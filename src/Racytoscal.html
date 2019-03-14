@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+<title>RascalScape</title>
+<script src="../lib/cytoscape.min.js"></script>
+<script src="../lib/dagre.min.js"></script>
+<script src="../lib/cytoscape-dagre.js"></script>
+<style>
+#cy {
+  width: 600px;
+  height: 600px;
+  display: block;
+}
+</style>
+</head>
+<body>
+<div id='cy'>
+<script>
+function addScript(filename, where)
+{
+ var d = new Date();
+ var n = d.getTime();
+ var scriptBlock=document.createElement('script');
+ scriptBlock.setAttribute("type","text/javascript");
+ scriptBlock.setAttribute("src", filename+"?"+n);
+ document.getElementsByTagName(where)[0].appendChild(scriptBlock);
+} 
+addScript("Output.js", "div");
+</script>
+</div>
+</body>
+</html>

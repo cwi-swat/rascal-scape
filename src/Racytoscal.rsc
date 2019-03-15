@@ -1,4 +1,4 @@
-module racytoscal::Racytoscal
+module Racytoscal
 import Prelude;
 import util::Math;
 import util::HtmlDisplay;
@@ -84,7 +84,6 @@ public data NodeShape
     | bezier()
     | segments()
     | taxi()
-    | defaultEdgeShape()
     ;
      
  public data Pos
@@ -110,8 +109,10 @@ public data NodeShape
     | defaultArrowShape()
     ;
     
-public data Label(str labelColor="", str outlineColor="", str backgroundColor="", 
-      int marginX=0, int marginY = 0)
+public data Label(str color="", str outlineColor="", str backgroundColor="", str borderColor="",
+      int marginX=0, int marginY = 0, num backgroundOpacity=-1, num outlineOpacity=-1
+         ,num borderOpacity=0.5, int borderWidth=-1, int backgroundPadding =0
+         ,str backgroundShape="")
     = label(str \value, str hAlign = "center", str vAlign="center")
     | sourceLabel(str \value, int offset = 0)
     | targetLabel(str \value, int offset = 0)
@@ -213,6 +214,7 @@ public data Layout
   //ready= undefined, // callback on layoutready
   // stop= undefined, // callback on layoutstop
    // )
+   | cose(str options)
   ;
   
 str addKeyValue(str key, str val) = isEmpty(val)?"":"\'<key>\':\'<val>\',";
@@ -230,7 +232,7 @@ str getArrowShape(ArrowShape arg) {
     r+= addKeyValue("<getName(pos)>-arrow-fill", arg.arrowFill);
     r+= addKeyValue("<getName(pos)>-arrow-color", arg.arrowColor);
     r+= addKeyNumValue("arrow-scale", arg.arrowScale);
-    r+= addKeyValue("<getName(pos)>-arrow-shape", getName(arg));
+    r+= addKeyValue("<getName1(pos)>-arrow-shape", getName(arg));
     return r;
     }
  
@@ -258,19 +260,18 @@ str getLabel(Label arg) {
             r+=addKeyValue("offset", arg.offset);
             }
          }
-    r+= addKeyValue("margin-x", arg.marginX);
-    r+= addKeyValue("margin-y", arg.marginY);
-    r+= addKeyValue("label-color", arg.labelColor);
-    r+= addKeyValue("outline-color", arg.outlineColor);
-    r+= addKeyValue("background-color", arg.backgroundColor);
-    return r;
-    }
-
-    
-str getEdgeShape(EdgeShape arg){
-    str r = "";
-    if (defaultEdgeShape():=arg) return r;
-    
+    r+= addKeyValue("text-margin-x", arg.marginX);
+    r+= addKeyValue("text-margin-y", arg.marginY);
+    r+= addKeyValue("color", arg.color);
+    r+= addKeyValue("text-outline-color", arg.outlineColor);
+    r+= addKeyValue("text-background-color", arg.backgroundColor);
+    r+= addKeyNumValue("text-outline-opacity", arg.outlineOpacity);
+    r+= addKeyNumValue("text-background-opacity", arg.backgroundOpacity);
+    r+= addKeyNumValue("text-background-padding", arg.backgroundPadding);
+    r+= addKeyValue("text-border-color", arg.borderColor);
+    r+= addKeyNumValue("text-border-opacity", arg.borderOpacity);
+    r+= addKeyValue("text-border-width", arg.borderWidth);
+    r+= addKeyValue("text-background-shape", arg.backgroundShape);
     return r;
     }
     
@@ -281,6 +282,15 @@ str getName1(NodeShape arg) {
         case "bottomRoundRectangle": return "bottom-round-rectangle";
         case "cutRectangle": return "cut-rectangle";
         case "concaveHaxagon": return "concave-hexagon";
+        }
+    return s;
+    }
+    
+str getName1(Pos arg) {
+    str s = getName(arg);
+    switch(s) {
+        case "midSource": return "mid-source";
+        case "midTarget": return "mid-target";
         }
     return s;
     }

@@ -16,7 +16,8 @@ public data Style = style(
               str lineColor="",
               str lineFill= "",
               str lineCap="",
-              int width = -1,
+              str width = "",
+              str height= "",
               list[ArrowShape] arrowShape = [],
               list[Label] label = [],
               NodeShape shape =  ellipse(),
@@ -82,8 +83,11 @@ public data NodeShape
     = haystack()
     | straight()
     | bezier()
+    | unbundledBezier(str controlPointDistances="", 
+        str controlPointWeights="") 
     | segments()
-    | taxi()
+    | taxi(TaxiDirection taxiDirection=downward(), str taxiTurn = "",
+          str taxiTurnMinDistance="")
     ;
      
  public data Pos
@@ -91,6 +95,16 @@ public data NodeShape
     | midSource()
     | target()
     | midTarget()
+    ;
+    
+public data TaxiDirection
+    =  auto()
+    |  vertical()
+    |  downward()
+    |  upward()
+    |  horizontal()
+    |  rightward()
+    |  leftward()
     ;
     
  public data ArrowShape(bool arrowFill = true, Pos pos= target(), num arrowScale=1.0,
@@ -215,6 +229,10 @@ public data Layout
   // stop= undefined, // callback on layoutstop
    // )
    | cose(str options)
+   | random(str options)
+   //fit: true, // whether to fit to viewport
+   // padding: 30, // fit padding
+   // boundingBox: undefined, 
   ;
   
 str addKeyValue(str key, str val) = isEmpty(val)?"":"\'<key>\':\'<val>\',";
@@ -275,6 +293,28 @@ str getLabel(Label arg) {
     return r;
     }
     
+ str getCurveStyle(EdgeShape arg) {  
+    str r = "";
+    switch(arg) {
+       case taxi(): { 
+            if ((arg.taxiDirection?))
+               r+=addKeyValue("taxi-direction", getName(arg.taxiDirection));
+            if ((arg.taxiTurn?))
+               r+=addKeyValue("taxi-turn", arg.taxiTurn);
+            if ((arg.taxiTurnMinDistance?))
+               r+=addKeyValue("taxi-turn-min-distance", arg.taxiTurnDistance);
+            }
+        case unbundledBezier(): {
+            if ((arg.controlPointDistances?))
+               r+=addKeyValue("control-point-distances", getName(arg.controlPointDistances));
+            if ((arg.controlPointWeights?))
+               r+=addKeyValue("control-point-weights", arg.controlPointWeights);
+            }
+         }
+    r+= addKeyValue("curve-style", getName1(arg));
+    return r;
+    }
+    
 str getName1(NodeShape arg) {
     str s = getName(arg);
     switch(s) {
@@ -282,6 +322,14 @@ str getName1(NodeShape arg) {
         case "bottomRoundRectangle": return "bottom-round-rectangle";
         case "cutRectangle": return "cut-rectangle";
         case "concaveHaxagon": return "concave-hexagon";
+        }
+    return s;
+    }
+    
+str getName1(EdgeShape arg) {
+    str s = getName(arg);
+    switch(s) {
+        case "unbundledBezier": return "unbundled-bezier";
         }
     return s;
     }
@@ -323,7 +371,7 @@ str getStyle(str selector, Style arg) {
     for (ArrowShape arrowShape<-arg.arrowShape)
        r+= getArrowShape(arrowShape);
     if ((arg.curveStyle?))
-    r+= addKeyValue("curve-style", getName(arg.curveStyle));
+        r+= getCurveStyle(arg.curveStyle);
     r+=getLabel(arg.label);
     // r+=getEdgeStyle(selector, style.edgeShape);
     return isEmpty(r)?"":"{selector:\'<selector>\', style: {

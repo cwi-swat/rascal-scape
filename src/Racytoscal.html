@@ -2,18 +2,27 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
 <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <title>RascalScape</title>
-<script src="../lib/cytoscape.min.js"></script>
+<script src="../lib/cytoscape.umd.js"></script>
 <script src="../lib/dagre.min.js"></script>
 <script src="../lib/cytoscape-dagre.js"></script>
 <style>
+//#cy {
+//  width: 600px;
+//  height: 600px;
+//  display: block;
+//}
 #cy {
-  width: 600px;
-  height: 600px;
-  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
 }
 </style>
 </head>

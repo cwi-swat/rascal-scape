@@ -4,9 +4,9 @@ import Prelude;
 import util::Math;
 import util::HtmlDisplay;
 
- lrel[int, int] getCircle(int n) = [<i%n, (i+2)%n>|int i<-[0..n]];
+ lrel[int, int] genCircle(int n) = [<i%n, (i+2)%n>|int i<-[0..n]];
  
-  lrel[int, int] genTree(int n, int depth) { 
+ lrel[int, int] genTree(int n, int depth) { 
       int name=1;
       lrel[int, int] result = [];
       lrel[int, int] nextLevel(list[int] level, int n) {
@@ -28,23 +28,59 @@ import util::HtmlDisplay;
           }
       return result;
       }
-
+      
+ lrel[loc, loc] genTree(loc root, int depth) { 
+      lrel[loc  , loc] result = [];
+      lrel[loc parent, loc child] nextLevel(list[loc] parents)  {
+          if (depth==0) return [];
+          lrel[loc, loc] r = []; 
+           for (loc k<-parents) {
+              if (isDirectory(k)) {
+                 list[str] childs = listEntries(k);
+                 r+=[<k, k+c>| str c<-childs];
+                 }
+              }
+          return r;
+         }
+          
+      lrel[loc, loc] l = nextLevel([root]);
+      result+=l;
+      for (int _ <-[1..depth]) {
+          l=nextLevel(range(l));
+          result+=l;
+          }
+      return result;
+      }
+      
+ str esc(loc v)= escape(v.path, (".":"_", "/":"_"));
+ 
  public void main() {
-    // int n=8;
-    
-    lrel[int, int] rl  = genTree(5, 3);
-    list[Ele] edges = [e_("<a[0]>_<a[1]>", "<a[0]>", "<a[1]>")
+    int n=8;
+    lrel[loc, loc] rl  = genTree(|project://racytoscal/src|, 4);
+    // lrel[int, int] rl  = genTree(5, 3);
+    list[Ele] edges = [e_("<esc(a[0])>_<esc(a[1])>", esc(a[0]), esc(a[1]))
         |a<-rl];
-    list[Ele]  nodes = [n_("<i>"
-      // , style=style(shape=nodeShape[i])
-       ) | int i<-dup(carrier(rl))];
+    list[Ele]  nodes = [n_(esc(i)
+       , style=style(backgroundColor="antiquewhite", shape=ellipse()
+          // , borderWidth = 2, borderColor="brown"
+          , padding = 10
+          , label=label(i.file 
+            ,vAlign="center"
+            //,borderColor="darkgrey"
+            //,backgroundColor="antiquewhite"
+            //,backgroundPadding=10
+            //,borderWidth=2,shape=rectangle()
+            )
+            )
+       ) | loc i<-dup(carrier(rl))];
     str output = genScript("cy", cytoscape(
         elements= nodes+edges
        ,styles = [<"edge", style(  
-                 curveStyle=taxi(),
+                 // curveStyle=taxi(taxiDirection=downward()),
+                 curveStyle=straight(),
                  arrowShape=[
                      ArrowShape::triangle(
-                     arrowScale=3, arrowColor="red", pos = target())]
+                     arrowScale=2, arrowColor="red", pos = target())]
                      ,lineColor="blue"
                     /* ,label=label("data(id)"
                          ,backgroundColor="antiquewhite"
@@ -58,12 +94,12 @@ import util::HtmlDisplay;
                    */
                )
                   >,
-                  <"node", style(backgroundColor="antiquewhite"
-                  , label = label("data(id)", vAlign="center")
-                  ,borderColor="darkgrey"
-                  ,borderWidth=2,shape=roundRectangle())>
+                  <"node", style(
+                    width = "label"  
+                  )>
                   ]
-        ,\layout = breadthfirst("directed:true")
+         //,\layout = breadthfirst("directed:true")
+          ,\layout = dagre("")
         ));
     println(output);
     writeFile(|project://racytoscal/src/Output.js|, output);

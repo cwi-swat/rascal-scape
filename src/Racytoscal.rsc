@@ -24,7 +24,10 @@ public data Style = style(
               EdgeShape curveStyle = straight(),
               Label label =  label(""),
               Label sourceLabel = sourceLabel(""),
-              Label targetLabel = targetLabel("")
+              Label targetLabel = targetLabel(""),
+              num opacity =  -1,
+              str visibility = "",
+              int zIndex = -1
               );
          
 public data Cytoscape = cytoscape(
@@ -374,6 +377,12 @@ str getStyle(str selector, Style arg) {
         r+= getCurveStyle(arg.curveStyle);
     r+=getLabel(arg.label);
     // r+=getEdgeStyle(selector, style.edgeShape);
+    if ((arg.opacity?))
+        r+= addKeyNumValue("opacity", arg.opacity);
+    if ((arg.visibility?))
+        r+= addKeyValue("visibility", arg.visibility);
+    if ((arg.zIndex?))
+        r+= addKeyValue("z-index", arg.zIndex);
     return isEmpty(r)?"":"{selector:\'<selector>\', style: {
         '<r>
         }
@@ -434,16 +443,17 @@ str getElements(list[Ele] eles) {
     }
  
   
-str getLayout(Layout \layout) {
+str getLayout(Layout \layout, loc extra= |std:///|) {
     str options = (isEmpty(\layout.options))?"{name:\'<getName(\layout)>\'}":
         "{name:\'<getName(\layout)>\',<\layout.options>}";
     str r = "var options = <options>;\n";
     r+="var layout = cy.layout(options);\n";
+    if (extra.scheme!="std") r+=readFile(extra);
     r+="layout.run();";
     return r;
     }
  
-public str genScript(str container, Cytoscape cy) {
+public str genScript(str container, Cytoscape cy, loc extra =|std:///|) {
   str r =  
   "var cy = cytoscape({
   'container: document.getElementById(\'<container>\'), 
@@ -451,7 +461,7 @@ public str genScript(str container, Cytoscape cy) {
   'elements: [<getElements(cy.elements)>]
   '
   '});
-  <getLayout(cy.\layout)>
+  <getLayout(cy.\layout, extra=extra)>
   "
   ;
   return r;

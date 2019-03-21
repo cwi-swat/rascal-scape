@@ -56,7 +56,7 @@ import util::HtmlDisplay;
  
  public void main() {
     int n=8;
-    lrel[loc, loc] rl  = genTree(|project://racytoscal/src|, 4);
+    lrel[loc, loc] rl  = genTree(|project://racytoscal|, 4);
     // lrel[int, int] rl  = genTree(5, 3);
     list[Ele] edges = [e_("<esc(a[0])>_<esc(a[1])>", esc(a[0]), esc(a[1]))
         |a<-rl];
@@ -64,7 +64,7 @@ import util::HtmlDisplay;
        , style=style(backgroundColor="antiquewhite", shape=ellipse()
           // , borderWidth = 2, borderColor="brown"
           , padding = 10
-          , label=label(i.file 
+          , label=label(isEmpty(i.file)?i.path:i.file 
             ,vAlign="center"
             //,borderColor="darkgrey"
             //,backgroundColor="antiquewhite"
@@ -95,12 +95,13 @@ import util::HtmlDisplay;
                )
                   >,
                   <"node", style(
-                    width = "label"  
+                    width = "15px",
+                    height= "15px"  
                   )>
                   ]
          //,\layout = breadthfirst("directed:true")
           ,\layout = dagre("")
-        ));
+        ), extra=|project://racytoscal/src/demo/Graph.js|);
     println(output);
     writeFile(|project://racytoscal/src/Output.js|, output);
     loc html = |project://racytoscal/src/Racytoscal.html|;

@@ -7,9 +7,9 @@
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <title>Racytoscal</title>
-<script src="../lib/cytoscape.umd.js"></script>
-<script src="../lib/dagre.min.js"></script>
-<script src="../lib/cytoscape-dagre.js"></script>
+<script src="lib/cytoscape.umd.js"></script>
+<script src="lib/dagre.min.js"></script>
+<script src="lib/cytoscape-dagre.js"></script>
 <style>
 //#cy {
 //  width: 600px;
@@ -24,9 +24,10 @@
   bottom: 0;
   z-index: 999;
 }
+title {display:block}
 </style>
 </head>
-<body>
+<body onbeforeunload="handleOnClose()">
 <div id='cy'>
 <script>
 function addScript(filename, where)
@@ -37,8 +38,25 @@ function addScript(filename, where)
  scriptBlock.setAttribute("type","text/javascript");
  scriptBlock.setAttribute("src", filename+"?"+n);
  document.getElementsByTagName(where)[0].appendChild(scriptBlock);
-} 
-addScript("Output.js", "div");
+}
+
+function httpGet(callback)
+{
+	var currentURL = window.location.href;
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", currentURL+"close", true); // true for asynchronous 
+    xmlHttp.send(null);
+}
+
+function handleOnClose() {
+	httpGet(function(v){});
+}
+// addScript("Output.js", "div");
+cytoscapeInit
 </script>
 </div>
 </body>

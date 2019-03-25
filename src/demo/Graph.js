@@ -10,16 +10,18 @@ cy.nodes().style({
      });  
 cy.on('tapstart', 'node', function(evt){
 	 var ele = evt.target;
-	 ele.style({'text-background-opacity':'1'});
-	 ele.style({'text-background-color':'lightgrey'});
-	 ele.style({'text-background-padding':'10'});
-	 ele.style({'text-opacity':'1'});
-	 ele.style({'color':'black'});
+	 ele.style({'text-background-opacity':'1'
+	            ,'text-background-color':'lightgrey'
+	            ,'text-background-padding':'10'
+	            ,'text-opacity':'1'
+	            ,'color':'black'}
+	          );
      });
 cy.on('tapend', 'node', function(evt){
 	 var ele = evt.target;
-	 ele.style({'text-background-opacity':'0'});
-	 ele.style({'text-opacity':'0'});
-	 ele.style({'color':'red'});
-    });
+	 ele.style({'text-background-opacity':'0'
+	           ,'text-opacity':'0'
+	           ,'color':'red'}
+              );
+     });
 

@@ -2,7 +2,6 @@ module demo::Graph
 import Racytoscal;
 import Prelude;
 import util::Math;
-import util::HtmlDisplay;
 
  lrel[int, int] genCircle(int n) = [<i%n, (i+2)%n>|int i<-[0..n]];
  
@@ -14,7 +13,6 @@ import util::HtmlDisplay;
          lrel[int, int] r = []; 
          for (int k<-level) {
              int d = arbInt(n);
-             // println(d); println(n);
              r+= [<k, dest>|int dest<-[name..d+name]];
              name+=d;
              }
@@ -102,8 +100,8 @@ import util::HtmlDisplay;
          //,\layout = breadthfirst("directed:true")
           ,\layout = dagre("")
         ), extra=|project://racytoscal/src/demo/Graph.js|);
-    println(output);
-    writeFile(|project://racytoscal/src/Output.js|, output);
-    loc html = |project://racytoscal/src/Racytoscal.html|;
-    htmlDisplay(html); 
+    loc html = |project://racytoscal/src/Racytoscal.html|; 
+    openBrowser(html, output);  
     }
+    
+

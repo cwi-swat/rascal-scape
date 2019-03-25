@@ -2,6 +2,7 @@ module Racytoscal
 import Prelude;
 import util::Math;
 import util::HtmlDisplay;
+import util::Webserver;
 
 alias Position = tuple[int x, int y];
 
@@ -466,22 +467,40 @@ public str genScript(str container, Cytoscape cy, loc extra =|std:///|) {
   ;
   return r;
   }
-  
-// private bool isUppercase(str s) 
- 
-  /*
-  style: [ // the stylesheet for the graph
-    {
-      selector: 'node',
-      style: {
-        'background-color': 'antiquewhite',
-        'border-color': 'darkgrey',
-        'border-width': 2,
-        'label': 'data(id)',
-        'text-valign':'center',
-        // 'label':'aap',
-        
+   
+str getIntro(loc src, str script) {
+      str r = readFile(src);
+      r = replaceFirst(r, "cytoscapeInit", script);
+      return r;
+    }
+    
+public loc openBrowser(loc html, str script) {
+  	loc site = |http://localhost:8081|;
+  	loc base = |project://racytoscal|;
+  	   
+  	 Response page(get(/^\/close$/)) { 
+        shutdown(site);
+	    return response("shutdown");
       }
-     },
-   }
-   */
+     
+     default Response page(get(str path)) {
+       if   (path=="/") {
+           str res = getIntro(html, script);
+	       return response(res);
+           }
+       return response(base + path); 
+       } 
+        
+       while (true) {
+          try {
+            println("Trying ... <site>");
+            serve(site, page);
+            htmlDisplay(site); 
+            return site;
+            }  
+          catch IO(_): {
+            site.port += 1; 
+            }
+       }
+    }
+   

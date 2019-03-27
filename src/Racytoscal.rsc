@@ -20,7 +20,7 @@ public data Style = style(
               str width = "",
               str height= "",
               list[ArrowShape] arrowShape = [],
-              list[Label] label = [],
+              // list[Label] label = [],
               NodeShape shape =  ellipse(),
               EdgeShape curveStyle = straight(),
               Label label =  label(""),
@@ -130,10 +130,11 @@ public data TaxiDirection
 public data Label(str color="", str outlineColor="", str backgroundColor="", str borderColor="",
       int marginX=0, int marginY = 0, num backgroundOpacity=-1, num outlineOpacity=-1
          ,num borderOpacity=0.5, int borderWidth=-1, int backgroundPadding =0
-         ,str backgroundShape="")
+         ,str backgroundShape="", num opacity=-1)
     = label(str \value, str hAlign = "center", str vAlign="center")
     | sourceLabel(str \value, int offset = 0)
     | targetLabel(str \value, int offset = 0)
+    | labelStyle()
     | defaultLabel()
     ;
     
@@ -239,27 +240,30 @@ public data Layout
    // boundingBox: undefined, 
   ;
   
-str addKeyValue(str key, str val) = isEmpty(val)?"":"\'<key>\':\'<val>\',";
+str addKeyValue(str key, str val) = isEmpty(val)?"":"\"<key>\":\"<val>\"";
 
-str addKeyValue(str key, int val) = val==-1?"":"\'<key>\':\'<val>\',";
+str addKeyValue(str key, int val) = val==-1?"":"\"<key>\":\"<val>\"";
 
-str addKeyValue(str key, bool val) = "\'<key>\':\'<val>\',";
+str addKeyValue(str key, bool val) = "\"<key>\":<val>";
 
-str addKeyNumValue(str key, num val) = val==-1?"":"\'<key>\':\'<val>\',";
+str addKeyNumValue(str key, num val) = val==-1?"":"\"<key>\":\"<val>\"";
     
 str getArrowShape(ArrowShape arg) {
-    str r = "";
-    if (defaultArrowShape():=arg) return r;
+    list[str] r = [];
+    if (defaultArrowShape():=arg) return "";
     Pos pos = arg.pos;
-    r+= addKeyValue("<getName(pos)>-arrow-fill", arg.arrowFill);
-    r+= addKeyValue("<getName(pos)>-arrow-color", arg.arrowColor);
+    if ((arg.arrowFill?))
+         r+= addKeyValue("<getName(pos)>-arrow-fill", arg.arrowFill?"filled":"hollow");
+    if ((arg.arrowColor?))
+         r+= addKeyValue("<getName(pos)>-arrow-color", arg.arrowColor);
+    if ((arg.arrowScale?))
     r+= addKeyNumValue("arrow-scale", arg.arrowScale);
     r+= addKeyValue("<getName1(pos)>-arrow-shape", getName(arg));
-    return r;
+    return intercalate(",", r);
     }
  
-str getLabel(Label arg) {  
-    str r = "";
+str toString(Label arg) {  
+    list[str] r = [];
     switch(arg) {
        case label(str \value): { 
             if (isEmpty(\value)) return "";
@@ -282,23 +286,37 @@ str getLabel(Label arg) {
             r+=addKeyValue("offset", arg.offset);
             }
          }
-    r+= addKeyValue("text-margin-x", arg.marginX);
-    r+= addKeyValue("text-margin-y", arg.marginY);
-    r+= addKeyValue("color", arg.color);
-    r+= addKeyValue("text-outline-color", arg.outlineColor);
-    r+= addKeyValue("text-background-color", arg.backgroundColor);
-    r+= addKeyNumValue("text-outline-opacity", arg.outlineOpacity);
-    r+= addKeyNumValue("text-background-opacity", arg.backgroundOpacity);
-    r+= addKeyNumValue("text-background-padding", arg.backgroundPadding);
-    r+= addKeyValue("text-border-color", arg.borderColor);
-    r+= addKeyNumValue("text-border-opacity", arg.borderOpacity);
-    r+= addKeyValue("text-border-width", arg.borderWidth);
+    if ((arg.marginX?))
+         r+= addKeyValue("text-margin-x", arg.marginX);
+    if ((arg.marginY?))
+         r+= addKeyValue("text-margin-y", arg.marginY);
+    if ((arg.color?))
+         r+= addKeyValue("color", arg.color);
+    if ((arg.outlineColor?))
+         r+= addKeyValue("text-outline-color", arg.outlineColor);
+    if ((arg.backgroundColor?))
+         r+= addKeyValue("text-background-color", arg.backgroundColor);
+    if ((arg.outlineOpacity?))
+         r+= addKeyNumValue("text-outline-opacity", arg.outlineOpacity);
+    if ((arg.opacity?))
+         r+= addKeyNumValue("text-opacity", arg.opacity);
+    if ((arg.backgroundOpacity?))
+         r+= addKeyNumValue("text-background-opacity", arg.backgroundOpacity);
+    if ((arg.backgroundPadding?))
+         r+= addKeyNumValue("text-background-padding", arg.backgroundPadding);
+    if ((arg.borderColor?))
+         r+= addKeyValue("text-border-color", arg.borderColor);
+    if ((arg.borderOpacity?))
+         r+= addKeyNumValue("text-border-opacity", arg.borderOpacity);
+    if ((arg.borderWidth?))
+         r+= addKeyValue("text-border-width", arg.borderWidth);
+    if ((arg.backgroudShape?))
     r+= addKeyValue("text-background-shape", arg.backgroundShape);
-    return r;
+    return intercalate(",", r);
     }
     
  str getCurveStyle(EdgeShape arg) {  
-    str r = "";
+    list[str] r = [];
     switch(arg) {
        case taxi(): { 
             if ((arg.taxiDirection?))
@@ -316,7 +334,7 @@ str getLabel(Label arg) {
             }
          }
     r+= addKeyValue("curve-style", getName1(arg));
-    return r;
+    return intercalate(",", r);
     }
     
 str getName1(NodeShape arg) {
@@ -347,8 +365,8 @@ str getName1(Pos arg) {
     return s;
     }
  
-str getStyle(str selector, Style arg) {
-    r="";
+str toString(Style arg) {
+    list[str] r=[];
     if ((arg.backgroundColor?))
     r+= addKeyValue("background-color", arg.backgroundColor);
     if ((arg.backgroundOpacity?))
@@ -376,7 +394,7 @@ str getStyle(str selector, Style arg) {
        r+= getArrowShape(arrowShape);
     if ((arg.curveStyle?))
         r+= getCurveStyle(arg.curveStyle);
-    r+=getLabel(arg.label);
+    r+=toString(arg.label);
     // r+=getEdgeStyle(selector, style.edgeShape);
     if ((arg.opacity?))
         r+= addKeyNumValue("opacity", arg.opacity);
@@ -384,23 +402,30 @@ str getStyle(str selector, Style arg) {
         r+= addKeyValue("visibility", arg.visibility);
     if ((arg.zIndex?))
         r+= addKeyValue("z-index", arg.zIndex);
+    return intercalate(",", r);
+    }
+
+str toString(tuple[str selector, Style style] d) = "{\"selector\": \"<d.selector>\", \"style\":{<toString(d.style)>}}";
+    
+str getStyleArgument(str selector, Style argument) {
+    str r = toString(argument);
     return isEmpty(r)?"":"{selector:\'<selector>\', style: {
         '<r>
         }
      }
     "
-          ;
+    ;
     }
     
 str getElStyle(Ele ele) {
     switch(ele) {
-       case v:n_(str id): return getStyle("node#<id>", v.style);
-       case v:e_(str id, str source, str target): return getStyle("edge#<id>", v.style);
+       case v:n_(str id): return getStyleArgument("node#<id>", v.style);
+       case v:e_(str id, str source, str target): return getStyleArgument("edge#<id>", v.style);
        }
     }
 
 str getStyles(list[tuple[str selector, Style style]] styles) {
-    list[str] r = [getStyle(t.selector, t.style)|
+    list[str] r = [getStyleArgument(t.selector, t.style)|
        tuple[str selector, Style style] t<-styles];
     r = [t|str t<-r,!isEmpty(t)];
     return intercalate(",", r);
@@ -449,8 +474,7 @@ str getLayout(Layout \layout, loc extra= |std:///|) {
         "{name:\'<getName(\layout)>\',<\layout.options>}";
     str r = "var options = <options>;\n";
     r+="var layout = cy.layout(options);\n";
-    if (extra.scheme!="std") r+=readFile(extra);
-    r+="layout.run();";
+    // r+="layout.run();";
     return r;
     }
  
@@ -467,27 +491,41 @@ public str genScript(str container, Cytoscape cy, loc extra =|std:///|) {
   ;
   return r;
   }
-   
-str getIntro(loc src, str script) {
-      str r = readFile(src);
-      r = replaceFirst(r, "cytoscapeInit", script);
-      return r;
-    }
     
-public loc openBrowser(loc html, str script) {
+public loc openBrowser(loc html, str script
+    ,str(str id) tapstart = str(str id){return "";}
+    ,str(str id) tapend = str(str id){return "";}
+    ,str(str id) tap = str(str id){return "";}
+    ) {
   	loc site = |http://localhost:8081|;
   	loc base = |project://racytoscal|;
   	   
-  	 Response page(get(/^\/close$/)) { 
+  	 Response page(get(/^\/tap\/<id:\S+>$/)) { 
+        return response(tap(id));
+      }
+      
+      Response page(get(/^\/tapstart\/<id:\S+>$/)) { 
+        return response(tapstart(id));
+      }
+      
+      Response page(get(/^\/tapend\/<id:\S+>$/)) { 
+        return response(tapend(id));	   
+      }
+      
+      Response page(get(/^\/close$/)) { 
         shutdown(site);
 	    return response("shutdown");
+      }
+      
+      Response page(get(/^\/init$/)) { 
+	    return response(script);
       }
      
      default Response page(get(str path)) {
        if   (path=="/") {
-           str res = getIntro(html, script);
-	       return response(res);
+	       return response(html);
            }
+       // println("HELP:<path>");
        return response(base + path); 
        } 
         

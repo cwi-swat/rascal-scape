@@ -1,6 +1,21 @@
 /**
  * 
  */
+function httpGet(callback, key)
+{
+	var currentURL = window.location.href;
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", currentURL+key, true); // true for asynchronous 
+    xmlHttp.send(null);
+}
+
+function handleOnClose() {
+	httpGet(function(v){}, "close");
+}
 
 cy.nodes().style({
     'overlay-color':'red',
@@ -31,11 +46,31 @@ cy.on('tapend', 'node', function(evt){
 cy.on('tap', 'node', function(evt){
 	 var ele = evt.target;
 	 httpGet(function(s){
+	   console.log(s);
 	   var t = JSON.parse(s);
 	   cy.elements(t.selector).style(t.style)
 	  }
 	  , "tap/"+ele.id());
      });
+
+cy.on('tapstart', 'node', function(evt){
+	 var ele = evt.target;
+	 httpGet(function(s){
+	   console.log(s);
+	   var t = JSON.parse(s);
+	   cy.elements(t.selector).style(t.style)
+	  }
+	  , "tapstart/"+ele.id());
+    });
+cy.on('tapend', 'node', function(evt){
+	 var ele = evt.target;
+	 httpGet(function(s){
+	   console.log(s);
+	   var t = JSON.parse(s);
+	   cy.elements(t.selector).style(t.style)
+	  }
+	  , "tapend/"+ele.id());
+   });
 /*
 cy.on('tapend', 'node', function(evt){
 	 var ele = evt.target;

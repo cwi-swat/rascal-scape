@@ -29,34 +29,10 @@ title {display:block}
 </head>
 <body onbeforeunload="handleOnClose()">
 <div id='cy'>
+<script src="init"></script>
+<script src="src/Racytoscal.js"></script>
 <script>
-function addScript(filename, where)
-{
- var d = new Date();
- var n = d.getTime();
- var scriptBlock=document.createElement('script');
- scriptBlock.setAttribute("type","text/javascript");
- scriptBlock.setAttribute("src", filename+"?"+n);
- document.getElementsByTagName(where)[0].appendChild(scriptBlock);
-}
-
-function httpGet(callback)
-{
-	var currentURL = window.location.href;
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText);
-    }
-    xmlHttp.open("GET", currentURL+"close", true); // true for asynchronous 
-    xmlHttp.send(null);
-}
-
-function handleOnClose() {
-	httpGet(function(v){});
-}
-// addScript("Output.js", "div");
-cytoscapeInit
+layout.run();
 </script>
 </div>
 </body>

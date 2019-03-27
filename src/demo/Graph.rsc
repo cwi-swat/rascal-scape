@@ -52,6 +52,18 @@ import util::Math;
       
  str esc(loc v)= escape(v.path, (".":"_", "/":"_"));
  
+ str callbackTapstart(str id) {
+    Style styl = style(label=labelStyle(backgroundOpacity=1, backgroundColor="lightgrey", backgroundPadding=10, opacity=1, color="black"));
+    str r = toString(<"node#<id>", styl>);
+    return r;
+    }
+    
+str callbackTapend(str id) {
+    Style styl = style(label=labelStyle(backgroundOpacity=0, opacity=0, color="red"));
+    str r = toString(<"node#<id>", styl>);
+    return r;
+    }
+ 
  public void main() {
     int n=8;
     lrel[loc, loc] rl  = genTree(|project://racytoscal|, 4);
@@ -60,12 +72,11 @@ import util::Math;
         |a<-rl];
     list[Ele]  nodes = [n_(esc(i)
        , style=style(backgroundColor="antiquewhite", shape=ellipse()
-          // , borderWidth = 2, borderColor="brown"
+          , borderWidth = 2, borderColor="brown"
           , padding = 10
           , label=label(isEmpty(i.file)?i.path:i.file 
             ,vAlign="center"
             //,borderColor="darkgrey"
-            //,backgroundColor="antiquewhite"
             //,backgroundPadding=10
             //,borderWidth=2,shape=rectangle()
             )
@@ -101,7 +112,7 @@ import util::Math;
           ,\layout = dagre("")
         ), extra=|project://racytoscal/src/demo/Graph.js|);
     loc html = |project://racytoscal/src/Racytoscal.html|; 
-    openBrowser(html, output);  
+    openBrowser(html, output, tapstart = callbackTapstart, tapend=callbackTapend);  
     }
     
 

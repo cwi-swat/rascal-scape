@@ -1,4 +1,4 @@
-module demo::Graph
+module demo::directoryTree::Tree
 import Racytoscal;
 import Prelude;
 import util::Math;
@@ -53,13 +53,14 @@ import util::Math;
  str esc(loc v)= escape(v.path, (".":"_", "/":"_"));
  
  str callbackTapstart(str id) {
-    Style styl = style(label=labelStyle(backgroundOpacity=1, backgroundColor="lightgrey", backgroundPadding=10, opacity=1, color="black"));
+    Style styl = style(
+       textBackgroundOpacity=1, textBackgroundColor="lightgrey", textBackgroundPadding=10, textOpacity=1, color="black");
     str r = toString(<"node#<id>", styl>);
     return r;
     }
     
 str callbackTapend(str id) {
-    Style styl = style(label=labelStyle(backgroundOpacity=0, opacity=0, color="red"));
+    Style styl = style(textBackgroundOpacity=0, textOpacity=0, color="red");
     str r = toString(<"node#<id>", styl>);
     return r;
     }
@@ -76,31 +77,17 @@ str callbackTapend(str id) {
           , padding = 10
           , label=label(isEmpty(i.file)?i.path:i.file 
             ,vAlign="center"
-            //,borderColor="darkgrey"
-            //,backgroundPadding=10
-            //,borderWidth=2,shape=rectangle()
             )
             )
        ) | loc i<-dup(carrier(rl))];
     str output = genScript("cy", cytoscape(
         elements= nodes+edges
        ,styles = [<"edge", style(  
-                 // curveStyle=taxi(taxiDirection=downward()),
-                 curveStyle=straight(),
+                 curveStyle=taxi(taxiDirection=downward()),
                  arrowShape=[
                      ArrowShape::triangle(
                      arrowScale=2, arrowColor="red", pos = target())]
                      ,lineColor="blue"
-                    /* ,label=label("data(id)"
-                         ,backgroundColor="antiquewhite"
-                     ,backgroundOpacity=1
-                     ,borderColor="brown"
-                     ,borderOpacity=1
-                     ,borderWidth=2
-                     ,backgroundPadding=5
-                     ,backgroundShape="roundrectangle"
-                     )
-                   */
                )
                   >,
                   <"node", style(
@@ -110,9 +97,9 @@ str callbackTapend(str id) {
                   ]
          //,\layout = breadthfirst("directed:true")
           ,\layout = dagre("")
-        ), extra=|project://racytoscal/src/demo/Graph.js|);
-    loc html = |project://racytoscal/src/Racytoscal.html|; 
-    openBrowser(html, output, tapstart = callbackTapstart, tapend=callbackTapend);  
+        )
+      ); 
+    openBrowser(|project://racytoscal/src/demo/directoryTree/Tree.html|, output, tapstart = callbackTapstart, tapend=callbackTapend);  
     }
     
 

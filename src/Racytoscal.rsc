@@ -28,7 +28,21 @@ public data Style = style(
               Label targetLabel = targetLabel(""),
               num opacity =  -1,
               str visibility = "",
-              int zIndex = -1
+              int zIndex = -1,
+   //   ---
+              str color="", 
+              str textOutlineColor="", 
+              str textBackgroundColor="", 
+              str textBorderColor="",
+              int textMarginX=0, 
+              int textMarginY = 0, 
+              num textBackgroundOpacity=-1, 
+              num textOutlineOpacity=-1,
+              num textBorderOpacity=0.5, 
+              int textBorderWidth=-1, 
+              int textBackgroundPadding =0,
+              str textBackgroundShape="", 
+              num textOpacity=-1
               );
          
 public data Cytoscape = cytoscape(
@@ -127,14 +141,10 @@ public data TaxiDirection
     | defaultArrowShape()
     ;
     
-public data Label(str color="", str outlineColor="", str backgroundColor="", str borderColor="",
-      int marginX=0, int marginY = 0, num backgroundOpacity=-1, num outlineOpacity=-1
-         ,num borderOpacity=0.5, int borderWidth=-1, int backgroundPadding =0
-         ,str backgroundShape="", num opacity=-1)
+public data Label
     = label(str \value, str hAlign = "center", str vAlign="center")
     | sourceLabel(str \value, int offset = 0)
     | targetLabel(str \value, int offset = 0)
-    | labelStyle()
     | defaultLabel()
     ;
     
@@ -286,32 +296,7 @@ str toString(Label arg) {
             r+=addKeyValue("offset", arg.offset);
             }
          }
-    if ((arg.marginX?))
-         r+= addKeyValue("text-margin-x", arg.marginX);
-    if ((arg.marginY?))
-         r+= addKeyValue("text-margin-y", arg.marginY);
-    if ((arg.color?))
-         r+= addKeyValue("color", arg.color);
-    if ((arg.outlineColor?))
-         r+= addKeyValue("text-outline-color", arg.outlineColor);
-    if ((arg.backgroundColor?))
-         r+= addKeyValue("text-background-color", arg.backgroundColor);
-    if ((arg.outlineOpacity?))
-         r+= addKeyNumValue("text-outline-opacity", arg.outlineOpacity);
-    if ((arg.opacity?))
-         r+= addKeyNumValue("text-opacity", arg.opacity);
-    if ((arg.backgroundOpacity?))
-         r+= addKeyNumValue("text-background-opacity", arg.backgroundOpacity);
-    if ((arg.backgroundPadding?))
-         r+= addKeyNumValue("text-background-padding", arg.backgroundPadding);
-    if ((arg.borderColor?))
-         r+= addKeyValue("text-border-color", arg.borderColor);
-    if ((arg.borderOpacity?))
-         r+= addKeyNumValue("text-border-opacity", arg.borderOpacity);
-    if ((arg.borderWidth?))
-         r+= addKeyValue("text-border-width", arg.borderWidth);
-    if ((arg.backgroudShape?))
-    r+= addKeyValue("text-background-shape", arg.backgroundShape);
+    
     return intercalate(",", r);
     }
     
@@ -394,7 +379,8 @@ str toString(Style arg) {
        r+= getArrowShape(arrowShape);
     if ((arg.curveStyle?))
         r+= getCurveStyle(arg.curveStyle);
-    r+=toString(arg.label);
+    if ((arg.label?))
+       r+=toString(arg.label);
     // r+=getEdgeStyle(selector, style.edgeShape);
     if ((arg.opacity?))
         r+= addKeyNumValue("opacity", arg.opacity);
@@ -402,6 +388,32 @@ str toString(Style arg) {
         r+= addKeyValue("visibility", arg.visibility);
     if ((arg.zIndex?))
         r+= addKeyValue("z-index", arg.zIndex);
+    if ((arg.textMarginX?))
+         r+= addKeyValue("text-margin-x", arg.textMarginX);
+    if ((arg.textMarginY?))
+         r+= addKeyValue("text-margin-y", arg.textMarginY);
+    if ((arg.color?))
+         r+= addKeyValue("color", arg.color);
+    if ((arg.textOutlineColor?))
+         r+= addKeyValue("text-outline-color", arg.textOutlineColor);
+    if ((arg.textBackgroundColor?))
+         r+= addKeyValue("text-background-color", arg.textBackgroundColor);
+    if ((arg.textOutlineOpacity?))
+         r+= addKeyNumValue("text-outline-opacity", arg.textOutlineOpacity);
+    if ((arg.textOpacity?))
+         r+= addKeyNumValue("text-opacity", arg.textOpacity);
+    if ((arg.textBackgroundOpacity?))
+         r+= addKeyNumValue("text-background-opacity", arg.textBackgroundOpacity);
+    if ((arg.textBackgroundPadding?))
+         r+= addKeyNumValue("text-background-padding", arg.textBackgroundPadding);
+    if ((arg.textBorderColor?))
+         r+= addKeyValue("text-border-color", arg.textBorderColor);
+    if ((arg.textBorderOpacity?))
+         r+= addKeyNumValue("text-border-opacity", arg.textBorderOpacity);
+    if ((arg.textBorderWidth?))
+         r+= addKeyValue("text-border-width", arg.textBorderWidth);
+    if ((arg.textBackgroundShape?))
+    r+= addKeyValue("text-background-shape", arg.textBackgroundShape);
     return intercalate(",", r);
     }
 
@@ -424,7 +436,7 @@ str getElStyle(Ele ele) {
        }
     }
 
-str getStyles(list[tuple[str selector, Style style]] styles) {
+str toString(list[tuple[str selector, Style style]] styles) {
     list[str] r = [getStyleArgument(t.selector, t.style)|
        tuple[str selector, Style style] t<-styles];
     r = [t|str t<-r,!isEmpty(t)];
@@ -482,7 +494,7 @@ public str genScript(str container, Cytoscape cy, loc extra =|std:///|) {
   str r =  
   "var cy = cytoscape({
   'container: document.getElementById(\'<container>\'), 
-  'style: [<getStyles(cy.styles)+","+getElStyles(cy.elements)>],
+  'style: [<toString(cy.styles)+","+getElStyles(cy.elements)>],
   'elements: [<getElements(cy.elements)>]
   '
   '});

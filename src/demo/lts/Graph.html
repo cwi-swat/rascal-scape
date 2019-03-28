@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+<meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+<title>CopyEndRenameMe</title>
+<script src="lib/cytoscape.umd.js"></script>
+<script src="lib/dagre.min.js"></script>
+<script src="lib/cytoscape-dagre.js"></script>
+<script src="lib/Racytoscal.js"></script>
+<style>
+//#cy {
+//  width: 600px;
+//  height: 600px;
+//  display: block;
+//}
+#cy {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+title {display:block}
+</style>
+</head>
+<body onbeforeunload="handleOnClose()">
+<div id='cy'>
+<script src="init"></script>
+<script>
+layout.run();
+</script>
+</div>
+</body>
+</html>

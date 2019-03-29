@@ -72,9 +72,7 @@ str callbackTapend(str id) {
     list[Ele] edges = [e_("<esc(a[0])>_<esc(a[1])>", esc(a[0]), esc(a[1]))
         |a<-rl];
     list[Ele]  nodes = [n_(esc(i)
-       , style=style(backgroundColor="antiquewhite", shape=ellipse()
-          , borderWidth = 2, borderColor="brown"
-          , padding = 10
+       , style=style(
           , label=label(isEmpty(i.file)?i.path:i.file 
             ,vAlign="center"
             )
@@ -92,7 +90,10 @@ str callbackTapend(str id) {
                   >,
                   <"node", style(
                     width = "15px",
-                    height= "15px"  
+                    height= "15px", 
+                    backgroundColor="antiquewhite", shape=ellipse(),
+                    borderWidth = 2, borderColor="brown"
+                   ,padding = 10 
                   )>
                   ]
          //,\layout = breadthfirst("directed:true")

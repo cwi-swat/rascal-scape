@@ -42,7 +42,10 @@ public data Style = style(
               int textBorderWidth=-1, 
               int textBackgroundPadding =0,
               str textBackgroundShape="", 
-              num textOpacity=-1
+              num textOpacity=-1,
+              str fontSize="",
+              str fontStyle="",
+              str fontWeight=""
               );
          
 public data Cytoscape = cytoscape(
@@ -313,7 +316,7 @@ str toString(Label arg) {
             }
         case unbundledBezier(): {
             if ((arg.controlPointDistances?))
-               r+=addKeyValue("control-point-distances", getName(arg.controlPointDistances));
+               r+=addKeyValue("control-point-distances", arg.controlPointDistances);
             if ((arg.controlPointWeights?))
                r+=addKeyValue("control-point-weights", arg.controlPointWeights);
             }
@@ -414,6 +417,12 @@ str toString(Style arg) {
          r+= addKeyValue("text-border-width", arg.textBorderWidth);
     if ((arg.textBackgroundShape?))
     r+= addKeyValue("text-background-shape", arg.textBackgroundShape);
+    if ((arg.fontSize?))
+    r+= addKeyValue("font-size", arg.fontSize);
+    if ((arg.fontStyle?))
+    r+= addKeyValue("font-style", arg.fontStyle);
+    if ((arg.fontWeight?))
+    r+= addKeyValue("font-weight", arg.fontWeight);
     return intercalate(",", r);
     }
 
@@ -490,7 +499,7 @@ str getLayout(Layout \layout, loc extra= |std:///|) {
     return r;
     }
  
-public str genScript(str container, Cytoscape cy, loc extra =|std:///|) {
+public str genScript(str container, Cytoscape cy, str extra ="") {
   str r =  
   "var cy = cytoscape({
   'container: document.getElementById(\'<container>\'), 
@@ -498,7 +507,8 @@ public str genScript(str container, Cytoscape cy, loc extra =|std:///|) {
   'elements: [<getElements(cy.elements)>]
   '
   '});
-  <getLayout(cy.\layout, extra=extra)>
+  '<getLayout(cy.\layout)>;
+  '<extra>
   "
   ;
   return r;
@@ -508,12 +518,17 @@ public loc openBrowser(loc html, str script
     ,str(str id) tapstart = str(str id){return "";}
     ,str(str id) tapend = str(str id){return "";}
     ,str(str id) tap = str(str id){return "";}
+    ,str(str id) click = str(str id){return "";}
     ) {
   	loc site = |http://localhost:8081|;
   	loc base = |project://racytoscal|;
   	   
   	 Response page(get(/^\/tap\/<id:\S+>$/)) { 
         return response(tap(id));
+      }
+      
+      Response page(get(/^\/click\/<id:\S+>$/)) { 
+        return response(click(id));
       }
       
       Response page(get(/^\/tapstart\/<id:\S+>$/)) { 

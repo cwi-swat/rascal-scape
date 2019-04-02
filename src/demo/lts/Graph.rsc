@@ -22,24 +22,28 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
          //   )
           )
             |str \node<-nodes]
-          +[e_("<edge.from>_<edge.to>", edge.from, edge.to, style=style(label=label(edge.lab)))|tuple[str from, str lab , str to] edge<-edges];
+          +[e_("<edge.from>_<edge.to>", edge.from, edge.to, style=style(label=label(edge.lab),
+               curveStyle= edge.lab=="c6(1)"?
+                  unbundledBezier(controlPointDistances="250"):straight()))|tuple[str from, str lab , str to] edge<-edges]
+                  ;
    return <eles, styles>;
    }
 
    
   public void main() {
+       int current = 0;
        tuple[list[Ele], lrel[str, Style]] eles = readAut(|file:///Users/bertl/abp.aut|);
        lrel[str, Style] styles = [<"edge", style(  
-                 curveStyle=straight(),
                  arrowShape=[
                      ArrowShape::triangle(
                      arrowScale=2, arrowColor="red", pos = target())]
                      ,lineColor="blue"
                      ,textBackgroundOpacity=1
-                     ,textBackgroundColor="lightgrey"
-                     ,textBackgroundPadding=10
+                     ,textBackgroundColor="whitesmoke"
+                     ,textBackgroundPadding=1
                      ,textOpacity=1
                      ,color="black"
+                     ,fontSize="12pt"
                )
                   >,
                   <"node", style(
@@ -51,8 +55,11 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                    ,backgroundColor="antiquewhite"
                   )>
                   ]+eles[1];
-       println(eles[1]);
+       // println(eles[1]);
        str output = genScript("cy", cytoscape(elements= eles[0], styles= styles,\layout = 
-       breadthfirst("")));
+       //breadthfirst("")
+       // concentric("concentric:level, minNodeSpacing:50")
+       dagre("nodeSep:350,ranker:\"network-simplex\",rankDir:\"TB\", edgeSep:300")  
+       ),extra="var current=0;", click = str(str id) {println("<id>");return "\"ok\"";});
        openBrowser(|project://racytoscal/src/demo/lts/Graph.html|, output);  
        }

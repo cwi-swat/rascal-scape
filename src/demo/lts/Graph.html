@@ -12,29 +12,54 @@
 <script src="lib/cytoscape-dagre.js"></script>
 <script src="lib/racytoscal1.js"></script>
 <style>
-//#cy {
-//  width: 600px;
-//  height: 600px;
-//  display: block;
-//}
 #cy {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 999;
-}
+    width: 800px;
+    height: 1200px;
+    display: block;
+    }
+
+/* #cy { */
+/*   position: absolute; */
+/*   left: 0; */
+/*   top: 0; */
+/*   right: 0; */
+/*   bottom: 0; */
+/*   z-index: 999; */
+/* } */
 title {display:block}
 </style>
 </head>
 <body onbeforeunload="handleOnClose()">
+<table>
+<tr>
+<td>
 <div id='cy'>
+<script src="src/demo/lts/Graph.js"></script>
 <script src="init"></script>
 <script src="lib/racytoscal2.js"></script>
 <script>
 layout.run();
 </script>
 </div>
+</td>
+<td id = "next">
+<script>
+var src = cy.$('#'+current);
+var eles = src.neighborhood('edge');
+var i = 0;
+var labels = [];
+var nods= [];
+for (;i<eles.length;i++) { 
+	if (!eles[i].source().same(src)) {continue;}
+	var label = eles[i].style("label");
+	var node = eles[i].target().style("label");
+	labels.push(label);
+	nods.push(node);
+    }
+step("next", {buttons:labels,nods:nods});
+</script>
+</td>
+</tr>
+</table>
 </body>
 </html>

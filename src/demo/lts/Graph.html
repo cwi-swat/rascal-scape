@@ -43,23 +43,28 @@ layout.run();
 </div>
 </td>
 <td id = "next">
-<script>
-var src = cy.$('#'+current);
-var eles = src.neighborhood('edge');
-var i = 0;
-var labels = [];
-var nods= [];
-for (;i<eles.length;i++) { 
-	if (!eles[i].source().same(src)) {continue;}
-	var label = eles[i].style("label");
-	var node = eles[i].target().style("label");
-	labels.push(label);
-	nods.push(node);
-    }
-step("next", {buttons:labels,nods:nods});
-</script>
 </td>
 </tr>
 </table>
+<script>
+function nextStep(current) {
+   var src = cy.$('#'+current);
+   var eles = src.neighborhood('edge');
+   var i = 0;
+   var labels = [];
+   var nods= [];
+   var ids = [];
+   for (;i<eles.length;i++) { 
+	  if (!eles[i].source().same(src)) {continue;}
+	  var label = eles[i].style("label");
+	  var node = eles[i].target().id();
+	  labels.push(label);
+	  nods.push(node);
+	  ids.push(eles[i].source().id()+"_"+eles[i].target().id());
+      }
+   step("next", {buttons:labels,nods:nods,ids:ids});
+   }
+  nextStep(current);
+</script>
 </body>
 </html>

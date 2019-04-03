@@ -28,10 +28,19 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                   ;
    return <eles, styles>;
    }
+   
+ 
 
    
-  public void main() {
+ public void main() {
        int current = 0;
+       str nextStep(str path) {
+          list[str] args  = split("/", path);
+          current = toInt(args[1]); 
+          Style styl = style(backgroundColor="red");
+          str r = toString(<"node#<current>", styl>);      
+          return r;
+          }
        tuple[list[Ele], lrel[str, Style]] eles = readAut(|file:///Users/bertl/abp.aut|);
        lrel[str, Style] styles = [<"edge", style(  
                  arrowShape=[
@@ -60,6 +69,6 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
        //breadthfirst("")
        // concentric("concentric:level, minNodeSpacing:50")
        dagre("nodeSep:350,ranker:\"network-simplex\",rankDir:\"TB\", edgeSep:300")  
-       ),extra="var current=0;", click = str(str id) {println("<id>");return "\"ok\"";});
-       openBrowser(|project://racytoscal/src/demo/lts/Graph.html|, output);  
+       ),extra="var current=0;");
+       openBrowser(|project://racytoscal/src/demo/lts/Graph.html|, output, click = nextStep);  
        }

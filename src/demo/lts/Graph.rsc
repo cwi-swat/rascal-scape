@@ -2,7 +2,6 @@ module demo::lts::Graph
 import Prelude;
 import Racytoscal;
 
-
 tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
    list[str] lines = tail(readFileLines(file));
    list[tuple[str from, str lab, str to]] edges = [];
@@ -29,19 +28,21 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
    return <eles, styles>;
    }
    
- 
-
-   
  public void main() {
        int current = 0;
        str nextStep(str path) {
           list[str] args  = split("/", path);
-          current = toInt(args[1]); 
-          Style styl = style(backgroundColor="red");
-          str r = toString(<"node#<current>", styl>);      
+          Style style1 = style(backgroundColor="antiquewhite");
+          Style style2 = style(backgroundColor="red");
+          int current0 = current;
+          current = toInt(args[1]);  
+          str r = (args[0]=="init")?
+                  Racytoscal::toString([<"node#<current>", style2>])   
+                 :Racytoscal::toString([<"node#<current0>", style1>,<"node#<current>", style2>]);   
+          // println(r);   
           return r;
           }
-       tuple[list[Ele], lrel[str, Style]] eles = readAut(|file:///Users/bertl/abp.aut|);
+       tuple[list[Ele], lrel[str, Style]] eles = readAut(|project://racytoscal/data/buf.aut|);
        lrel[str, Style] styles = [<"edge", style(  
                  arrowShape=[
                      ArrowShape::triangle(
@@ -56,9 +57,9 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                )
                   >,
                   <"node", style(
-                    width = "5px",
-                    height= "5px", 
-                     shape=ellipse(),
+                     width = "5px"
+                    ,height= "5px" 
+                     ,shape=ellipse(),
                     borderWidth = 2, borderColor="brown"
                    ,padding = 10 
                    ,backgroundColor="antiquewhite"
@@ -66,9 +67,9 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                   ]+eles[1];
        // println(eles[1]);
        str output = genScript("cy", cytoscape(elements= eles[0], styles= styles,\layout = 
-       //breadthfirst("")
-       // concentric("concentric:level, minNodeSpacing:50")
-       dagre("nodeSep:350,ranker:\"network-simplex\",rankDir:\"TB\", edgeSep:300")  
+       //dagre("nodeSep:350,ranker:\"network-simplex\",rankDir:\"TB\", edgeSep:300")  
+       circle("")
        ),extra="var current=0;");
-       openBrowser(|project://racytoscal/src/demo/lts/Graph.html|, output, click = nextStep);  
+       openBrowser(|project://racytoscal/src/demo/lts/Graph.html|, output, click = nextStep
+       ,load = nextStep);  
        }

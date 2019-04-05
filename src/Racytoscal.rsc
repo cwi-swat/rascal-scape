@@ -426,11 +426,11 @@ str toString(Style arg) {
     return intercalate(",", r);
     }
 
-str toString(tuple[str selector, Style style] d) = "{\"selector\": \"<d.selector>\", \"style\":{<toString(d.style)>}}";
+// str toString(tuple[str selector, Style style] d) = "{\"selector\": \"<d.selector>\", \"style\":{<toString(d.style)>}}";
     
 str getStyleArgument(str selector, Style argument) {
     str r = toString(argument);
-    return isEmpty(r)?"":"{selector:\'<selector>\', style: {
+    return isEmpty(r)?"":"{\"selector\":\"<selector>\", \"style\": {
         '<r>
         }
      }
@@ -444,18 +444,21 @@ str getElStyle(Ele ele) {
        case v:e_(str id, str source, str target): return getStyleArgument("edge#<id>", v.style);
        }
     }
+    
+public str toJSON(list[tuple[str selector, Style style]] styles) = toString(styles);
 
 str toString(list[tuple[str selector, Style style]] styles) {
+    // println("ToString");
     list[str] r = [getStyleArgument(t.selector, t.style)|
        tuple[str selector, Style style] t<-styles];
     r = [t|str t<-r,!isEmpty(t)];
-    return intercalate(",", r);
+    return "["+intercalate(",", r)+"]";
     }
     
 str getElStyles(list[Ele] eles) {
     list[str] r = [getElStyle(ele)| Ele ele<-eles];
     r = [t|str t<-r,!isEmpty(t)];
-    return intercalate(",", r);
+    return "["+intercalate(",", r)+"]";
     }
     
 str getNodeElement(str id) = 
@@ -495,7 +498,7 @@ str getLayout(Layout \layout, loc extra= |std:///|) {
         "{name:\'<getName(\layout)>\',<\layout.options>}";
     str r = "var options = <options>;\n";
     r+="var layout = cy.layout(options);\n";
-    // r+="layout.run();";
+    r+="layout.run();";
     return r;
     }
  
@@ -503,7 +506,7 @@ public str genScript(str container, Cytoscape cy, str extra ="") {
   str r =  
   "var cy = cytoscape({
   'container: document.getElementById(\'<container>\'), 
-  'style: [<toString(cy.styles)+","+getElStyles(cy.elements)>],
+  'style: <toString(cy.styles)>.concat(<getElStyles(cy.elements)>),
   'elements: [<getElements(cy.elements)>]
   '
   '});
@@ -519,6 +522,7 @@ public loc openBrowser(loc html, str script
     ,str(str id) tapend = str(str id){return "";}
     ,str(str id) tap = str(str id){return "";}
     ,str(str id) click = str(str id){return "";}
+    ,str(str id) load = str(str id){return "";}
     ) {
   	loc site = |http://localhost:8081|;
   	loc base = |project://racytoscal|;
@@ -527,9 +531,14 @@ public loc openBrowser(loc html, str script
         return response(tap(id));
       }
       
-      Response page(get(/^\/click\/<id:\S+>$/)) { 
+      Response page(get(/^\/click\/<path:\S+>$/)) { 
         // println("HELP0:<id>");
-        return response(click(id));
+        return response(click(path));
+      }
+      
+      Response page(get(/^\/load\/<path:\S+>$/)) { 
+        // println("HELP0:<id>");
+        return response(load(path));
       }
       
       Response page(get(/^\/tapstart\/<id:\S+>$/)) { 

@@ -10,14 +10,23 @@
 <script src="lib/cytoscape.umd.js"></script>
 <script src="lib/dagre.min.js"></script>
 <script src="lib/cytoscape-dagre.js"></script>
-<script src="lib/racytoscal1.js"></script>
+<script src="lib/racytoscal.js"></script>
+<script src="src/demo/lts/Graph.js"></script>
 <style>
 #cy {
     width: 800px;
     height: 1200px;
     display: block;
+    border: 1px solid powderblue;
     }
-
+td{
+ vertical-align: top
+  }
+button {
+   height:50px;
+   width:100px;
+   /*border-radius:10px;*/
+   }
 /* #cy { */
 /*   position: absolute; */
 /*   left: 0; */
@@ -34,37 +43,12 @@ title {display:block}
 <tr>
 <td>
 <div id='cy'>
-<script src="src/demo/lts/Graph.js"></script>
 <script src="init"></script>
-<script src="lib/racytoscal2.js"></script>
-<script>
-layout.run();
-</script>
 </div>
 </td>
 <td id = "next">
 </td>
 </tr>
 </table>
-<script>
-function nextStep(current) {
-   var src = cy.$('#'+current);
-   var eles = src.neighborhood('edge');
-   var i = 0;
-   var labels = [];
-   var nods= [];
-   var ids = [];
-   for (;i<eles.length;i++) { 
-	  if (!eles[i].source().same(src)) {continue;}
-	  var label = eles[i].style("label");
-	  var node = eles[i].target().id();
-	  labels.push(label);
-	  nods.push(node);
-	  ids.push(eles[i].source().id()+"_"+eles[i].target().id());
-      }
-   step("next", {buttons:labels,nods:nods,ids:ids});
-   }
-  nextStep(current);
-</script>
 </body>
 </html>

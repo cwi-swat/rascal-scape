@@ -55,13 +55,13 @@ import util::Math;
  str callbackTapstart(str id) {
     Style styl = style(
        textBackgroundOpacity=1, textBackgroundColor="lightgrey", textBackgroundPadding=10, textOpacity=1, color="black");
-    str r = toString(<"node#<id>", styl>);
+    str r = Racytoscal::toString([<"node#<id>", styl>]);
     return r;
     }
     
 str callbackTapend(str id) {
     Style styl = style(textBackgroundOpacity=0, textOpacity=0, color="red");
-    str r = toString(<"node#<id>", styl>);
+    str r = Racytoscal::toString([<"node#<id>", styl>]);
     return r;
     }
  

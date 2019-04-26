@@ -10,31 +10,20 @@
 <script src="lib/cytoscape.umd.js"></script>
 <script src="lib/dagre.min.js"></script>
 <script src="lib/cytoscape-dagre.js"></script>
-<script src="lib/racytoscal1.js"></script>
+<script src="lib/racytoscal.js"></script>
 <style>
-//#cy {
-//  width: 600px;
-//  height: 600px;
-//  display: block;
-//}
 #cy {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 999;
-}
+    width: 600px;
+    height: 600px;
+    display: block;
+    border: 1px solid powderblue;
+    }
 title {display:block}
 </style>
 </head>
 <body onbeforeunload="handleOnClose()">
 <div id='cy'>
 <script src="init"></script>
-<script src="lib/racytoscal2.js"></script>
-<script>
-layout.run();
-</script>
 </div>
 </body>
 </html>

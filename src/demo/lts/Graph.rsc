@@ -21,9 +21,13 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
          //   )
           )
             |str \node<-nodes]
-          +[e_("<edge.from>_<edge.to>", edge.from, edge.to, style=style(label=label(edge.lab),
-               curveStyle= edge.lab=="c6(1)"?
-                  unbundledBezier(controlPointDistances="250"):straight()))|tuple[str from, str lab , str to] edge<-edges]
+          +[e_("<edge.from>_<edge.lab>_<edge.to>", edge.from, edge.to, style=style(label=label(edge.lab),
+               curveStyle= (edge.lab=="blocked" || edge.lab=="unblock")
+                  ?unbundledBezier(controlPointDistances="45")
+                  :
+                  (edge.lab=="deposit" || edge.lab=="interest"||edge.lab=="withdraw")
+                  ?bezier(controlPointStepSize="150")
+                  :straight()))|tuple[str from, str lab , str to] edge<-edges]
                   ;
    return <eles, styles>;
    }
@@ -42,11 +46,14 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
           // println(r);   
           return r;
           }
-       tuple[list[Ele], lrel[str, Style]] eles = readAut(|project://racytoscal/data/buf.aut|);
+       tuple[list[Ele], lrel[str, Style]] eles = readAut(|project://racytoscal/data/bank.aut|);
        lrel[str, Style] styles = [<"edge", style(  
                  arrowShape=[
                      ArrowShape::triangle(
-                     arrowScale=2, arrowColor="red", pos = target())]
+                      arrowScale=2
+                     ,arrowColor="red", pos = target()
+                     )
+                     ]
                      ,lineColor="blue"
                      ,textBackgroundOpacity=1
                      ,textBackgroundColor="whitesmoke"
@@ -54,21 +61,23 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                      ,textOpacity=1
                      ,color="black"
                      ,fontSize="12pt"
+                     , loopDirection = "-90deg"
+                     , loopSweep = "-45deg"
                )
                   >,
                   <"node", style(
-                     width = "5px"
-                    ,height= "5px" 
-                     ,shape=ellipse(),
-                    borderWidth = 2, borderColor="brown"
+                    width = "5px"
+                   ,height= "5px" 
+                   ,shape=ellipse()
+                   ,borderWidth = 2, borderColor="brown"
                    ,padding = 10 
                    ,backgroundColor="antiquewhite"
                   )>
                   ]+eles[1];
        // println(eles[1]);
        str output = genScript("cy", cytoscape(elements= eles[0], styles= styles,\layout = 
-       //dagre("nodeSep:350,ranker:\"network-simplex\",rankDir:\"TB\", edgeSep:300")  
-       circle("")
+       dagre("nodeSep:150,ranker:\"network-simplex\",rankDir:\"TB\", edgeSep:150,rankSep:200")  
+       // circle("")
        ),extra="var current=0;");
        openBrowser(|project://racytoscal/src/demo/lts/Graph.html|, output, click = nextStep
        ,load = nextStep);  

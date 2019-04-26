@@ -1,0 +1,8 @@
+aaaaa
+(0,"openAccount",1)
+(1,"withdraw",1)
+(1,"interest",1)
+(1,"deposit",1)
+(1,"blocked",2)
+(2,"unblock",1)
+(1,"close",3)

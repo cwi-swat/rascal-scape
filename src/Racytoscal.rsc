@@ -45,7 +45,9 @@ public data Style = style(
               num textOpacity=-1,
               str fontSize="",
               str fontStyle="",
-              str fontWeight=""
+              str fontWeight="",
+              str loopDirection="",
+              str loopSweep = ""
               );
          
 public data Cytoscape = cytoscape(
@@ -103,7 +105,7 @@ public data NodeShape
  public data EdgeShape
     = haystack()
     | straight()
-    | bezier()
+    | bezier(str controlPointDistances="", str controlPointWeight="", str controlPointStepSize="")
     | unbundledBezier(str controlPointDistances="", 
         str controlPointWeights="") 
     | segments()
@@ -320,7 +322,16 @@ str toString(Label arg) {
             if ((arg.controlPointWeights?))
                r+=addKeyValue("control-point-weights", arg.controlPointWeights);
             }
+         case bezier(): {
+            if ((arg.controlPointDistances?))
+               r+=addKeyValue("control-point-distances", arg.controlPointDistances);
+            if ((arg.controlPointWeight?))
+               r+=addKeyValue("control-point-weight", arg.controlPointWeight);
+            if ((arg.controlPointStepSize?))
+               r+=addKeyValue("control-point-step-size", arg.controlPointStepSize);
+             }
          }
+         
     r+= addKeyValue("curve-style", getName1(arg));
     return intercalate(",", r);
     }
@@ -423,6 +434,10 @@ str toString(Style arg) {
     r+= addKeyValue("font-style", arg.fontStyle);
     if ((arg.fontWeight?))
     r+= addKeyValue("font-weight", arg.fontWeight);
+    if ((arg.loopDirection?))
+    r+= addKeyValue("loop-direction", arg.loopDirection);
+    if ((arg.loopSweep?))
+    r+= addKeyValue("loop-sweep", arg.loopSweep);
     return intercalate(",", r);
     }
 
@@ -555,6 +570,7 @@ public loc openBrowser(loc html, str script
       }
       
       Response page(get(/^\/init$/)) { 
+        // println("INIT");
 	    return response(script);
       }
      

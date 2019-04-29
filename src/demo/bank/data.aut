@@ -6,3 +6,4 @@ aaaaa
 (1,"blocked",2)
 (2,"unblock",1)
 (1,"close",3)
+(3,"restart",0)

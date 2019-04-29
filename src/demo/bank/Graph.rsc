@@ -1,6 +1,7 @@
-module demo::lts::Graph
+module demo::bank::Graph
 import Prelude;
 import Racytoscal;
+import util::Math;
 
 tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
    list[str] lines = tail(readFileLines(file));
@@ -33,20 +34,21 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
    }
    
  public void main() {
-       int current = 0;
+       tuple[int pt, int account] current = <0, -1>;
        str nextStep(str path) {
           list[str] args  = split("/", path);
           Style style1 = style(backgroundColor="antiquewhite");
           Style style2 = style(backgroundColor="red");
-          int current0 = current;
-          current = toInt(args[1]);  
+          tuple[int pt, int account] current0 = current;
+          current.pt = toInt(args[1]); 
+          current.account = (current.pt==0||current.pt==3)?-1:arbInt(100000); 
           str r = (args[0]=="init")?
-                  Racytoscal::toString([<"node#<current>", style2>])   
-                 :Racytoscal::toString([<"node#<current0>", style1>,<"node#<current>", style2>]);   
+                  Racytoscal::toString([<"node#<current.pt>", style2>])   
+                 :Racytoscal::toString([<"node#<current0.pt>", style1>,<"node#<current.pt>", style2>]);   
           // println(r);   
-          return r;
+          return "{\"state\":{\"loc\":<current.pt>, \"account\":<current.account>}, \"styles\":<r>}";
           }
-       tuple[list[Ele], lrel[str, Style]] eles = readAut(|project://racytoscal/data/bank.aut|);
+       tuple[list[Ele], lrel[str, Style]] eles = readAut(|project://racytoscal/src/demo/bank/data.aut|);
        lrel[str, Style] styles = [<"edge", style(  
                  arrowShape=[
                      ArrowShape::triangle(
@@ -61,8 +63,8 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                      ,textOpacity=1
                      ,color="black"
                      ,fontSize="12pt"
-                     , loopDirection = "-90deg"
-                     , loopSweep = "-45deg"
+                     ,loopDirection = "-90deg"
+                     ,loopSweep = "-45deg"
                )
                   >,
                   <"node", style(
@@ -76,9 +78,9 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                   ]+eles[1];
        // println(eles[1]);
        str output = genScript("cy", cytoscape(elements= eles[0], styles= styles,\layout = 
-       dagre("nodeSep:150,ranker:\"network-simplex\",rankDir:\"TB\", edgeSep:150,rankSep:200")  
+       dagre("nodeSep:50,ranker:\"network-simplex\",rankDir:\"TB\", edgeSep:50,rankSep:200")  
        // circle("")
-       ),extra="var current=0;");
-       openBrowser(|project://racytoscal/src/demo/lts/Graph.html|, output, click = nextStep
+       ),extra="var current={\'loc\':0,\'account\':-1};");
+       openBrowser(|project://racytoscal/src/demo/bank/Graph.html|, output, click = nextStep
        ,load = nextStep);  
        }

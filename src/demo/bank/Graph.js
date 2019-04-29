@@ -7,18 +7,23 @@ function level(node) {var d = parseInt(node.id());
         return d<26?1:2;
         }
 
+function getData(s) {
+	 var r = fromRascal(s);
+	 current.loc  = r.state.loc;
+	 current.account = r.state.account;
+	 nextStep(current);
+}
+
 function choose(to) {return function(evt)
 	                    {
 	                    var ele = evt.target;
 	                    var id = ele.getAttribute("id");
-	                    httpGet(fromRascal,"click/"+id+"/"+ to);
-	                    nextStep(to);
+	                    httpGet(getData,"click/"+id+"/"+ to+"/"+"-1");            
 	                    };
 	                }
 
 window.addEventListener("load", function(evt) {
-	                   httpGet(fromRascal,"load/init/"+current);
-	                   nextStep(current);
+	                   httpGet(getData,"load/init/"+current.loc+"/"+current.account);
                        });
 
 // Create buttons to choose between outgoing states,
@@ -36,6 +41,12 @@ function step(id, next) {
 		button.innerHTML=next.buttons[i];
 		td.appendChild(button);
 		tr.appendChild(td);
+		if (i==0)
+			if (current.account>0) {
+			  td = document.createElement("td");
+			  td.innerHTML="<table class='account-table'><tr><td class='account account0'>account</td><td class='account account1'>"+current.account+"</td></tr></table>";
+			  tr.appendChild(td);
+		     }
 		table.appendChild(tr);
 	}
 	var root = document.getElementById(id);
@@ -46,7 +57,7 @@ function step(id, next) {
 }
 
 function nextStep(current) {
-	   var src = cy.$('#'+current);
+	   var src = cy.$('#'+current.loc);
 	   var eles = src.neighborhood('edge');
 	   var i = 0;
 	   var labels = [];

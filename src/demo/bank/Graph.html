@@ -17,7 +17,7 @@
 td{
  vertical-align: top
   }
-button {
+.step-button {
    height:50px;
    width:100px;
    /*border-radius:10px;*/
@@ -29,23 +29,45 @@ button {
     border: 1px solid powderblue;
     }
     
- .account-table {
+ #account-table {
     border-collapse:collapse;
+    visibility:hidden;
     }
-
-.account0 {
+.label {
    font-weight: bold
    }
    
- .account1 {
+ .value {
    font-style: italic
    }
     
-.account {
+.cell {
    border: 1px solid gray;
    background-color:antiquewhite;
    padding: 15px
    }
+   
+.enter-button {
+   height:50px;
+   width:100px;
+   }
+   
+input {
+    line-height: 20px;
+}
+   
+#enter {
+   font-size:20px;
+   height:70px;
+   visibility:hidden;
+   }
+   
+input.disabled {
+    pointer-events:none;
+    color:#AAA;
+    background:#F5F5F5;
+}
+
 title {display:block}
 </style>
 <link rel="icon" href="data:,">
@@ -62,5 +84,25 @@ title {display:block}
 </td>
 </tr>
 </table>
+<table id='account-table'><tr> 
+<td class='label cell'>account</td> 
+<td class='value cell' id='account-cell'/>
+<td class='label cell'>interest</td>
+<td class='value cell' id='interest-cell'/>
+<td class='label cell'>amount</td>
+<td class='value cell' id='amount-cell'/>
+</tr>
+</table>
+<div id="enter">
+    <span id = "interest-span">
+    <label for="interest-field">Interest: </label>
+    <input type="text" id="interest-field"/>
+    </span>
+    <span id = "amount-span">
+    <label for="amount-field">Amount: </label>
+    <input height = "30" type="text" id="amount-field"/>
+    </span>
+    <button id="enter-button">enter</button>
+  </div>
 </body>
 </html>

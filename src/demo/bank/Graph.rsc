@@ -16,11 +16,7 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
           substring(e[1],0, 1)=="s" || substring(e[1],0, 1)=="r"];
    // println(table);
    list[str] nodes = dup(domain(edges)+[v[1]|v<-range(edges)]);
-   list[Ele] eles = [n_(\node
-        //, style=style(
-         // , label=label(\node, vAlign="center")
-         //   )
-          )
+   list[Ele] eles = [n_(\node)
             |str \node<-nodes]
           +[e_("<edge.from>_<edge.lab>_<edge.to>", edge.from, edge.to, style=style(label=label(edge.lab),
                curveStyle= (edge.lab=="blocked" || edge.lab=="unblock")
@@ -43,29 +39,28 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
           str lab  ="";
           tuple[str lab, int pt, int account, int interest, int amount] current0 = current;
           if (args[1]!="none") {
-             current.lab = args[0];
-             lab  = current.lab;
-             current.pt = toInt(args[1]);     
-             if (lab=="openAccount") current.account = arbInt(100000);
-             if (lab=="close") current.account = -1;
-             r = (args[0]=="init")?
+             current.lab = lab = args[0];
+             current.pt = toInt(args[1]); 
+             switch (lab) {
+                 case "openAccount": current.account = arbInt(100000);
+                 case "close": current.account = -1;
+                 case "interest": current.amount+=floor((current.amount*current.interest)/100);
+                 }    
+             r = (lab=="init")?
                   Racytoscal::toString([<"node#<current.pt>", style2>])   
                  :Racytoscal::toString([<"node#<current0.pt>", style1>,<"node#<current.pt>", style2>]);
-             if (lab=="interest") {
-                 current.amount+=floor((current.amount*current.interest)/100);
-                 }
              }  
           else {
             lab = current0.lab;
-          if (lab=="openAccount") {
-                  current.interest = toInt(args[3]);
-                  current.amount = toInt(args[4]);
-             } else
-             if (lab=="deposit")
-                  current.amount += toInt(args[4]);
-             else
-             if (lab=="withdraw")  current.amount -= toInt(args[4]);
-             }   
+            switch (lab) {
+                case "openAccount": {
+                      current.interest = toInt(args[3]);
+                      current.amount = toInt(args[4]);
+                      }
+                case "deposit":  current.amount += toInt(args[4]);
+                case "withdraw": current.amount -= toInt(args[4]); 
+                } 
+           } 
           str result = "{\"state\":{\"lab\":\"<lab>\", \"loc\":<current.pt>, \"account\":<current.account>,\"interest\":<current.interest>,\"amount\":<current.amount>} <if(!isEmpty(r)){>,\"styles\":<r><}>}";
           // println(result);
           return result;
@@ -98,7 +93,6 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                    ,backgroundColor="antiquewhite"
                   )>
                   ]+eles[1];
-       // println(eles[1]);
        str output = genScript("cy", cytoscape(elements= eles[0], styles= styles,\layout = 
        dagre("nodeSep:50,ranker:\"network-simplex\",rankDir:\"TB\", edgeSep:50,rankSep:200")  
        // circle("")

@@ -12,6 +12,9 @@ public data Ele(Position position= <-1, -1>)  = n_(str id, Style style = style()
          
 public data Style = style(
               str backgroundColor="", num backgroundOpacity=-1,
+              str backgroundFill="", num backgroundBlacken= 0,
+              str backgroundGradientStopColors="",str backgroundGradientStopPositions="", 
+              str backgroundGradientDirection="",
               str borderColor= "", int borderWidth=-1,
               int padding=-1, int width=-1, str height = -1,
               str lineColor="",
@@ -370,6 +373,16 @@ str toString(Style arg) {
     r+= addKeyValue("background-color", arg.backgroundColor);
     if ((arg.backgroundOpacity?))
     r+= addKeyNumValue("background-opacity", arg.backgroundOpacity);
+    if ((arg.backgroundFill?))
+    r+= addKeyValue("background-fill", arg.backgroundFill);
+    if ((arg.backgroundBlacken?))
+    r+= addKeyNumValue("background-blacken", arg.backgroundBlacken);
+    if ((arg.backgroundGradientStopColors?))
+    r+= addKeyValue("background-gradient-stop-colors", arg.backgroundGradientStopColors);
+    if ((arg.backgroundGradientStopPositions?))
+    r+= addKeyValue("background-gradient-stop-positions", arg.backgroundGradientStopPositions);
+    if ((arg.backgroundGradientDirections?))
+    r+= addKeyValue("background-gradient-directions", arg.backgroundGradientDirections);
     if ((arg.borderColor?))
     r+= addKeyValue("border-color", arg.borderColor);
     if ((arg.borderWidth?))

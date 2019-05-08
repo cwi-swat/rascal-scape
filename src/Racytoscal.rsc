@@ -6,7 +6,7 @@ import util::Webserver;
 
 alias Position = tuple[int x, int y];
 
-public data Ele(Position position= <-1, -1>)  = n_(str id, Style style = style())
+public data Ele = n_(str id, Style style = style(), Position position= <-1, -1>)
          | e_(str id, str source, str target, Style style = style())
          ;
          
@@ -509,7 +509,7 @@ str getElement(Ele ele) {
        case v:n_(str id): r+=getNodeElement(id);
        case v:e_(str id, str source, str target): r+=getEdgeElement(id, source, target);
        }
-    if (ele.position?) 
+    if (n_(_):=ele && ele.position?) 
        r+=",position: {x: <ele.position.x>, y:<ele.position.y>}";
     r+= "}\n";
     return r;
@@ -521,13 +521,13 @@ str getElements(list[Ele] eles) {
     }
  
   
-str getLayout(Layout \layout, loc extra= |std:///|) {
+str getLayout(Layout \layout) {
     str options = (isEmpty(\layout.options))?"{name:\'<getName(\layout)>\'}":
         "{name:\'<getName(\layout)>\',<\layout.options>}";
-    str r = "var options = <options>;\n";
-    r+="var layout = cy.layout(options);\n";
-    r+="layout.run();";
-    return r;
+    //str r = "var options = <options>;\n";
+    // r+="var layout = cy.layout(options);\n";
+    //r+="layout.run();";
+    return options;
     }
  
 public str genScript(str container, Cytoscape cy, str extra ="") {
@@ -535,10 +535,9 @@ public str genScript(str container, Cytoscape cy, str extra ="") {
   "var cy = cytoscape({
   'container: document.getElementById(\'<container>\'), 
   'style: <toString(cy.styles)>.concat(<getElStyles(cy.elements)>),
-  'elements: [<getElements(cy.elements)>]
-  '
+  'elements: [<getElements(cy.elements)>],
+  'layout: <getLayout(cy.\layout)>
   '});
-  '<getLayout(cy.\layout)>;
   '<extra>
   "
   ;

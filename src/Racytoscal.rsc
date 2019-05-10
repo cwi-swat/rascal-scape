@@ -150,7 +150,7 @@ public data TaxiDirection
     ;
     
 public data Label
-    = label(str \value, str hAlign = "center", str vAlign="center")
+    = label(str \value, str hAlign = "center", str vAlign="center", int marginX=0, int marginY=0)
     | sourceLabel(str \value, int offset = 0)
     | targetLabel(str \value, int offset = 0)
     | defaultLabel()
@@ -290,18 +290,22 @@ str toString(Label arg) {
                r+=addKeyValue("text-halign", arg.hAlign);
             if ((arg.vAlign?))
                r+=addKeyValue("text-valign", arg.vAlign);
+             if ((arg.marginX?))
+               r+=addKeyValue("text-margin-x", arg.marginX);
+            if ((arg.marginY?))
+               r+=addKeyValue("text-margin-y", arg.marginY);
             }
        case sourceLabel(str \value): {
             if (isEmpty(\value)) return "";
             r+=addKeyValue("source-label", \value);
             if ((arg.offset?))
-            r+=addKeyValue("offset", arg.offset);
+            r+=addKeyValue("source-text-offset", arg.offset);
             }
        case targetLabel(str \value): {
             if (isEmpty(\value)) return "";
             r+=addKeyValue("target-label", \value);
              if ((arg.offset?))
-            r+=addKeyValue("offset", arg.offset);
+            r+=addKeyValue("target-text-offset", arg.offset);
             }
          }
     

@@ -8,35 +8,41 @@ list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
      
 str pickColor() {
     int d = arbInt(size(colors));
-    return "<colors[d]> light<colors[d]>";
+    return "<colors[d]>";
     }
 
 public void main() {
-    int n = 5000;
-    list[Ele]  nodes = [n_("TEST<i>"
-         , position=<arbInt(400), arbInt(400)>
-         , style = style(backgroundGradientStopColors= pickColor())
+    int n = 3;
+    str onTap(str path) {
+       list[tuple[str, Style]] r = [];
+       for (int i<-[0..n]) {
+          int z = arbInt(400);
+          r+=<"#<i>", style(
+             width="<z>", height="<z>", borderColor=pickColor()
+             )>;
+         }
+         str result = Racytoscal::toString(r);
+         return  "{\"styles\": <result>, \"layout\":\"preset\"}";        
+    }
+    list[Ele]  nodes = [n_("<i>"
+         , position=<200, 200>
+         , style = style(
+             borderColor=pickColor()
+             ,width="<100*(i+1)>", height="<100*(i+1)>"
+         )
         )|int i<-[0..n]];
-    // list[Ele] edges = [*[e_("<i>_<j>", "<i>", "<j>")|int j<-[0..i]]|int i<-[0..n]];
-    println(pickColor());
+    // list[Ele] edges = [e_("<i>_<i+1>", "<i>", "<i+1>")|int i<-[0..n-1]];
     str output = genScript("cy", cytoscape(
         elements= nodes
        ,styles = [
                   <"node", style(
-                    width = "5px",
-                    height= "5px", 
-                    // backgroundColor="antiquewhite",
                     shape=ellipse(),
-                    backgroundFill="radial-gradient",
-                    backgroundGradientStopPositions="0% 20% 25% 30% 40% 50% 60% 70% 80& 90% 100%",
-                    backgroundOpacity=1.0,
-                    borderWidth = 0 , borderColor="antiquewhite"
-                   // ,padding = 10 
-                   // ,\label=\label("Test", vAlign="center")
+                    backgroundOpacity=0.0,
+                    borderWidth = 4              
                   )>
                   ]
          ,\layout = preset("")
         )
       ); 
-    openBrowser(|project://racytoscal/src/demo/preset/Graph.html|, output);  
+    openBrowser(|project://racytoscal/src/demo/preset/Graph.html|, output,tap = onTap);  
     }

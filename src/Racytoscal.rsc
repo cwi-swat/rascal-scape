@@ -568,7 +568,6 @@ public loc openBrowser(loc html, str script
       }
       
       Response page(get(/^\/load\/<path:\S+>$/)) { 
-        // println("HELP0:<id>");
         return response(load(path));
       }
       

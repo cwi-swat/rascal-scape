@@ -53,7 +53,7 @@ public void main() {
                     backgroundGradientStopPositions="0% 20% 25% 30% 40% 50% 60% 70% 80& 90% 100%",
                     backgroundGradientStopColors= "lightsteelblue steelblue",
                     backgroundOpacity=1.0,
-                    borderWidth = 0 , borderColor="antiquewhite"
+                    borderWidth = "0" , borderColor="antiquewhite"
                   )>
                   , <"edge", style(lineColor="khaki"
                      ,textBackgroundColor="whitesmoke", textBackgroundPadding=1

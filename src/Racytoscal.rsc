@@ -15,8 +15,8 @@ public data Style = style(
               str backgroundFill="", num backgroundBlacken= 0,
               str backgroundGradientStopColors="",str backgroundGradientStopPositions="", 
               str backgroundGradientDirection="",
-              str borderColor= "", int borderWidth=-1,
-              int padding=-1, int width=-1, str height = -1,
+              str borderColor= "", str borderWidth="",
+              str padding= "",
               str lineColor="",
               str lineFill= "",
               str lineCap="",
@@ -42,7 +42,7 @@ public data Style = style(
               num textBackgroundOpacity=-1, 
               num textOutlineOpacity=-1,
               num textBorderOpacity=0.5, 
-              int textBorderWidth=-1, 
+              str textBorderWidth="", 
               int textBackgroundPadding =0,
               str textBackgroundShape="", 
               num textOpacity=-1,
@@ -609,4 +609,12 @@ public loc openBrowser(loc html, str script
             }
        }
     }
+    
+ public str executeInBrowser(lrel[str, Style] styles=[], str \layout="", str extra="{\"extra\":\"none\"}") {
+       return 
+       "{<extra[1..-1]>
+       '<if((\layout?)){>,\"layout\":\"<\layout>\"<}>
+       '<if((\styles?)){>,\"styles\":<toString(styles)><}>
+       '}"; 
+       }
    

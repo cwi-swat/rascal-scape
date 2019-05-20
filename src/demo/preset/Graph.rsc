@@ -21,8 +21,7 @@ public void main() {
              width="<z>", height="<z>", borderColor=pickColor()
              )>;
          }
-         str result = Racytoscal::toString(r);
-         return  "{\"styles\": <result>, \"layout\":\"preset\"}";        
+         return executeInBrowser(styles=r, \layout="preset");       
     }
     list[Ele]  nodes = [n_("<i>"
          , position=<200, 200>
@@ -38,7 +37,7 @@ public void main() {
                   <"node", style(
                     shape=ellipse(),
                     backgroundOpacity=0.0,
-                    borderWidth = 4              
+                    borderWidth = "4"              
                   )>
                   ]
          ,\layout = preset("")

@@ -32,13 +32,12 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
  public void main() {
        tuple[str lab, int pt, int account, int interest, int amount] current = <"start", 0, -1, -1, -1>;
        str nextStep(str path) {
-          str r = "";
           list[str] args  = split("/", path);
           Style style1 = style(backgroundColor="antiquewhite");
           Style style2 = style(backgroundColor="red");
           str lab  ="";
           tuple[str lab, int pt, int account, int interest, int amount] current0 = current;
-          if (args[1]!="none") {
+          if (size(args)>=2 && args[1]!="none") {
              current.lab = lab = args[0];
              current.pt = toInt(args[1]); 
              switch (lab) {
@@ -46,9 +45,6 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                  case "close": current.account = -1;
                  case "interest": current.amount+=floor((current.amount*current.interest)/100);
                  }    
-             r = (lab=="init")?
-                  Racytoscal::toString([<"node#<current.pt>", style2>])   
-                 :Racytoscal::toString([<"node#<current0.pt>", style1>,<"node#<current.pt>", style2>]);
              }  
           else {
             lab = current0.lab;
@@ -60,9 +56,9 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                 case "deposit":  current.amount += toInt(args[4]);
                 case "withdraw": current.amount -= toInt(args[4]); 
                 } 
-           } 
-          str result = "{\"state\":{\"lab\":\"<lab>\", \"loc\":<current.pt>, \"account\":<current.account>,\"interest\":<current.interest>,\"amount\":<current.amount>} <if(!isEmpty(r)){>,\"styles\":<r><}>}";
-          // println(result);
+           }    
+          str result = executeInBrowser(extra="{\"state\":{\"lab\":\"<lab>\", \"loc\":<current.pt>, \"account\":<current.account>,\"interest\":<current.interest>,\"amount\":<current.amount>}}"
+          ,styles = (lab=="init"?[<"node#<current.pt>", style2>]:[<"node#<current0.pt>", style1>,<"node#<current.pt>", style2>]));
           return result;
           }
        tuple[list[Ele], lrel[str, Style]] eles = readAut(|project://racytoscal/src/demo/bank/data.aut|);
@@ -88,8 +84,8 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                     width = "5px"
                    ,height= "5px" 
                    ,shape=ellipse()
-                   ,borderWidth = 2, borderColor="brown"
-                   ,padding = 10 
+                   ,borderWidth = "2", borderColor="brown"
+                   ,padding = "10" 
                    ,backgroundColor="antiquewhite"
                   )>
                   ]+eles[1];

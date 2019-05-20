@@ -9,8 +9,7 @@ str callbackTap(str id) {
     color[id] = (color[id]=="blue"?"red":"blue");
     // println(color[id]);
     Style styl = style(lineColor=color[id]);
-    str r = Racytoscal::toString([<"edge#<id>", styl>]);
-    return "{\"styles\":<r>}";
+    return executeInBrowser(styles=[<"edge#<id>", styl>]);
     }
     
 public void main() {
@@ -31,8 +30,8 @@ public void main() {
                     shape=ellipse(),
                     backgroundFill="radial-gradient",
                     backgroundGradientStopColors="antiquewhite brown",
-                    borderWidth = 2, borderColor="brown"
-                   ,padding = 10 
+                    borderWidth = "2", borderColor="brown"
+                   ,padding = "10" 
                   )>
                   ]
           ,\layout = circle("")

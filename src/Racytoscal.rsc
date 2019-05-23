@@ -610,11 +610,25 @@ public loc openBrowser(loc html, str script
        }
     }
     
- public str executeInBrowser(lrel[str, Style] styles=[], str \layout="", str extra="{\"extra\":\"none\"}") {
+str toCssString(list[tuple[str sel, str key, str val]] css) {
+    list[str] r =[];
+    for (cs<-css) {
+         r+= "{\"sel\":\"<cs.sel>\",\"key\":\"<cs.key>\",\"val\":\"<cs.val>\"}";
+         }
+    return intercalate(",", r);
+    }
+    
+ public str executeInBrowser(lrel[str, Style] styles=[], str \layout="", str extra="{\"extra\":\"none\"}",
+       tuple[str attach, str tableId, str cellId, int width, int height] table = <"","", "", 0,0>,
+       list[tuple[str sel, str key, str val]] css = [], str onclick="") {
        return 
        "{<extra[1..-1]>
        '<if((\layout?)){>,\"layout\":\"<\layout>\"<}>
        '<if((\styles?)){>,\"styles\":<toString(styles)><}>
+       '<if((\css?)){>,\"css\":[<toCssString(css)>]<}>
+       '<if((\table?)){>,\"table\":
+       ' {\"id\":\"<table.attach>\", \"tableId\":\"<table.tableId>\",\"cellId\":\"<table.cellId>\", \"width\":\"<table.width>\",\"height\":\"<table.height>\"}<}>
+       '<if((\onclick?)){>,\"onclick\":\"<onclick>\"<}>
        '}"; 
        }
    

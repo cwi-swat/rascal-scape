@@ -618,17 +618,28 @@ str toCssString(list[tuple[str sel, str key, str val]] css) {
     return intercalate(",", r);
     }
     
+ str toSelString(list[str] sels) {
+   list[str] r = ["\"<q>\""|q<-sels];
+    return intercalate(",", r);
+    }
+    
+ str toString(list[tuple[str attach, str tableId, str cellId, int width, int height]] tables) {
+         list[str ] r = [];
+         for (table <- tables)
+           r+="{\"id\":\"<table.attach>\", \"tableId\":\"<table.tableId>\",\"cellId\":\"<table.cellId>\", \"width\":\"<table.width>\",\"height\":\"<table.height>\"}";
+         return intercalate(",", r);
+    }
+    
  public str executeInBrowser(lrel[str, Style] styles=[], str \layout="", str extra="{\"extra\":\"none\"}",
-       tuple[str attach, str tableId, str cellId, int width, int height] table = <"","", "", 0,0>,
-       list[tuple[str sel, str key, str val]] css = [], str onclick="") {
+       list[tuple[str attach, str tableId, str cellId, int width, int height]] table = [],
+       list[tuple[str sel, str key, str val]] css = [], list[str] onclick=[]) {
        return 
        "{<extra[1..-1]>
        '<if((\layout?)){>,\"layout\":\"<\layout>\"<}>
        '<if((\styles?)){>,\"styles\":<toString(styles)><}>
        '<if((\css?)){>,\"css\":[<toCssString(css)>]<}>
-       '<if((\table?)){>,\"table\":
-       ' {\"id\":\"<table.attach>\", \"tableId\":\"<table.tableId>\",\"cellId\":\"<table.cellId>\", \"width\":\"<table.width>\",\"height\":\"<table.height>\"}<}>
-       '<if((\onclick?)){>,\"onclick\":\"<onclick>\"<}>
+       '<if((\table?)){>,\"table\":[<toString(table)>]<}>
+       '<if((\onclick?)){>,\"onclick\":[<toSelString(onclick)>]<}>
        '}"; 
        }
    

@@ -554,6 +554,7 @@ public loc openBrowser(loc html, str script
     ,str(str id) tap = str(str id){return "";}
     ,str(str id) click = str(str id){return "";}
     ,str(str id) load = str(str id){return "";}
+    ,str(str id) timer = str(str id){return "";}
     ) {
   	loc site = |http://localhost:8081|;
   	loc base = |project://racytoscal|;
@@ -565,6 +566,11 @@ public loc openBrowser(loc html, str script
       Response page(get(/^\/click\/<path:\S+>$/)) { 
         // println("HELP0:<id>");
         return response(click(path));
+      }
+      
+       Response page(get(/^\/timer\/<path:\S+>$/)) { 
+        // println("HELP0:<id>");
+        return response(timer(path));
       }
       
       Response page(get(/^\/load\/<path:\S+>$/)) { 
@@ -580,6 +586,7 @@ public loc openBrowser(loc html, str script
       }
       
       Response page(get(/^\/close$/)) { 
+        // println("shutdown"); 
         shutdown(site);
 	    return response("shutdown");
       }
@@ -632,7 +639,7 @@ str toCssString(list[tuple[str sel, str key, str val]] css) {
     
  public str executeInBrowser(lrel[str, Style] styles=[], str \layout="", str extra="{\"extra\":\"none\"}",
        list[tuple[str attach, str tableId, str cellId, int width, int height]] table = [],
-       list[tuple[str sel, str key, str val]] css = [], list[str] onclick=[]) {
+       list[tuple[str sel, str key, str val]] css = [], list[str] onclick=[], int setInterval= -1) {
        return 
        "{<extra[1..-1]>
        '<if((\layout?)){>,\"layout\":\"<\layout>\"<}>
@@ -640,6 +647,8 @@ str toCssString(list[tuple[str sel, str key, str val]] css) {
        '<if((\css?)){>,\"css\":[<toCssString(css)>]<}>
        '<if((\table?)){>,\"table\":[<toString(table)>]<}>
        '<if((\onclick?)){>,\"onclick\":[<toSelString(onclick)>]<}>
+       '<if((\setInterval?) && setInterval>=0){>,\"setInterval\":\"<setInterval>\"<}>
+       '<if((\setInterval?) && setInterval<=0){>,\"clearInterval\":\"<setInterval>\"<}>
        '}"; 
        }
    

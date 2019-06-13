@@ -3,7 +3,8 @@ import Prelude;
 import Racytoscal;
 import util::Math;
 
-alias el = tuple[int rot, int x, int y, rel[int, int] state, str kind] ;
+alias el = tuple[int rot, int x, int y, rel[int, int] state, str kind];
+int shift  =3;
 
 list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
      , "seagreen","skyblue", "slategray","steelblue", "yellow"];
@@ -21,17 +22,24 @@ list[str] rFig = ["T","I", "Z", "L", "L1", "O"];
     
 int width = 20; int height = 40;
 
-list[tuple[int x, int y]] computeI() =  [*[<i, j>|j<-[3..5]]|i<-[0..8]];
-list[tuple[int x, int y]] computeT() =  [*[<i, j>|int j<-[1..7]]|int i<-[4..6]] + [*[<i, j>|int j<-[3..5]]|int i<-[2..4]];
-list[tuple[int x, int y]] computeZ() =  [*[<i, j>|int j<-[1..5]]|int i<-[2..4]] + [*[<i, j>|int j<-[3..7]]|int i<-[4..6]];
-list[tuple[int x, int y]] computeL() =  [*[<i, j>|int j<-[2..4]]|int i<-[1..7]] + [*[<i, j>|int j<-[4..6]]|int i<-[5..7]];
-list[tuple[int x, int y]] computeL1() = [*[<i, j>|int j<-[4..6]]|int i<-[1..7]] + [*[<i, j>|int j<-[2..4]]|int i<-[5..7]];
-list[tuple[int x, int y]] computeO() =  [*[<i, j>|int j<-[2..6]]|int i<-[2..6]];
+list[tuple[int y, int x]] computeI() =  [*[<i, j>|j<-[3..5]]|i<-[0..8]];
+list[tuple[int y, int x]] computeT() =  [*[<i, j>|int j<-[1..7]]|int i<-[4..6]] + [*[<i, j>|int j<-[3..5]]|int i<-[2..4]];
+list[tuple[int y, int x]] computeZ() =  [*[<i, j>|int j<-[1..5]]|int i<-[2..4]] + [*[<i, j>|int j<-[3..7]]|int i<-[4..6]];
+list[tuple[int y, int x]] computeL() =  [*[<i, j>|int j<-[2..4]]|int i<-[1..7]] + [*[<i, j>|int j<-[4..6]]|int i<-[5..7]];
+list[tuple[int y, int x]] computeL1() = [*[<i, j>|int j<-[4..6]]|int i<-[1..7]] + [*[<i, j>|int j<-[2..4]]|int i<-[5..7]];
+list[tuple[int y, int x]] computeO() =  [*[<i, j>|int j<-[2..6]]|int i<-[2..6]];
+
+list[tuple[int y, int x]] cornerI = [<0, 3>, <7, 3>, <7, 4>, <0, 4>];
+list[tuple[int y, int x]] cornerT = [<2, 1>, <5, 1>, <5, 6>, <2, 6>];
+list[tuple[int y, int x]] cornerZ = [<2, 1>, <5, 1>, <5, 6>, <2, 6>];
+list[tuple[int y, int x]] cornerL = [<1, 2>, <6, 2>, <6, 5>, <1, 5>];
+list[tuple[int y, int x]] cornerL1 = [<1, 2>, <6, 2>,  <6, 5>, <1, 5>];
+list[tuple[int y, int x]] cornerO = [<2, 2>, <5, 2>, <5, 5>, <2, 5>];
 
 list[str] fig(str prepend, el old, str kind) {
      int last = size(current)-1;
      if (last>=0) current[last].state = {};
-     lrel[int, int] fig1 = [];
+     lrel[int y, int x] fig1 = [];
      switch(kind) {
         case "T": fig1 = computeT();
         case "I": fig1 = computeI();
@@ -40,15 +48,15 @@ list[str] fig(str prepend, el old, str kind) {
         case "L1": fig1 = computeL1();
         case "O": fig1 = computeO();
         }
-     list[str] r =  [turn(prepend, p.x,p.y)|tuple[int x, int y] p<-fig1];
+     list[str] r =  [turn(prepend, p.y, p.x, 8)|tuple[int y, int x] p<-fig1];
      if (!isDisjunct()) {
           current[last] = old; 
-          r =  [turn(prepend, p.x,p.y)|tuple[int x, int y] p<-fig1];
+          r =  [turn(prepend, p.y, p.x, 8)|tuple[int y, int x] p<-fig1];
           }
      return r;
      }
      
-list[tuple[str, str, str]] clear(rel[int x, int y] state) = [<"cells_<d.x>_<d.y>","background-color", "antiquewhite">|d<-state];
+list[tuple[str, str, str]] clear(rel[int y, int x] state) = [<"<d.y*width+d.x>cells","background-color", "antiquewhite">|d<-state];
 
 tuple[int y, int x] space(int i, int j) {
     int x = current[-1].x;
@@ -60,14 +68,29 @@ tuple[int y, int x] space(int i, int j) {
          case 3:return <7-j+y, i+x>;
          }
     }
+ 
+tuple[int y, int x] space(tuple[int y, int x] t) = space(t.y, t.x); 
 
-str turn(str prepend, int i, int j) {
-    if (isEmpty(current)) return "<prepend>cells_<i>_<j>";
+int rot() {
+    int angle = current[-1].rot;
+     switch(current[-1].kind) {
+         case "L": return space(cornerL[angle]).x;
+         case "L1": return space(cornerL1[angle]).x;
+         case "I": return space(cornerI[angle]).x;
+         case "O": return space(cornerO[angle]).x;
+         case "T": return space(cornerT[angle]).x;
+         case "Z": return  space(cornerZ[angle]).x;
+      }
+    return 0;
+    } 
+
+str turn(str prepend, int i, int j, int n) {
+    if (isEmpty(current)) return "<i*n+j><prepend>cells";
     int last = size(current)-1;
     tuple[int y, int x] r = space(i, j);
     // println("HELP:<r>  <current[last].state>");
     current[last].state += {r};
-    return "<prepend>cells_<r.y>_<r.x>";
+    return "<r.y*width+r.x><prepend>cells";
     }
  
 bool isDisjunct() {
@@ -81,9 +104,10 @@ bool isDisjunct() {
    return n== -1;
    }
    
+   
 str new(str kind) {
    current+=[<0, 0, 0, {},kind>];
-   return executeInBrowser(css=[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)]);    
+   return executeInBrowser(css=[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)], extra="\"x\":\"<rot()>\", \"y\":\"<0>\"");    
    }
    
 str getColor(str kind) {
@@ -93,7 +117,7 @@ str getColor(str kind) {
       case "Z":return "goldenrod";
       case "L":return "brown";
       case "L1":return "green";
-      case "O":return "salmon";
+      case "O":return "thistle";
       }
    }
  
@@ -129,8 +153,9 @@ public void main() {
                                      +[<v,"background-color",getColor("L1")>|v<-fig("L1_",  nullEl, "L1")]
                                      +[<v,"background-color",getColor("O")>|v<-fig("O_",  nullEl, "O")]
                                       , onclick=[
-                                "rotate","left", "right", "up", "down", "fall", "T_table", 	"I_table", "Z_table","L_table","L1_table","O_table"]
-                                 , setInterval=10000
+                                "rotate","left", "right", "up", "down", "fall", "reset", "T_table", 	"I_table", "Z_table","L_table","L1_table","O_table"]
+                                , setInterval=300
+                                , sync = false
                                 );               
     }
     
@@ -144,10 +169,12 @@ public void main() {
           list[tuple[str, str, str]] oldArg = [<v,"background-color",getColor(current[-1].kind)>|v<-fig("",old,current[-1].kind)];
           current+=[<0, 0, 0, {},kind>];
           return executeInBrowser(css=clear(state)+oldArg
-                                                  +[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)]);  
+                                                  +[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)],
+                                                  extra="\"x\":\"<rot()>\", \"y\":\"<0>\"");  
           }
        current+=[<0, 0, 0, {},kind>]; 
-       return executeInBrowser(css=[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)]);   
+       return executeInBrowser(css=[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)]
+       ,extra="\"x\":\"<rot()>\", \"y\":\"<0>\"");   
        }
        
     str onClick(str path) {
@@ -170,17 +197,24 @@ public void main() {
           case "right": current[last].x = current[-1].x+1;
           case "up": current[last].y = current[-1].y-1;
           case "down": current[last].y = current[-1].y+1;
+          case "reset": {
+                 str r = executeInBrowser(css= [*clear(d.state)|d<-current], path = path);
+                 current= [];
+                 return r;
+                 }
           case "fall": {
                  fall();
                  list[tuple[str, str, str]] oldArg = [<v,"background-color",getColor(current[-1].kind)>|v<-fig("",old,current[-1].kind)];
-                 str kind = rFig[arbInt(6)];
-                 current+=[<0, 0, 0, {},kind>];
+                 //str kind = rFig[arbInt(6)];
+                 // current+=[<0, 0, 0, {},kind>];
                  return executeInBrowser(css=clear(state)+oldArg
-                                                 +[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)]);  
+                                                 // +[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)]
+                                                 ,
+                                                 extra="\"x\":\"<rot()>\", \"y\":\"<0>\"", path = path);  
                  }
           }
          return executeInBrowser(css=clear(state)+[<v,"background-color",getColor(current[-1].kind)>|v<-fig("",old,current[-1].kind)]
-                                                 );  
+           , extra="\"x\":\"<rot()>\", \"y\":\"<0>\"" ,path = path);  
          }
     return "";             
     }

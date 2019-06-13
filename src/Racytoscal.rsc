@@ -637,11 +637,12 @@ str toCssString(list[tuple[str sel, str key, str val]] css) {
          return intercalate(",", r);
     }
     
- public str executeInBrowser(lrel[str, Style] styles=[], str \layout="", str extra="{\"extra\":\"none\"}",
+ public str executeInBrowser(lrel[str, Style] styles=[], str \layout="", str extra="\"extra\":\"none\"",
        list[tuple[str attach, str tableId, str cellId, int width, int height]] table = [],
-       list[tuple[str sel, str key, str val]] css = [], list[str] onclick=[], int setInterval= -1) {
+       list[tuple[str sel, str key, str val]] css = [], list[str] onclick=[], int setInterval= -1, str path = ""
+       ,bool sync = true) {
        return 
-       "{<extra[1..-1]>
+       "{<extra>
        '<if((\layout?)){>,\"layout\":\"<\layout>\"<}>
        '<if((\styles?)){>,\"styles\":<toString(styles)><}>
        '<if((\css?)){>,\"css\":[<toCssString(css)>]<}>
@@ -649,6 +650,8 @@ str toCssString(list[tuple[str sel, str key, str val]] css) {
        '<if((\onclick?)){>,\"onclick\":[<toSelString(onclick)>]<}>
        '<if((\setInterval?) && setInterval>=0){>,\"setInterval\":\"<setInterval>\"<}>
        '<if((\setInterval?) && setInterval<=0){>,\"clearInterval\":\"<setInterval>\"<}>
+       '<if((\path?)){>,\"path\":\"<\path>\"<}>
+       '<if((\sync?)){>,\"sync\":\"<\sync>\"<}>
        '}"; 
        }
    

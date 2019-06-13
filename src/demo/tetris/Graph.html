@@ -11,6 +11,76 @@
 <script src="lib/dagre.min.js"></script>
 <script src="lib/cytoscape-dagre.js"></script>
 <script src="lib/racytoscal.js"></script>
+<script>
+z0  = 99999999;
+cnt = 0;
+n  = 20;
+function extraMark(s){
+	if (s.length==0) return "";
+	   var el = document.getElementById(""+z0+"cells"); 
+	   if (el!=null) {
+		     el.style["background-color"] = oldColor;
+		     el.style["opacity"] = "1";
+	   }
+	   var t = JSON.parse(s);
+	   if  (t.path=="reset" || t.path=="fall") {
+		   z0  = 99999999; 
+		   return "";
+	   }
+	   var x = parseInt(t.x);
+	   var y = Math.floor(z0/20);  
+	   var z = y*20+x;
+	   el = document.getElementById(""+z+"cells"); 
+	   if (el!=null) {
+		    oldColor = el.style["background-color"];
+		    el.style["background-color"] = "yellow";
+		    el.style["opacity"] = "0.5";
+	        }
+	   z0 = z;
+	   return "";
+    }
+
+function clickCallback(s) {
+	  // cnt = 1;
+	  return extraMark(fromRascal(s));
+}
+
+function fromRascal1(s) {
+	var t = JSON.parse(fromRascal(s));
+	var x = parseInt(t.x);
+	var y = parseInt(t.y)+4; 
+	z0 = 20*8+x;
+	return s;
+}
+
+oldColor = "white";
+function timerCallback(s) {
+	var el = document.getElementById(""+z0+"cells");
+	if (el!=null) {
+		 el.style["background-color"] = oldColor;
+		 el.style["opacity"] = "1";
+	}	
+	//alert(z0);
+	if (z0>20*40) {
+		 httpGet(fromRascal1, "timer/"+cnt, false);cnt=1;	 
+	 }
+	z = z0+20;
+	el = document.getElementById(""+z+"cells"); 
+	if (el!=null) {
+		  oldColor = el.style["background-color"];
+		  el.style["background-color"] = "yellow";
+	      el.style["opacity"] = "0.5";
+	}
+	z0 = z;
+	cnt=cnt+1;
+	// return "";
+}
+
+
+
+
+// window.addEventListener("click", extraMark);
+</script>
 <style>
 .cells {
     width: 20px; height: 20px;
@@ -54,6 +124,9 @@ title {display:block}
 </td>
 <td>
 <button id ="fall">Fall</button>
+</td>
+<td>
+<button id ="reset">Reset</button>
 </td>
 </tr>
 </table>

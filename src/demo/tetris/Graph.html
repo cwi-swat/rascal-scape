@@ -45,6 +45,10 @@ function clickCallback(s) {
 	  return extraMark(fromRascal(s));
 }
 
+function keypressCallback(s) {
+	 return clickCallback(s);
+}
+
 function fromRascal1(s) {
 	var t = JSON.parse(fromRascal(s));
 	var x = parseInt(t.x);
@@ -76,7 +80,14 @@ function timerCallback(s) {
 	// return "";
 }
 
-
+function pause() {
+	if (runningInterval!=null) 
+		if (runningInterval) 
+		     clearInterval(interval);
+		else
+			 interval = setInterval(timerCallback, mSec);
+	    runningInterval = !runningInterval;
+}
 
 
 // window.addEventListener("click", extraMark);
@@ -92,41 +103,64 @@ function timerCallback(s) {
     border: 2px solid grey;
     border-collapse:collapse;
     }
+#manager {
+    border: 2px solid black;
+    border-collapse:collapse;
+    }
 title {display:block}
 </style>
 </head>
 <body onbeforeunload="handleOnClose()">
 <h1>Tetris</h1>
-<div id='attach'>
-</div>
 <table>
 <tr>
-<td id = "T"></td>
-<td id = "I"></td>
-<td id = "Z"></td>
-<td id = "L"></td>
-<td id = "L1"></td>
-<td id = "O"></td>
 <td>
-<button id ="rotate">Rotate</button>
+<div id='attach'>
+</div>
 </td>
+<td  valign="top">
+<div id="manager" tabindex="-1">
+<table>
+<!-- <td id = "T"></td> -->
+<!-- <td id = "I"></td> -->
+<!-- <td id = "Z"></td> -->
+<!-- <td id = "L"></td> -->
+<!-- <td id = "L1"></td> -->
+<!-- <td id = "O"></td> -->
+<tr>
+<td  colspan="3" align="center">
+<button id ="up">Up</button>
+</td>
+</tr>
+<tr>
 <td>
 <button id ="left">Left</button>
 </td>
 <td>
+<button id ="rotate">Rotate</button>
+</td>
+<td>
 <button id ="right">Right</button>
 </td>
-<td>
-<button id ="up">Up</button>
-</td>
-<td>
+</tr>
+<tr>
+<td  colspan="3" align="center">
 <button id ="down">Down</button>
+</td>
+</tr>
+<tr>
+<td>
+<button id ="pause" onclick=pause()>Pause</button>
 </td>
 <td>
 <button id ="fall">Fall</button>
 </td>
 <td>
 <button id ="reset">Reset</button>
+</td>
+</tr>
+</table>
+</div>
 </td>
 </tr>
 </table>

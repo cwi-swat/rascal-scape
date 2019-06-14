@@ -553,6 +553,7 @@ public loc openBrowser(loc html, str script
     ,str(str id) tapend = str(str id){return "";}
     ,str(str id) tap = str(str id){return "";}
     ,str(str id) click = str(str id){return "";}
+    ,str(str id) keypress = str(str id){return "";}
     ,str(str id) load = str(str id){return "";}
     ,str(str id) timer = str(str id){return "";}
     ) {
@@ -566,6 +567,11 @@ public loc openBrowser(loc html, str script
       Response page(get(/^\/click\/<path:\S+>$/)) { 
         // println("HELP0:<id>");
         return response(click(path));
+      }
+      
+      Response page(get(/^\/keypress\/<path:\S+>$/)) { 
+        // println("HELP0:<id>");
+        return response(keypress(path));
       }
       
        Response page(get(/^\/timer\/<path:\S+>$/)) { 
@@ -639,7 +645,7 @@ str toCssString(list[tuple[str sel, str key, str val]] css) {
     
  public str executeInBrowser(lrel[str, Style] styles=[], str \layout="", str extra="\"extra\":\"none\"",
        list[tuple[str attach, str tableId, str cellId, int width, int height]] table = [],
-       list[tuple[str sel, str key, str val]] css = [], list[str] onclick=[], int setInterval= -1, str path = ""
+       list[tuple[str sel, str key, str val]] css = [], list[str] onclick=[], list[str] onkeypress=[], int setInterval= -1, str path = ""
        ,bool sync = true) {
        return 
        "{<extra>
@@ -648,6 +654,7 @@ str toCssString(list[tuple[str sel, str key, str val]] css) {
        '<if((\css?)){>,\"css\":[<toCssString(css)>]<}>
        '<if((\table?)){>,\"table\":[<toString(table)>]<}>
        '<if((\onclick?)){>,\"onclick\":[<toSelString(onclick)>]<}>
+       '<if((\onkeypress?)){>,\"onkeypress\":[<toSelString(onkeypress)>]<}>
        '<if((\setInterval?) && setInterval>=0){>,\"setInterval\":\"<setInterval>\"<}>
        '<if((\setInterval?) && setInterval<=0){>,\"clearInterval\":\"<setInterval>\"<}>
        '<if((\path?)){>,\"path\":\"<\path>\"<}>

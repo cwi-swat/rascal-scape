@@ -12,31 +12,49 @@
 <script src="lib/cytoscape-dagre.js"></script>
 <script src="lib/racytoscal.js"></script>
 <script>
-z0  = 99999999;
+z01  = 99999999;
+z02  = 99999999;
 cnt = 0;
 n  = 20;
+
 function extraMark(s){
 	if (s.length==0) return "";
-	   var el = document.getElementById(""+z0+"cells"); 
+	   var el = document.getElementById(""+z01+"cells"); 
 	   if (el!=null) {
-		     el.style["background-color"] = oldColor;
+		     el.style["background-color"] = oldColor1;
+		     el.style["opacity"] = "1";
+	   }
+	   var el = document.getElementById(""+z02+"cells"); 
+	   if (el!=null) {
+		     el.style["background-color"] = oldColor2;
 		     el.style["opacity"] = "1";
 	   }
 	   var t = JSON.parse(s);
 	   if  (t.path=="reset" || t.path=="fall") {
-		   z0  = 99999999; 
+		   z01  = 99999999;
+		   z02  = 99999999; 
 		   return "";
 	   }
-	   var x = parseInt(t.x);
-	   var y = Math.floor(z0/20);  
-	   var z = y*20+x;
+	   var x1 = parseInt(t.x1);
+	   var y1 = Math.floor(z01/20);  
+	   var z = y1*20+x1;
 	   el = document.getElementById(""+z+"cells"); 
 	   if (el!=null) {
-		    oldColor = el.style["background-color"];
+		    oldColor1 = el.style["background-color"];
 		    el.style["background-color"] = "yellow";
 		    el.style["opacity"] = "0.5";
 	        }
-	   z0 = z;
+	   z01 = z;
+	   var x2 = parseInt(t.x2);
+	   var y2 = Math.floor(z02/20);  
+	   var z = y2*20+x2;
+	   el = document.getElementById(""+z+"cells"); 
+	   if (el!=null) {
+		    oldColor2 = el.style["background-color"];
+		    el.style["background-color"] = "yellow";
+		    el.style["opacity"] = "0.5";
+	        }
+	   z02 = z;
 	   return "";
     }
 
@@ -51,31 +69,52 @@ function keypressCallback(s) {
 
 function fromRascal1(s) {
 	var t = JSON.parse(fromRascal(s));
-	var x = parseInt(t.x);
-	var y = parseInt(t.y)+4; 
-	z0 = 20*8+x;
+	var x1 = parseInt(t.x1);
+	var y1 = parseInt(t.y1)+4; 
+	var x2 = parseInt(t.x2);
+	var y2 = parseInt(t.y2)+4; 
+	var cnt  = t.cnt;
+	z01 = 20*8+x1;
+	z02=  20*8+x2;
+	document.getElementById("manager").focus();
+	var cntEl = document.getElementById("cnt");
+	if (typeof cnt !=="undefined") cntEl.innerHTML = cnt;
 	return s;
 }
 
-oldColor = "white";
+oldColor1 = "white";
+oldColor2 = "white";
 function timerCallback(s) {
-	var el = document.getElementById(""+z0+"cells");
+	var el = document.getElementById(""+z01+"cells");
 	if (el!=null) {
-		 el.style["background-color"] = oldColor;
+		 el.style["background-color"] = oldColor1;
+		 el.style["opacity"] = "1";
+	}
+	var el = document.getElementById(""+z02+"cells");
+	if (el!=null) {
+		 el.style["background-color"] = oldColor2;
 		 el.style["opacity"] = "1";
 	}	
 	//alert(z0);
-	if (z0>20*40) {
+	if (z01>20*40) {
 		 httpGet(fromRascal1, "timer/"+cnt, false);cnt=1;	 
 	 }
-	z = z0+20;
+	var z = z01+20;
 	el = document.getElementById(""+z+"cells"); 
 	if (el!=null) {
-		  oldColor = el.style["background-color"];
+		  oldColor1 = el.style["background-color"];
 		  el.style["background-color"] = "yellow";
 	      el.style["opacity"] = "0.5";
 	}
-	z0 = z;
+	z01 = z;
+	var z = z02+20;
+	el = document.getElementById(""+z+"cells"); 
+	if (el!=null) {
+		  oldColor2 = el.style["background-color"];
+		  el.style["background-color"] = "yellow";
+	      el.style["opacity"] = "0.5";
+	}
+	z02 = z;
 	cnt=cnt+1;
 	// return "";
 }
@@ -157,6 +196,19 @@ title {display:block}
 </td>
 <td>
 <button id ="reset">Reset</button>
+</td>
+</tr>
+<tr>
+<td>
+Number
+</td>
+<td id="cnt">
+</td>
+<td>
+Max
+</td>
+<td>
+50
 </td>
 </tr>
 </table>

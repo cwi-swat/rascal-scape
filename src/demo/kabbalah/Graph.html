@@ -21,7 +21,7 @@
 title {display:block}
 </style>
 </head>
-<body onbeforeunload="handleOnClose()">
+<body onunload="function() {handleOnClose();}">
 <div id='cy'>
 <script src="init"></script>
 </div>

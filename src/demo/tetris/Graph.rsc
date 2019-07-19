@@ -20,7 +20,7 @@ int cnt = 0;
 
 el nullEl = <0, 0, 0, {}, "">;
 
-list[str] rFig = ["T","I", "Z", "L", "L1", "O"];
+list[str] rFig = ["T","I", "Z", "Z1", "L", "L1", "O"];
     
 int width = 20; int height = 40;
 
@@ -29,6 +29,7 @@ list[tuple[int y, int x]] computeClr() =  [*[<i, j>|j<-[0..8]]|i<-[0..8]];
 list[tuple[int y, int x]] computeI() =  [*[<i, j>|j<-[3..5]]|i<-[0..8]];
 list[tuple[int y, int x]] computeT() =  [*[<i, j>|int j<-[1..7]]|int i<-[4..6]] + [*[<i, j>|int j<-[3..5]]|int i<-[2..4]];
 list[tuple[int y, int x]] computeZ() =  [*[<i, j>|int j<-[1..5]]|int i<-[2..4]] + [*[<i, j>|int j<-[3..7]]|int i<-[4..6]];
+list[tuple[int y, int x]] computeZ1() =  [*[<i, j>|int j<-[1..5]]|int i<-[4..6]] + [*[<i, j>|int j<-[3..7]]|int i<-[2..4]];
 list[tuple[int y, int x]] computeL() =  [*[<i, j>|int j<-[2..4]]|int i<-[1..7]] + [*[<i, j>|int j<-[4..6]]|int i<-[5..7]];
 list[tuple[int y, int x]] computeL1() = [*[<i, j>|int j<-[4..6]]|int i<-[1..7]] + [*[<i, j>|int j<-[2..4]]|int i<-[5..7]];
 list[tuple[int y, int x]] computeO() =  [*[<i, j>|int j<-[2..6]]|int i<-[2..6]];
@@ -36,6 +37,7 @@ list[tuple[int y, int x]] computeO() =  [*[<i, j>|int j<-[2..6]]|int i<-[2..6]];
 list[tuple[int y, int x]] cornerI = [<0, 3>, <7, 3>, <7, 4>, <0, 4>];
 list[tuple[int y, int x]] cornerT = [<2, 1>, <5, 1>, <5, 6>, <2, 6>];
 list[tuple[int y, int x]] cornerZ = [<2, 1>, <5, 1>, <5, 6>, <2, 6>];
+list[tuple[int y, int x]] cornerZ1 = [<2, 1>, <5, 1>, <5, 6>, <2, 6>];
 list[tuple[int y, int x]] cornerL = [<1, 2>, <6, 2>, <6, 5>, <1, 5>];
 list[tuple[int y, int x]] cornerL1 = [<1, 2>, <6, 2>,  <6, 5>, <1, 5>];
 list[tuple[int y, int x]] cornerO = [<2, 2>, <5, 2>, <5, 5>, <2, 5>];
@@ -49,6 +51,7 @@ list[str] fig(str prepend, el old, str kind) {
         case "T": fig1 = computeT();
         case "I": fig1 = computeI();
         case "Z": fig1 = computeZ();
+        case "Z1": fig1 = computeZ1();
         case "L": fig1 = computeL();
         case "L1": fig1 = computeL1();
         case "O": fig1 = computeO();
@@ -86,6 +89,7 @@ int rot1() {
          case "O": return space(cornerO[angle]).x;
          case "T": return space(cornerT[angle]).x;
          case "Z": return  space(cornerZ[angle]).x;
+         case "Z1": return  space(cornerZ1[angle]).x;
          case "Clr": return  space(cornerClr[angle]).x;
       }
     return 0;
@@ -100,6 +104,7 @@ int rot2() {
          case "O": return space(cornerO[angle]).x;
          case "T": return space(cornerT[angle]).x;
          case "Z": return  space(cornerZ[angle]).x;
+         case "Z1": return  space(cornerZ1[angle]).x;
          case "Clr": return  space(cornerClr[angle]).x;
       }
     return 0;
@@ -139,9 +144,10 @@ str getColor(str kind) {
       case "T":return "red";
       case "I":return "blue";
       case "Z":return "goldenrod";
+      case "Z1":return "orange";
       case "L":return "brown";
       case "L1":return "green";
-      case "O":return "thistle";
+      case "O":return "cyan";
       case "Clr":return "grey";
       }
    }
@@ -190,7 +196,7 @@ public void main() {
     
     str onTimer(str path) {
        // println(path);
-       str kind = rFig[arbInt(6)];
+       str kind = rFig[arbInt(7)];
        cnt = cnt+1;
        if (size(current)>=1) {
           el old = current[-1];

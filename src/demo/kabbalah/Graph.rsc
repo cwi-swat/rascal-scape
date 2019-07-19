@@ -3,6 +3,7 @@ import Prelude;
 import Racytoscal;
 import util::Math;
 
+
 public void main() {
     list[Ele]  nodes = 
         [
@@ -69,5 +70,5 @@ public void main() {
          ,\layout = preset("")
         )
       ); 
-    openBrowser(|project://racytoscal/src/demo/kabbalah/Graph.html|, output);  
+    openBrowser(|project://racytoscal/src/demo/kabbalah/Graph.html|, output, display = true);  
     }

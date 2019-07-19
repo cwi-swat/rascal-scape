@@ -548,7 +548,7 @@ public str genScript(str container, Cytoscape cy, str extra ="") {
   return r;
   }
     
-public loc openBrowser(loc html, str script
+public loc openBrowser(loc html, str script, bool display = true 
     ,str(str id) tapstart = str(str id){return "";}
     ,str(str id) tapend = str(str id){return "";}
     ,str(str id) tap = str(str id){return "";}
@@ -592,7 +592,7 @@ public loc openBrowser(loc html, str script
       }
       
       Response page(get(/^\/close$/)) { 
-        // println("shutdown"); 
+        println("shutdown"); 
         shutdown(site);
 	    return response("shutdown");
       }
@@ -603,10 +603,11 @@ public loc openBrowser(loc html, str script
       }
      
      default Response page(get(str path)) {
+       // println("HELP:path=<path>  base=<base>");
        if   (path=="/") {
 	       return response(html);
-           }
-       // println("HELP:<path>");
+           } 
+       // return response("");    
        return response(base + path); 
        } 
         
@@ -614,7 +615,7 @@ public loc openBrowser(loc html, str script
           try {
             println("Trying ... <site>");
             serve(site, page);
-            htmlDisplay(site); 
+            if (display) htmlDisplay(site); 
             return site;
             }  
           catch IO(_): {

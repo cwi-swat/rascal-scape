@@ -170,27 +170,12 @@ str getColor(str kind) {
 public void main() {
     current = [];
     str onLoad(str path) {
-         return executeInBrowser(table=[<"attach","table","cells", width, height >
-                                      // ,<"T","T_table","T_cells", 8, 8>
-                                      // ,<"I","I_table","I_cells", 8, 8>
-                                      // ,<"Z","Z_table","Z_cells", 8, 8>
-                                      // ,<"L","L_table","L_cells", 8, 8>
-                                      // ,<"L1","L1_table","L1_cells", 8, 8>
-                                      // ,<"O","O_table","O_cells", 8, 8>
-                                       ]
-                                //,css= [<v,"background-color",getColor("T")>|v<-fig("T_",  nullEl, "T")]
-                                //     +[<v,"background-color",getColor("I")>|v<-fig("I_",  nullEl, "I")]
-                                //     +[<v,"background-color",getColor("Z")>|v<-fig("Z_",  nullEl, "Z")]
-                                //     +[<v,"background-color",getColor("L")>|v<-fig("L_",  nullEl, "L")]
-                                 //    +[<v,"background-color",getColor("L1")>|v<-fig("L1_",  nullEl, "L1")]
-                                //     +[<v,"background-color",getColor("O")>|v<-fig("O_",  nullEl, "O")]
-                                      , onclick=[
-                                "rotate","left", "right", "up", "down", "fall", "reset"
-                                   //, "T_table", 	"I_table", "Z_table","L_table","L1_table","O_table"
-                                   ]
-                                 , onkeypress=["manager"]
-                                , setInterval=300
-                                , sync = false
+         return executeInBrowser(table=[<"attach","table","cells", width, height >]
+                                       , onclick=["rotate","left", "right", "up", "down", "fall", "reset"]
+                                       , onkeypress=["manager"]
+                                       , setInterval=300
+                                       , sync = false
+                                       , html=[<"test", "Number of fields <width*height>">]
                                 );               
     }
     

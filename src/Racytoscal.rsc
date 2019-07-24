@@ -640,14 +640,21 @@ str toCssString(list[tuple[str sel, str key, str val]] css) {
  str toString(list[tuple[str attach, str tableId, str cellId, int width, int height]] tables) {
          list[str ] r = [];
          for (table <- tables)
-           r+="{\"id\":\"<table.attach>\", \"tableId\":\"<table.tableId>\",\"cellId\":\"<table.cellId>\", \"width\":\"<table.width>\",\"height\":\"<table.height>\"}";
+           r+="{\"attach\":\"<table.attach>\", \"tableId\":\"<table.tableId>\",\"cellId\":\"<table.cellId>\", \"width\":\"<table.width>\",\"height\":\"<table.height>\"}";
+         return intercalate(",", r);
+    }
+    
+str toString(list[tuple[str attach, str content]] htmls) {
+         list[str ] r = [];
+         for (html <- htmls)
+           r+="{\"attach\":\"<html.attach>\", \"content\":\"<html.content>\"}";
          return intercalate(",", r);
     }
     
  public str executeInBrowser(lrel[str, Style] styles=[], str \layout="", str extra="\"extra\":\"none\"",
        list[tuple[str attach, str tableId, str cellId, int width, int height]] table = [],
        list[tuple[str sel, str key, str val]] css = [], list[str] onclick=[], list[str] onkeypress=[], int setInterval= -1, str path = ""
-       ,bool sync = true) {
+       ,bool sync = true, list[tuple[str attach, str content]] html = []) {
        return 
        "{<extra>
        '<if((\layout?)){>,\"layout\":\"<\layout>\"<}>
@@ -656,10 +663,11 @@ str toCssString(list[tuple[str sel, str key, str val]] css) {
        '<if((\table?)){>,\"table\":[<toString(table)>]<}>
        '<if((\onclick?)){>,\"onclick\":[<toSelString(onclick)>]<}>
        '<if((\onkeypress?)){>,\"onkeypress\":[<toSelString(onkeypress)>]<}>
-       '<if((\setInterval?) && setInterval>=0){>,\"setInterval\":\"<setInterval>\"<}>
+       '<if((\setInterval?) && setInterval>0){>,\"setInterval\":\"<setInterval>\"<}>
        '<if((\setInterval?) && setInterval<=0){>,\"clearInterval\":\"<setInterval>\"<}>
        '<if((\path?)){>,\"path\":\"<\path>\"<}>
        '<if((\sync?)){>,\"sync\":\"<\sync>\"<}>
+       '<if((\html?)){>,\"html\":[<toString(html)>]<}>
        '}"; 
        }
    

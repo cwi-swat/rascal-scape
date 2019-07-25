@@ -9,6 +9,7 @@ function level(node) {var d = parseInt(node.id());
 
 function getData(s) {
 	 var r = fromRascal(s);
+	 // var r  = JSON.parse(s);
 	 var current0  = {'loc':current.loc,'account':current.account
 			         ,'interest':current.interest,'amount':current.amount
 			         };
@@ -21,7 +22,8 @@ function getData(s) {
 }
 
 function getExtraData(s) {
-	 var r = fromRascal(s);
+	 var r= fromRascal(s);
+	 // var r  = JSON.parse(s);
 	 current.interest  = r.state.interest;
 	 current.amount = r.state.amount;
 	 document.getElementById("account-cell").innerHTML=current.account;

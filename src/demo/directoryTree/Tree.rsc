@@ -53,15 +53,17 @@ import util::Math;
  str esc(loc v)= escape(v.path, (".":"_", "/":"_"));
  
  str callbackTapstart(str id) {
+   // println("start: <id>");
     Style styl = style(
        textBackgroundOpacity=1, textBackgroundColor="lightgrey", textBackgroundPadding=10, textOpacity=1, color="black");
-    str r = Racytoscal::toString([<"node#<id>", styl>]);
+    str r = "{\"styles\":<Racytoscal::toString([<"node#<id>", styl>])>}";
     return r;
     }
     
 str callbackTapend(str id) {
+    // println("end: <id>");
     Style styl = style(textBackgroundOpacity=0, textOpacity=0, color="red");
-    str r = Racytoscal::toString([<"node#<id>", styl>]);
+    str r = "{\"styles\":<Racytoscal::toString([<"node#<id>", styl>])>}";
     return r;
     }
  
@@ -92,8 +94,8 @@ str callbackTapend(str id) {
                     width = "15px",
                     height= "15px", 
                     backgroundColor="antiquewhite", shape=ellipse(),
-                    borderWidth = 2, borderColor="brown"
-                   ,padding = 10 
+                    borderWidth = "2", borderColor="brown"
+                   ,padding = "10" 
                   )>
                   ]
          //,\layout = breadthfirst("directed:true")

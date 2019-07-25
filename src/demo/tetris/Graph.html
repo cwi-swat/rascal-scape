@@ -18,7 +18,7 @@ cnt = 0;
 n  = 20;
 
 function extraMark(s){
-	if (s.length==0) return "";
+	if (s==null) return "";
 	   var el = document.getElementById(""+z01+"cells"); 
 	   if (el!=null) {
 		     el.style["background-color"] = oldColor1;
@@ -29,7 +29,7 @@ function extraMark(s){
 		     el.style["background-color"] = oldColor2;
 		     el.style["opacity"] = "1";
 	   }
-	   var t = JSON.parse(s);
+	   var t = s;
 	   if  (t.path=="reset" || t.path=="fall") {
 		   z01  = 99999999;
 		   z02  = 99999999; 
@@ -68,7 +68,7 @@ function keypressCallback(s) {
 }
 
 function fromRascal1(s) {
-	var t = JSON.parse(fromRascal(s));
+	var t = fromRascal(s);
 	var x1 = parseInt(t.x1);
 	var y1 = parseInt(t.y1)+4; 
 	var x2 = parseInt(t.x2);

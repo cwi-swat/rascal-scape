@@ -4,6 +4,7 @@ import Racytoscal;
 import util::Math;
 
 alias el = tuple[int rot, int x, int y, rel[int, int] state, str kind];
+
 int shift  =3;
 
 list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"

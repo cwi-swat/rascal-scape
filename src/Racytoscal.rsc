@@ -5,6 +5,7 @@ import util::HtmlDisplay;
 import util::Webserver;
 
 alias Position = tuple[int x, int y];
+alias ViewBox = tuple[int x, int y, int width, int height];
 
 public data Ele = n_(str id, Style style = style(), Position position= <-1, -1>)
          | e_(str id, str source, str target, Style style = style())
@@ -547,6 +548,26 @@ public str genScript(str container, Cytoscape cy, str extra ="") {
   ;
   return r;
   }
+  
+public loc openBrowser(loc html, bool display = true 
+    ,str(str id) tapstart = str(str id){return "";}
+    ,str(str id) tapend = str(str id){return "";}
+    ,str(str id) tap = str(str id){return "";}
+    ,str(str id) click = str(str id){return "";}
+    ,str(str id) keypress = str(str id){return "";}
+    ,str(str id) load = str(str id){return "";}
+    ,str(str id) timer = str(str id){return "";}
+    ) {
+      return openBrowser(html, ""
+          ,tapstart=tapstart
+          ,tapend=tapend
+          ,tap=tap
+          ,click=click
+          ,keypress=keypress
+          ,load=load
+          ,timer=timer
+          );
+    }
     
 public loc openBrowser(loc html, str script, bool display = true 
     ,str(str id) tapstart = str(str id){return "";}
@@ -647,7 +668,7 @@ str toCssString(list[tuple[str sel, str key, str val]] css) {
 str toString(list[tuple[str attach, str content]] htmls) {
          list[str ] r = [];
          for (html <- htmls)
-           r+="{\"attach\":\"<html.attach>\", \"content\":\"<html.content>\"}";
+           r+="{\"attach\":\"<html.attach>\", \"content\":\"<replaceAll(html.content,"\n","")>\"}";
          return intercalate(",", r);
     }
     
@@ -670,4 +691,7 @@ str toString(list[tuple[str attach, str content]] htmls) {
        '<if((\html?)){>,\"html\":[<toString(html)>]<}>
        '}"; 
        }
+       
+  public str svg(int width, int height, ViewBox viewBox, str inside) =
+      "\<svg width=\'<width>px\' height=\'<height>px\', viewBox=\'<viewBox.x> <viewBox.y> <viewBox.width> <viewBox.height>\'\><inside>\</svg\>";
    

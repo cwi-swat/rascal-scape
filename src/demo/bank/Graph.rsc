@@ -57,7 +57,7 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                 case "withdraw": current.amount -= toInt(args[4]); 
                 } 
            }    
-          str result = executeInBrowser(extra="{\"state\":{\"lab\":\"<lab>\", \"loc\":<current.pt>, \"account\":<current.account>,\"interest\":<current.interest>,\"amount\":<current.amount>}}"
+          str result = executeInBrowser(extra="\"state\":{\"lab\":\"<lab>\", \"loc\":<current.pt>, \"account\":<current.account>,\"interest\":<current.interest>,\"amount\":<current.amount>}"
           ,styles = (lab=="init"?[<"node#<current.pt>", style2>]:[<"node#<current0.pt>", style1>,<"node#<current.pt>", style2>]));
           return result;
           }

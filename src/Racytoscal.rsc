@@ -55,7 +55,6 @@ public data Style = style(
               );
          
 public data Cytoscape = cytoscape(
-  // str container = "",
   list[Ele] elements = [],
   list[tuple[str selector, Style style]] styles = [],
   Layout \layout = circle(""),
@@ -537,7 +536,7 @@ str getLayout(Layout \layout) {
  
 public str genScript(str container, Cytoscape cy, str extra ="") {
   str r =  
-  "var cy = cytoscape({
+  "cy[\"<container>\"] = cytoscape({
   'container: document.getElementById(\'<container>\'), 
   'style: <toString(cy.styles)>.concat(<getElStyles(cy.elements)>),
   'elements: [<getElements(cy.elements)>],
@@ -546,6 +545,14 @@ public str genScript(str container, Cytoscape cy, str extra ="") {
   '<extra>
   "
   ;
+  return r;
+  }
+  
+public str genScript(str container, str content) {
+  str r= 
+  "attach[\"<container>\"] = document.getElementById(\'<container>\');
+  'attach[\"<container>\"].innerHTML=\'<replaceAll(content,"\n"," ")>\';
+  ";
   return r;
   }
   
@@ -672,13 +679,13 @@ str toString(list[tuple[str attach, str content]] htmls) {
          return intercalate(",", r);
     }
     
- public str executeInBrowser(lrel[str, Style] styles=[], str \layout="", str extra="\"extra\":\"none\"",
+ public str executeInBrowser(lrel[str, Style] styles=[], tuple[str, str] \layout=<"","">, str extra="\"extra\":\"none\"",
        list[tuple[str attach, str tableId, str cellId, int width, int height]] table = [],
        list[tuple[str sel, str key, str val]] css = [], list[str] onclick=[], list[str] onkeypress=[], int setInterval= -1, str path = ""
        ,bool sync = true, list[tuple[str attach, str content]] html = []) {
        return 
        "{<extra>
-       '<if((\layout?)){>,\"layout\":\"<\layout>\"<}>
+       '<if((\layout?)){>,\"layout\":[\"<\layout[0]>\", \"<\layout[1]>\"]<}>
        '<if((\styles?)){>,\"styles\":<toString(styles)><}>
        '<if((\css?)){>,\"css\":[<toCssString(css)>]<}>
        '<if((\table?)){>,\"table\":[<toString(table)>]<}>
@@ -692,6 +699,54 @@ str toString(list[tuple[str attach, str content]] htmls) {
        '}"; 
        }
        
-  public str svg(int width, int height, ViewBox viewBox, str inside) =
-      "\<svg width=\'<width>px\' height=\'<height>px\', viewBox=\'<viewBox.x> <viewBox.y> <viewBox.width> <viewBox.height>\'\><inside>\</svg\>";
+  data Pos = L(int  left) | R(int right) |C(int center);
+       
+  data SVG  (ViewBox viewBox= <0, 0, 100, 100>, list[SVG] inner =[]) 
+        =
+        rect(Pos x, Pos y, int width, int height, int strokeWidth, str style);
+        
+ int posX(int width, Pos p, int lw) {
+    switch(p) {
+       case L(int x): return x+lw/2;
+       case R(int x): return x-width+lw/2;
+       case C(int x): return x-width/2+lw/2;
+       }
+    return 0;
+    }
+    
+int posY(int height, Pos p, int lw) {
+    switch(p) {
+       case L(int y): return y+lw/2;
+       case R(int y): return y-height+lw/2;
+       case C(int y): return y-height/2+lw/2;
+       }
+    return 0;
+    }
+       
+public str svg(int width, int height, ViewBox viewBox, str inside) =
+      "\<svg width=\"<width>px\" height=\"<height>px\", viewBox=\"<viewBox.x> <viewBox.y> <viewBox.width> <viewBox.height>\"\><inside>\</svg\>";
+   
+  
+public str svg(int width, int height, ViewBox viewBox, SVG content...) {
+      str inside = "<for(SVG c <- content){>  <eval(viewBox, 0, c)> <}>";
+      return "\<svg width=\"<width>px\" height=\"<height>px\"  viewBox=\"<viewBox.x> <viewBox.y> <viewBox.width> <viewBox.height>\"\>
+      <inside>\</svg\>";
+      }
+
+str eval(ViewBox vb,  int lw0, SVG c) {
+      str r  = "";
+      int x  = 0, y = 0, width  = 0, height = 0, lw = 0;
+      list[SVG] inner = c.inner;
+      switch (c) {
+          case fig:rect(Pos x1, Pos y1, int width1, int height1, int lw1, str style1): {
+                 x = posX(width1, x1, lw1); y = posY(height1,  y1, lw1); width = width1-lw1; height  = height1-lw1; lw = lw1;
+                 r= "\<rect x=\"<x>\" y=\"<y>\"  width=\"<width>\" height=\"<height>\" style=\"<style1>\" stroke-width=\"<lw>\"/\>";
+                 }
+          }
+      vb  = c.viewBox;
+      r+= "\<svg x=\"<x+lw/2>\"  y=\"<y+lw/2>\" width=\"<width-lw>\" height=\"<height-lw>\" viewBox=\"<vb.x> <vb.y> <vb.width> <vb.height>\"\>
+          ' <for(SVG s<-c.inner){> <eval(vb, lw, s)><}>\</svg\>
+          ";
+      return r;
+      }
    

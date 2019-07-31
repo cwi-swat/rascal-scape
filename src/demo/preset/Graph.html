@@ -12,7 +12,13 @@
 <script src="lib/cytoscape-dagre.js"></script>
 <script src="lib/racytoscal.js"></script>
 <style>
-#cy {
+#cy1 {
+    width: 600px;
+    height: 600px;
+    display: block;
+    border: 1px solid powderblue;
+    }
+#cy2 {
     width: 600px;
     height: 600px;
     display: block;
@@ -22,7 +28,11 @@ title {display:block}
 </style>
 </head>
 <body onunload="handleOnClose()">
-<div id='cy'>
+<div id="cy">
+<div id='cy1'>
+</div>
+<div id='cy2'>
+</div>
 <script src="init"></script>
 </div>
 </body>

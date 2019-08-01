@@ -743,9 +743,13 @@ str eval(ViewBox vb,  int lw0, SVG c) {
                  r= "\<rect x=\"<x>\" y=\"<y>\"  width=\"<width>\" height=\"<height>\" style=\"<style1>\" stroke-width=\"<lw>\"/\>";
                  }
           }
-      vb  = c.viewBox;
-      r+= "\<svg x=\"<x+lw/2>\"  y=\"<y+lw/2>\" width=\"<width-lw>\" height=\"<height-lw>\" viewBox=\"<vb.x> <vb.y> <vb.width> <vb.height>\"\>
-          ' <for(SVG s<-c.inner){> <eval(vb, lw, s)><}>\</svg\>
+      ViewBox vb1  = c.viewBox;
+      int h = height-lw, w = width-lw;
+      ViewBox newVb = <vb1.x, vb1.y, (vb.width*vb1.width)/w, (vb.height*vb1.height)/h>;
+      r+= "
+          ' \<svg x=\"<x+lw/2>\"  y=\"<y+lw/2>\"  viewBox=\"<newVb.x> <newVb.y> <newVb.width> <newVb.height>\" 
+          ' preserveAspectRatio=\"none\"\>
+          ' <for(SVG s<-c.inner){> <eval(newVb, lw, s)><}>\</svg\>
           ";
       return r;
       }

@@ -13,19 +13,24 @@ str pickColor() {
 
 public void main() {
     int lw  = 4;
-    int x = 20, y = 20, width = 30, height = 20;
-    str output = svg(400, 400, <0, 0, 100, 100>,
-     rect(L(0),L(0), 100, 100, lw, "fill:antiquewhite; stroke:cyan"
+    int x = 20, y = 20, width = 40, height = 30;
+    str output = svg(600, 600, <0, 0, 100, 100>,
+     rect(L(0),L(0), 100, 100, 2, "fill:antiquewhite; stroke:cyan"
        ,inner=[
-        rect(L(0),L(0), width, height, lw/2, "fill:beige; stroke:red")
-       //,rect(R(100),L(0), width, height, lw, "fill:beige; stroke:red")
-       //,rect(L(0),R(100), width, height, lw, "fill:beige; stroke:red") 
+        rect(L(0),L(0), width, height, lw, "fill:beige; stroke:red"
+         ,inner=[rect(C(50),C(50), 50, 50, 4, "fill:yellow; stroke:blue" )]
+        )
+        
+       ,rect(R(100),L(0), width, height, lw/2, "fill:beige; stroke:red")
+       ,rect(L(0),R(100), width, height, lw/2, "fill:beige; stroke:red") 
        ,rect(R(100),R(100), width, height, lw/2, "fill:beige; stroke:red"
-         inner=[rect(L(0),L(0), 15, 15, 3, "fill:yellow; stroke:blue")])
-       // ,rect(C(50),C(50), width, height, lw, "fill:beige; stroke:red") 
+         ,inner=[rect(R(100),R(100), 80, 80, 8, "fill:yellow; stroke:blue"
+           , inner = [rect(R(100),R(100), 70, 70, 8, "fill:yellow; stroke:grey")] )]
+         )
+       ,rect(C(50),C(50), width, height, lw, "fill:beige; stroke:red") 
       ])   
     );
-    println(output);
+    // println(output);
     //str output = svg(400, 400, <0, 0, 100, 100>,
     //     "\<rect width=<width> height=<height> x=<x> y = <y>
     //     ' style = \"fill:coral; stroke:cyan\" \</rect\>");

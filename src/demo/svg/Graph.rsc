@@ -10,6 +10,18 @@ str pickColor() {
     int d = arbInt(size(colors));
     return "<colors[d]>";
     }
+    
+public void short() {
+    str html(str txt, str class = "") = "\<div <if ((class?) && !isEmpty(class)){>class=\"<class>\"<}> \> <txt> \</div\>";
+    str styl = "fill:beige; stroke:red";
+    str output = svg(800,800, htmlObject(LT, html(html("Zie haar lonken in het leven")
+                                            +html("Kijk haar spelen met de wind")
+                                            +html("Prikkels die haar gloed me geven")
+                                            +html("Houd me voor haar stekels blind"), class="inner"), 
+         vshrink = 0.3, hshrink = 0.6, class="aap", style=styl), box(LC, shrink = 0.3, style=styl), box(LB, shrink = 0.3, style=styl), viewBox = <0, 0, 200, 200>
+                             ); 
+    openBrowser(|project://racytoscal/src/demo/svg/Graph.html|, genScript("attach", output));  
+    }
 
 public void main() {
     int lw  = 4;
@@ -17,10 +29,9 @@ public void main() {
     str output = svg(600, 600, <0, 0, 100, 100>,
      rect(L(0),L(0), 100, 100, 2, "fill:antiquewhite; stroke:cyan"
        ,inner=[
-        rect(L(0),L(0), width, height, lw, "fill:beige; stroke:red"
-         ,inner=[rect(C(50),C(50), 50, 50, 4, "fill:yellow; stroke:blue" )]
-        )
-        
+        ellipse(L(0),L(0), width, height, lw, "fill:beige; stroke:red"
+         ,inner=[rect(C(50),C(50), 90, 90, 4, "fill:yellow; stroke:blue" )]
+        )    
        ,rect(R(100),L(0), width, height, lw/2, "fill:beige; stroke:red")
        ,rect(L(0),R(100), width, height, lw/2, "fill:beige; stroke:red") 
        ,rect(R(100),R(100), width, height, lw/2, "fill:beige; stroke:red"
@@ -37,7 +48,6 @@ public void main() {
     str onload(str path) {
          return executeInBrowser(html=[<"attach", output>]);               
     }
-    // {rect(), width(50), height(100), style("fill:coral; stroke:cyan")};
     openBrowser(|project://racytoscal/src/demo/svg/Graph.html|, genScript("attach", output));  
     }
     

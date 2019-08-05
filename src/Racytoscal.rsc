@@ -699,23 +699,64 @@ str toString(list[tuple[str attach, str content]] htmls) {
        '}"; 
        }
        
-  data Pos = L(int  left) | R(int right) |C(int center);
+  data Pos = L(int  left) | R(int right) |C(int center)|L1(int  left1) | R1(int right1) |C1(int center1);
+  
+  data Dim = pxl(int dim)|prc(int dim);
        
-  data SVG  (ViewBox viewBox= <0, 0, 100, 100>, list[SVG] inner =[]) 
-        =
-        rect(Pos x, Pos y, int width, int height, int strokeWidth, str style);
+  data SVG  (ViewBox viewBox= <0, 0, 100, 100>, list[SVG] inner =[], str id = "", str class= "", SVG parent= init(<0, 0, 100, 100>))
+        = rect(Pos x, Pos y, Dim width, Dim height, int strokeWidth, str style)
+        | ellipse(Pos x, Pos y, Dim width, Dim height, int strokeWidth, str style)
+        | foreignObject(Pos x, Pos y, Dim width, Dim height, int strokeWidth, str style, str html)
+        | init(ViewBox vb)
+        ;
+ 
+ public tuple[Pos, Pos] LT = <L1(0), L1(0)>;
+ public tuple[Pos, Pos] LC = <L1(0), C1(50)>;
+ public tuple[Pos, Pos] LB = <L1(0), R1(100)>;
+ public tuple[Pos, Pos] CT = <C1(50), L1(0)>;
+ public tuple[Pos, Pos] CC = <C1(50), C1(50)>;
+ public tuple[Pos, Pos] CB = <C1(50), R1(100)>;
+ public tuple[Pos, Pos] RT = <R1(100), L1(0)>;
+ public tuple[Pos, Pos] RC = <R1(100), C1(50)>;
+ public tuple[Pos, Pos] RB = <R1(100), R1(100)>;
+ 
+ public SVG box(tuple[Pos, Pos] pos, SVG inner ..., str id= "", str style="", int width=100, int height=100, num vshrink = 1.0, num hshrink = 1.0, 
+     num shrink = 1.0, int strokeWidth=2) {
+     if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
+     // println("<vshrink?> <vshrink>");
+     SVG c =  rect(pos[0], pos[1], ((hshrink?)||(shrink?))?prc(floor(hshrink*100)) :pxl(width) 
+                                 , ((vshrink?)||(shrink?))?prc(floor(vshrink*100)) :pxl(height)
+                                 , strokeWidth, style, inner = inner, id = id);
+     return c;
+ }
+ 
+ public SVG htmlObject(tuple[Pos, Pos] pos, str html, str id= "", str class= "", str style="", int width=100, int height=100, num vshrink = 1.0, num hshrink = 1.0, 
+     num shrink = 1.0, int strokeWidth=2) {
+     if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
+     // println("<vshrink?> <vshrink>");
+     SVG c =  foreignObject(pos[0], pos[1], ((hshrink?)||(shrink?))?prc(floor(hshrink*100)) :pxl(width) 
+                                 , ((vshrink?)||(shrink?))?prc(floor(vshrink*100)) :pxl(height)
+                                 , strokeWidth, style, html, id = id, class=class);
+     return c;
+ }
         
- int posX(int width, Pos p, int lw) {
+ int posX(int dim, int width, Pos p, int lw) {
     switch(p) {
+       case L1(int x): return x*dim/100+lw/2;
+       case R1(int x): return x*dim/100-width +lw/2;
+       case C1(int x): return x*dim/100-width/2+lw/2;
        case L(int x): return x+lw/2;
-       case R(int x): return x-width+lw/2;
+       case R(int x): return x-width +lw/2;
        case C(int x): return x-width/2+lw/2;
        }
     return 0;
     }
     
-int posY(int height, Pos p, int lw) {
+int posY(int dim, int height, Pos p, int lw) {
     switch(p) {
+       case L1(int y): return y*dim/100+lw/2;
+       case R1(int y): return y*dim/100-height +lw/2;
+       case C1(int y): return y*dim/100-height/2+lw/2;
        case L(int y): return y+lw/2;
        case R(int y): return y-height+lw/2;
        case C(int y): return y-height/2+lw/2;
@@ -725,23 +766,62 @@ int posY(int height, Pos p, int lw) {
        
 public str svg(int width, int height, ViewBox viewBox, str inside) =
       "\<svg width=\"<width>px\" height=\"<height>px\", viewBox=\"<viewBox.x> <viewBox.y> <viewBox.width> <viewBox.height>\"\><inside>\</svg\>";
-   
+      
+public SVG addParent(SVG parent, SVG s) {
+       s.parent = parent;
+       s.inner = addParent(s, s.inner);
+       return s;
+       }
+ 
+public list[SVG] addParent(SVG parent, list[SVG] content) =  [addParent(parent, c)|SVG c<-content]; 
   
-public str svg(int width, int height, ViewBox viewBox, SVG content...) {
+public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, 100, 100>) {
+      // SVG parent =  init(viewBox);
+      //content = addParent(parent, content);
       str inside = "<for(SVG c <- content){>  <eval(viewBox, 0, c)> <}>";
       return "\<svg width=\"<width>px\" height=\"<height>px\"  viewBox=\"<viewBox.x> <viewBox.y> <viewBox.width> <viewBox.height>\"\>
       <inside>\</svg\>";
       }
+      
+str useId(SVG c) {
+   if ((c.id?) && !isEmpty(c.id)) return "id=\"<c.id>\"";
+   return "";
+   }
+   
+str useClass(SVG c) {
+   if ((c.class?) && !isEmpty(c.class)) return "class=\"<c.class>\"";
+   return "";
+   }
+   
+int checkShrink(int dim, Dim d) {
+   if (pxl(int v):=d) return v;
+   if (prc(int v):=d) return dim*v/100;
+   } 
 
 str eval(ViewBox vb,  int lw0, SVG c) {
       str r  = "";
       int x  = 0, y = 0, width  = 0, height = 0, lw = 0;
       list[SVG] inner = c.inner;
       switch (c) {
-          case fig:rect(Pos x1, Pos y1, int width1, int height1, int lw1, str style1): {
-                 x = posX(width1, x1, lw1); y = posY(height1,  y1, lw1); width = width1-lw1; height  = height1-lw1; lw = lw1;
-                 r= "\<rect x=\"<x>\" y=\"<y>\"  width=\"<width>\" height=\"<height>\" style=\"<style1>\" stroke-width=\"<lw>\"/\>";
+          case fig:rect(Pos x1, Pos y1, Dim widthDim, Dim heightDim, int lw1, str style1): {
+                 int width1 = checkShrink(vb.width, widthDim), height1 = checkShrink(vb.height, heightDim);
+                 x = posX(vb.width, width1, x1, lw1); y = posY(vb.height, height1,  y1, lw1); width = width1-lw1; height  = height1-lw1; lw = lw1;
+                 r= "\<rect <useId(c)> <useClass(c)> x=\"<x>\" y=\"<y>\"  width=\"<width>\" height=\"<height>\" style=\"<style1>\" stroke-width=\"<lw>\"/\>";
                  }
+          case fig:ellipse(Pos x1, Pos y1, Dim widthDim, Dim heightDim, int lw1, str style1): {
+                 int width1 = checkShrink(vb.width, widthDim), height1 = checkShrink(vb.height, heightDim);
+                 x = posX(vb.width, width1, x1, lw1); y = posY(vb.height, height1,  y1, lw1); width = width1-lw1; height  = height1-lw1; lw = lw1;
+                 r= "\<ellipse <useId(c)> <useClass(c)> cx=\"<x+width/2>\" cy=\"<y+height/2>\"  rx=\"<width/2>\" ry=\"<height/2>\" style=\"<style1>\" stroke-width=\"<lw>\"/\>";
+                 }
+          case fig:foreignObject(Pos x1, Pos y1, Dim widthDim, Dim heightDim, int lw1, str style1, str html): {
+                 int width1 = checkShrink(vb.width, widthDim), height1 = checkShrink(vb.height, heightDim);
+                 x = posX(vb.width, width1, x1, lw1); y = posY(vb.height, height1,  y1, lw1); width = width1-lw1; height  = height1-lw1; lw = lw1;
+                 r= "\<rect <useId(c)> <useClass(c)> x=\"<x>\" y=\"<y>\"  width=\"<width>\" height=\"<height>\" style=\"<style1>\" stroke-width=\"<lw>\"/\>";
+                 r+= "\<foreignObject <useId(c)> <useClass(c)> x=\"<x+lw/2>\" y=\"<y+lw/2>\"  width=\"<width-lw>\" height=\"<height-lw>\" style=\"<style1>\" stroke-width=\"<lw>\"\>
+                    '<html>
+                    '\</foreignObject\>
+                    ";
+                }
           }
       ViewBox vb1  = c.viewBox;
       int h = height-lw, w = width-lw;

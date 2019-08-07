@@ -11,16 +11,54 @@ str pickColor() {
     return "<colors[d]>";
     }
     
-public void short() {
-    str html(str txt, str class = "") = "\<div <if ((class?) && !isEmpty(class)){>class=\"<class>\"<}> \> <txt> \</div\>";
+public void tst() { 
     str styl = "fill:beige; stroke:red";
-    str output = svg(800,800, htmlObject(LT, html(html("Zie haar lonken in het leven")
-                                            +html("Kijk haar spelen met de wind")
-                                            +html("Prikkels die haar gloed me geven")
-                                            +html("Houd me voor haar stekels blind"), class="inner"), 
-         vshrink = 0.3, hshrink = 0.6, class="aap", style=styl), box(LC, shrink = 0.3, style=styl), box(LB, shrink = 0.3, style=styl), viewBox = <0, 0, 200, 200>
-                             ); 
-    openBrowser(|project://racytoscal/src/demo/svg/Graph.html|, genScript("attach", output));  
+    str output = svg(800,800      
+         , box(LT
+                 , ellipse(LT, height=30, width=30,class = "tst")
+                 , ellipse(LC, width=30, height=30,class = "tst")
+                 , ellipse(LB, width=30, height=30 ,class = "tst")
+                 , ellipse(CT, height=30, width=30,class = "tst")
+                 , ellipse(CC, width=30, height=30,class = "tst")
+                 , ellipse(CB, width=30, height=30 ,class = "tst")
+                 , ellipse(RT, height=30, width=30,class = "tst")
+                 , ellipse(RC, width=30, height=30,class = "tst")
+                 , ellipse(RB, shrink=0.38 ,class = "tst")
+                    , style=styl, viewBox = <0, 0, 100, 100>, hshrink = 1.0, vshrink=1.0, id="frame", strokeWidth=4)
+          )
+          ; 
+    str onload(str path) {
+         return executeInBrowser(html=[<"attach", output>]);               
+    }     
+    openBrowser(|project://racytoscal/src/demo/svg/Graph.html|, load=onload); 
+    }
+
+
+public void short() { 
+    str styl = "fill:beige; stroke:red";
+    str output = svg(800,800
+         , htmlObject(LT, centerText(
+                                       "Zie haar lonken in het leven"
+                                       ,"Kijk haar spelen met de wind"
+                                       ,"Prikkels die haar gloed me geven"
+                                       ,"Houd me voor haar stekels blind"
+                                    )                     
+         , vshrink = 0.3, hshrink = 0.6, class="aap", style=styl)
+             
+         , box(LC, text(10, 10, "Ik weet niet waarop ik wachtte",    class="text")
+                 , text(10, 20, "Toen die avond in de stad",    class="text")
+                 , text(10, 30, "Ik naar huis liep en ik zag je",    class="text")
+                    , style=styl, viewBox = <0, 0, 100, 50>, hshrink = 0.6, vshrink=0.3, style=styl)
+          , box(LB, text(10, 10, "Roos tussen het vuil en nat",    class="text")
+                 , text(10, 20, "Ongebroken mooi, je lachte wat",    class="text")
+                 , style=styl, viewBox = <0, 0, 50, 50>, hshrink = 0.3, vshrink=0.3, style=styl)
+          )
+          ; 
+    // openBrowser(|project://racytoscal/src/demo/svg/Graph.html|, genScript("attach", output));
+    str onload(str path) {
+         return executeInBrowser(html=[<"attach", output>]);               
+    }     
+    openBrowser(|project://racytoscal/src/demo/svg/Graph.html|, load=onload); 
     }
 
 public void main() {
@@ -48,7 +86,7 @@ public void main() {
     str onload(str path) {
          return executeInBrowser(html=[<"attach", output>]);               
     }
-    openBrowser(|project://racytoscal/src/demo/svg/Graph.html|, genScript("attach", output));  
+    openBrowser(|project://racytoscal/src/demo/svg/Graph.html|, genScript("attach", output));   
     }
     
  /*

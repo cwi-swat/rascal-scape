@@ -11,20 +11,37 @@ str pickColor() {
     return "<colors[d]>";
     }
     
+public void frame() { 
+    str output = svg(800,800      
+         , box(LT, path(
+             "<for (num i<-[0.1,0.2..1]){> M 0 <i> H 1 <}><for (num i<-[0.1,0.2..1]){> M <i> 0 V 1 <}>"
+             , class="path"), viewBox = <0, 0, 1, 1>
+                        , hshrink = 1.0, vshrink=1.0                
+                       , class="frame", strokeWidth=0.5)
+          )
+          ; 
+    str onload(str path) {
+         return executeInBrowser(html=[<"attach", output>]);               
+    }     
+    openBrowser(|project://racytoscal/src/demo/svg/Graph.html|, load=onload); 
+    }
+
+    
 public void tst() { 
     str styl = "fill:beige; stroke:red";
+    
     str output = svg(800,800      
          , box(LT
-                 , ellipse(LT, height=30, width=30,class = "tst")
-                 , ellipse(LC, width=30, height=30,class = "tst")
-                 , ellipse(LB, width=30, height=30 ,class = "tst")
-                 , ellipse(CT, height=30, width=30,class = "tst")
-                 , ellipse(CC, width=30, height=30,class = "tst")
-                 , ellipse(CB, width=30, height=30 ,class = "tst")
-                 , ellipse(RT, height=30, width=30,class = "tst")
-                 , ellipse(RC, width=30, height=30,class = "tst")
-                 , ellipse(RB, shrink=0.38 ,class = "tst")
-                    , style=styl, viewBox = <0, 0, 100, 100>, hshrink = 1.0, vshrink=1.0, id="frame", strokeWidth=4)
+                  ,[ellipse(pos , ellipse(pos, shrink=0.5, class="inner-tst")
+                     // , height=30, width=30
+                     , shrink=0.3
+                     , class = "tst", padding=pct(<0, 0, 0, 0>)
+                    )|pos<-getPositions()]
+                 
+                    , style=styl, viewBox = <0, 0, 200, 200>
+                        , hshrink = 1.0, vshrink=1.0
+                       // , width = 70, height = 70
+                       , id="frame", strokeWidth=4)
           )
           ; 
     str onload(str path) {

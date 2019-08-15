@@ -562,6 +562,26 @@ public str genScript(str container, str content) {
   return r;
   }
   
+public loc openBrowser(loc html, tuple[str container, str content] attach, bool display = true 
+    ,str(str id) tapstart = str(str id){return "";}
+    ,str(str id) tapend = str(str id){return "";}
+    ,str(str id) tap = str(str id){return "";}
+    ,str(str id) click = str(str id){return "";}
+    ,str(str id) keypress = str(str id){return "";}
+    ,str(str id) load = str(str id){return "";}
+    ,str(str id) timer = str(str id){return "";}
+    ) {  
+    return openBrowser(html, genScript(attach.container, attach.content)
+          ,tapstart=tapstart
+          ,tapend=tapend
+          ,tap=tap
+          ,click=click
+          ,keypress=keypress
+          ,load=load
+          ,timer=timer
+          );  
+    }
+  
 public loc openBrowser(loc html, bool display = true 
     ,str(str id) tapstart = str(str id){return "";}
     ,str(str id) tapend = str(str id){return "";}
@@ -705,12 +725,14 @@ str toString(list[tuple[str attach, str content]] htmls) {
        '}"; 
        }
        
+  data SVGLayout = grid(int nCols)|overlay();
+       
   data Pos = L(num  left) | R(num right) |C(num center)|L1(num  left1) | R1(num right1) |C1(num center1);
   
   data Dim = pxl(num dim)|pct(num dim)|pxl(Padding tpl)|pct(Padding tpl);
        
   data SVG  (ViewBox viewBox= <0, 0, 100, 100>, list[SVG] inner =[], str id = "", str class= "", str frameClass = "", SVG parent= root(),
-          Dim padding = pxl(<0, 0, 0, 0>))
+          Dim padding = pxl(<0, 0, 0, 0>), SVGLayout svgLayout = overlay())
         = rect(Pos x, Pos y, Dim width, Dim height, num strokeWidth, str style)
         | ellipse(Pos x, Pos y, Dim width, Dim height, num strokeWidth, str style)
         | foreignObject(Pos x, Pos y, Dim width, Dim height, num strokeWidth, str style, str html)
@@ -732,12 +754,14 @@ str toString(list[tuple[str attach, str content]] htmls) {
  public list[tuple[Pos, Pos]] getPositions() = [LT, LC, LB, CT, CC, CB, RT, RC, RB];
  
  public SVG box(tuple[Pos, Pos] pos, SVG inner ..., str id= "", str class= "", str style="", num width=100, num height=100, num vshrink = 1.0, num hshrink = 1.0, 
-     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, 100, 100>, Dim padding = pxl(<0,0,0, 0>)) {
+     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, 100, 100>, Dim padding = pxl(<0,0,0, 0>)
+     , SVGLayout svgLayout = overlay()) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      // println("<vshrink?> <vshrink>");
-     SVG c =  rect(pos[0], pos[1], ((hshrink?)||(shrink?))?pct(hshrink*100) :pxl(width) 
-                                 , ((vshrink?)||(shrink?))?pct(vshrink*100) :pxl(height)
-                                 , strokeWidth, style, inner = inner, id = id, class = class, viewBox = viewBox, padding = padding);
+     SVG c =  rect(pos[0], pos[1], (!(width?))?pct(hshrink*100) :pxl(width) 
+                                 , (!(height?))?pct(vshrink*100) :pxl(height)
+                                 , strokeWidth, style, inner = inner, id = id, class = class, viewBox = viewBox, padding = padding
+                                 , svgLayout = svgLayout);
      return c;
  }
  
@@ -836,6 +860,7 @@ str useFrameClass(SVG c) {
    }
    
 num checkShrink(num dim, Dim d) {
+   // println("checkshrink <dim> <d>");
    if (pxl(num v):=d) return v;
    if (pct(num v):=d) return dim*v/100;
    } 
@@ -844,6 +869,30 @@ Padding getPadding(num width, num height, Dim d) {
    if (pxl(Padding v):=d) return v;
    if (pct(Padding v):=d) return <floor(height*v.top/100),floor(width*v.right/100),floor(height*v.bottom/100),floor(width*v.left/100)>;
    } 
+   
+str gridLayout(num x, num y, num width, num height, num lw, int nCols, ViewBox vb, list[SVG] inner) {
+   int nRows = (size(inner)-1)/nCols+1;
+   ViewBox newVb = <vb.x, vb.y, vb.width*nCols,  vb.height*nRows>;
+   num posX = x+lw/2, posY = y+lw/2;
+   str r = "";
+   int cnt = 0;
+   int row = 0;
+   for (int row<-[0..nRows]) {
+      for (_<-[row..row+nCols] && cnt<size(inner)) {   
+       r+= "
+          ' \<svg x=\"<posX>\"  y=\"<posY>\"  viewBox=\"<newVb.x> <newVb.y> <_(newVb.width)> <_(newVb.height)>\" 
+          ' preserveAspectRatio=\"none\"\>
+          ' <eval(newVb, lw, inner[cnt])>
+          ' \</svg\>
+          ";
+         posX+=(width/nCols);
+         cnt += 1;
+        }
+        posX = x+lw/2; 
+        posY+=(height/nRows);
+      }
+    return r;
+   }
 
 str eval(ViewBox vb,  num lw0, SVG c) {
       str r  = "", styl = "", txt = "";
@@ -896,13 +945,17 @@ str eval(ViewBox vb,  num lw0, SVG c) {
         // int h = 10, w = 10;
         // println("height=<height> ub0=<vb.height>  ub1=<vb1.height> h=<h> ub=<vb.height*vb1.height/h>"); 
         ViewBox newVb = <vb1.x, vb1.y, _((vb.width*vb1.width)/w),  _((vb.height*vb1.height)/h)>;
+        if (overlay():=c.svgLayout)
         r+= "
           ' \<svg x=\"<x+lw/2>\"  y=\"<y+lw/2>\"  viewBox=\"<newVb.x> <newVb.y> <_(newVb.width)> <_(newVb.height)>\" 
           ' preserveAspectRatio=\"none\"\>
           ' <for(SVG s<-c.inner){> <eval(newVb, lw, s)><}>
           ' \</svg\>
           ";
+       if (grid(int nCols):=c.svgLayout) {
+         r+=gridLayout(x, y, w, h, lw, nCols, newVb, c.inner);
          }
+       }
       // println(r);
       return r;
       }

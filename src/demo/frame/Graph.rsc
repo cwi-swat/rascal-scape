@@ -1,4 +1,4 @@
-module demo::svg::Graph
+module demo::frame::Graph
 import Prelude;
 import Racytoscal;
 import util::Math;
@@ -21,7 +21,7 @@ str frame(list[str] xAxe, list[str] yAxe, ViewBox viewBox, num step, num fun(num
                 ,class="path"
                 ));
     }
-    
+/*    
 public void main() { 
     num f  = 0.90;
     num xy = (1-f)/2;
@@ -47,6 +47,18 @@ public void main() {
     }     
     openBrowser(|project://racytoscal/src/demo/frame/Graph.html|, load=onload); 
     }
-
-    
+*/
+    public void main() {
+       str output = svg( 400, 800,
+          box(LT, box(LT, shrink=1, style="fill:steelblue;stroke:red")
+                , box(RB, shrink=1, style="fill:seagreen;stroke:gray")
+             ,shrink=1,svgLayout=grid(1), style="fill:none;stroke:black"
+             )
+          );
+    str onload(str path) {
+         return executeInBrowser(html=[<"attach", output>]);               
+    }     
+    openBrowser(|project://racytoscal/src/demo/frame/Graph.html|, load=onload); 
+    }   
+       
  

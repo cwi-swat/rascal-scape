@@ -32,6 +32,12 @@
     width: 100%;  
     text-align:left;
     }
+
+path.x-axe{stroke-width:0.01;stroke:lightgrey}
+path.y-axe {stroke-width:0.01;stroke:lightgrey}
+rect{fill:none; stroke-width:2; stroke:black}
+rect.x-axe{fill:none; stroke-width:0; stroke:black}
+rect.y-axe{fill:none; stroke-width:0; stroke:black}
 .frame{fill:antiquewhite; stroke:red}
 .tst{fill:lightgray; stroke:green}
 .inner-tst{fill:lightblue; stroke:orange}
@@ -40,20 +46,29 @@
     font-size:4pt;
     font-style:italic;
     }
-.text-axe {
+text.x-axe {
     fill:darkblue;
     font-style:italic;
     text-anchor:middle;
     dominant-baseline:middle;
-    font-size:0.5pt;
+    font-size:12pt;
     }
-.path {
-      stroke-width:0.01;
-      stroke:lightblue;
-       }
+text.y-axe {
+    fill:darkblue;
+    stroke-width:0;
+    font-style:italic;
+    text-anchor:middle;
+    dominant-baseline:middle;
+    font-size:12pt;
+    }
  .sin {
       stroke-width:0.01;
       stroke:green;
+      fill:none
+       }
+ .cos {
+      stroke-width:0.01;
+      stroke:red;
       fill:none
        }
  .axe {

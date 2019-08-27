@@ -67,7 +67,7 @@ where *pos* is the position with respect to the viewBox of the outer SVG figure,
              if *svgLayout* = `grid(ncols)` then the inner figure will be laid next to each other,
 produces a rect with attributes *width*, *height*, and *viewBox* on *pos*.
 * `SVG ellipse` has the same parameters as `box`. There are no parameters *rx* and *ry*.
-* `SVG text(num x, num y, str txt, str id= "", str class= "", str style= "") places *txt* in position *(x,y)* with 
+* `SVG text(num x, num y, str txt, str id= "", str class= "", str style= "")` places *txt* in position *(x,y)* with 
    respect to the viewbox of the parent figure.
 *  
 ```

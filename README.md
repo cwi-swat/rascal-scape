@@ -46,16 +46,14 @@ The command `openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"at
 
 ## SVG Commands
 
-`svg(int width , int height,  SVG content ..., ViewBox viewBox= <0, 0, width, height>)`
-    produces an `.svg` string from a *content* of type *list\[SVG\]* with attributes *width*, *height*, an *viewBox*.
-    
-```
-      box(tuple[Pos, Pos] pos, SVG inner ..., str id = "", str class = "", str style = ""
+* `svg(int width , int height,  SVG content ..., ViewBox viewBox= <0, 0, width, height>)`
+    produces an `.svg` string from a *content* of type *list\[SVG\]* with attributes *width*, *height*, and *viewBox*.
+* `box(tuple[Pos, Pos] pos, SVG inner ..., str id = "", str class = "", str style = ""
               ,num vshrink = 1, num hshrink = 1, shrink = 1, num strokeWidth = 2
               ,ViewBox viewBox=<0, 0, 100, 100>
-              ,Dim padding = pxl(<0,0,0,0,>)
+              ,Dim padding = pxl(<0,0,0,0>)
               ,SVGLayout svgLayout = overlay()
-```
+`
 where *pos* is the position with respect to the viewBox of the outer SVG figure,
              *inner* is the list of inner figures,
              *hshrink* the relative size with respect to the width of the outer SVG figure,
@@ -65,6 +63,7 @@ where *pos* is the position with respect to the viewBox of the outer SVG figure,
              *padding* applied to each inner figure,       
              if *svgLayout* = `overlay()` then the inner figures will be overlayed,        
              if *svgLayout* = `grid(ncols)` then the inner figure will be laid next to each other
+             produces a rect with attributes *width*, *height*, and *viewBox* on *pos*.
              
 
 

@@ -50,7 +50,7 @@ The command `openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"at
     produces an `.svg` string from a *content* of type *list\[SVG\]* with attributes *width*, *height*, and *viewBox*.
 *  
 ``` 
-   box(tuple[Pos, Pos] pos, SVG inner ..., str id = "", str class = "", str style = ""
+   SVG box(tuple[Pos, Pos] pos, SVG inner ..., str id = "", str class = "", str style = ""
               ,num vshrink = 1, num hshrink = 1, shrink = 1, num strokeWidth = 2
               ,ViewBox viewBox=<0, 0, 100, 100>
               ,Dim padding = pxl(<0,0,0,0>)
@@ -64,8 +64,19 @@ where *pos* is the position with respect to the viewBox of the outer SVG figure,
              *viewBox* will be applied to each inner figure,
              *padding* applied to each inner figure,       
              if *svgLayout* = `overlay()` then the inner figures will be overlayed,        
-             if *svgLayout* = `grid(ncols)` then the inner figure will be laid next to each other
-             produces a rect with attributes *width*, *height*, and *viewBox* on *pos*.
+             if *svgLayout* = `grid(ncols)` then the inner figure will be laid next to each other,
+produces a rect with attributes *width*, *height*, and *viewBox* on *pos*.
+* `SVG ellipse` has the same parameters as `box`. There are no parameters *rx* and *ry*.
+* `SVG text(num x, num y, str txt, str id= "", str class= "", str style= "") places *txt* in position *(x,y)* with 
+   respect to the viewbox of the parent figure.
+*  
+```
+   SVG htmlObject(tuple[Pos, Pos] pos, str html, str id= "", str class= "", str frameClass = "",
+   str style="", int width=100, int height=100, num vshrink = 1.0, num hshrink = 1.0, 
+   num shrink = 1.0, int strokeWidth=2)
+``` 
+places the html code defined in string  *html* in position *pos* with respect to the viewbox of the parent. 
+* `SVG path(str graph, str id= "", str class= "", str style= "")` places in position *pos* with respect to the viewbox of the parent the svg path definition (defined in the format after `path -d`) in string  *graph*. 
              
 
 

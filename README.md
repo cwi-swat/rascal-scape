@@ -76,7 +76,7 @@ produces a rect with attributes *width*, *height*, and *viewBox* on *pos*.
    num shrink = 1.0, int strokeWidth=2)
 ``` 
 places the html code defined in string  *html* in position *pos* with respect to the viewbox of the parent. 
-* `SVG path(str graph, str id= "", str class= "", str style= "")` places in position *pos* with respect to the viewbox of the parent the svg path definition (defined in the format after `path -d`) in string  *graph*. 
+* `SVG path(str graph, str id= "", str class= "", str style= "")` adds the svg path definition (as defined in the format after `path -d`) in string  *graph* . Coordinates are relative to the viewbox defined in the parent.
              
 
 

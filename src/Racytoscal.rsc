@@ -964,4 +964,53 @@ public str div(str txt..., str class = "") = "
     '<for (str t<-txt){> \<div <if ((class?) && !isEmpty(class)){>class=\"<class>\"<}> \> <t> \</div\><}>";
     
 public str centerText(str txt...) = div(div(div(txt), class = "innerX"), class = "innerY");
+
+list[SVG] graph(ViewBox viewBox, tuple[str \class, lrel[num x, num y] d] graphs...) {
+    list[SVG] r = [];
+    for (tuple[str \class, lrel[num x, num y] d] graph<-graphs) {
+          r+=path(
+          "M <_(graph.d[0].x)> <_(2*viewBox.y+viewBox.height-graph.d[0].y)> 
+          '<for (tuple[num x, num y] g <-tail(graph.d)){> L <_(g.x)> <_(2*viewBox.y+viewBox.height-g.y)> <}>"
+               ,class=graph.class
+                );
+    }
+    return r;
+  }
+    
+public SVG frame(num hshrink, num vshrink, tuple[str \class, list[str] d] xAxe, tuple[str \class, list[str] d] yAxe
+    , tuple[str \class, lrel[num x, num y] d] graphs... ,ViewBox viewBox =<0, 0, 100, 100>,
+    num width = 800, num height = 800) {
+    num shrnk = 0.9;
+    println("width: <width>");
+    num shift = (1-shrnk)/2;
+    num dx = viewBox.width/(size(xAxe.d)-1), dy = viewBox.height/(size(yAxe.d)-1);
+    yAxe.d = reverse(yAxe.d);
+    ViewBox  viewBoxXaxe = <-width*shift, 0, width*(hshrink*shrnk+2*shift), shift*height>,
+             viewBoxYaxe = <0, -height*shift, shift*width, height*(vshrink*shrnk+2*shift)>;  
+    num dxX = (width*hshrink*shrnk)/(size(xAxe.d)-1), 
+        dyY = (height*vshrink*shrnk)/(size(yAxe.d)-1);            
+    SVG r = box(LT, box(<L1(shift),L1(shift)>
+             ,[path(
+                "<for (num i<-[viewBox.y+dy,viewBox.y+2*dy..viewBox.y+viewBox.height-dy/2]){> M <_(viewBox.x)> <_(i)> H <_(viewBox.x+viewBox.width)> <}>"
+                ,class=xAxe.class) 
+              ,path(
+                "<for (num i<-[viewBox.x+dx,viewBox.x+2*dx..viewBox.x+viewBox.width-dx/2]){> M <_(i)> <_(viewBox.y)> V <_(viewBox.y+viewBox.height)> <}>"
+               ,class=yAxe.class
+                )]
+               +graph(viewBox, graphs)
+                ,hshrink=hshrink*shrnk, vshrink = vshrink*shrnk, viewBox= viewBox)
+              ,box(<L1(0), L1(0)>,
+                   [text(viewBoxYaxe.width/2, y, yAxe.d[i], class=yAxe.class)
+                     | int i <-[0..size(yAxe.d)], num y := (i*dyY)]             
+                   , vshrink=vshrink*shrnk+2*shift, hshrink = shift, class=yAxe.class
+                   , viewBox=viewBoxYaxe)
+              ,box(<L1(0), L1(vshrink*shrnk+shift)>
+                    , [text(x, viewBoxXaxe.height/2, xAxe.d[i], class=xAxe.class)
+                    | int i<-[0..size(xAxe.d)], num x := i*dxX]
+                   , vshrink= shift, hshrink = hshrink*(shrnk+2*shift), class=xAxe.class
+                    , viewBox=viewBoxXaxe)
+                ,width=width, height = height, strokeWidth=0,
+                viewBox=<0, 0, width, height>);
+    return r;
+    }
    

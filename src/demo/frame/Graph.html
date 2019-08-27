@@ -33,8 +33,8 @@
     text-align:left;
     }
 
-path.x-axe{stroke-width:0.01;stroke:lightgrey}
-path.y-axe {stroke-width:0.01;stroke:lightgrey}
+path.x-axe{stroke-width:0.001;stroke:lightgrey}
+path.y-axe {stroke-width:0.001;stroke:lightgrey}
 rect{fill:none; stroke-width:2; stroke:black}
 rect.x-axe{fill:none; stroke-width:0; stroke:black}
 rect.y-axe{fill:none; stroke-width:0; stroke:black}
@@ -46,20 +46,23 @@ rect.y-axe{fill:none; stroke-width:0; stroke:black}
     font-size:4pt;
     font-style:italic;
     }
-text.x-axe {
-    fill:darkblue;
+text {
     font-style:italic;
     text-anchor:middle;
     dominant-baseline:middle;
+    }
+text.x-axe {
+    fill:darkblue;
     font-size:12pt;
     }
 text.y-axe {
     fill:darkblue;
     stroke-width:0;
-    font-style:italic;
-    text-anchor:middle;
-    dominant-baseline:middle;
     font-size:12pt;
+    }
+ #sign {
+    stroke: orange;
+    fill:yellow;
     }
  .sin {
       stroke-width:0.01;
@@ -68,6 +71,16 @@ text.y-axe {
        }
  .cos {
       stroke-width:0.01;
+      stroke:red;
+      fill:none
+       }
+ .left {
+      stroke-width:0.001;
+      stroke:green;
+      fill:none
+       }
+ .right {
+      stroke-width:0.001;
       stroke:red;
       fill:none
        }

@@ -16,7 +16,7 @@ SVG cell(tuple[Pos, Pos] pos) = box(CC
          ,class="cell",shrink=1); 
     
 public void main() {
-    str output = svg( 800, 800, box(LT, [cell(p)|p<-getPositions()]
+    str output = svg( 600, 600, box(LT, [cell(p)|p<-getPositions()]
         ,svgLayout=grid(3)));    
     openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>); 
     }   

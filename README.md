@@ -55,17 +55,15 @@ The command `openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"at
               ,ViewBox viewBox=<0, 0, 100, 100>
               ,Dim padding = pxl(<0,0,0,0,>)
               ,SVGLayout svgLayout = overlay()
-``` 
-     where *pos* is the position with respect to the viewBox of the outer SVG figure,
+```
+where *pos* is the position with respect to the viewBox of the outer SVG figure,
              *inner* is the list of inner figures,
              *hshrink* the relative size with respect to the width of the outer SVG figure,
              *vshrink* the relative size with respect to the height of the outer SVG figure,
              *strokeWidth* the width of the stroke with respect to the viewPort of the outer figure,
              *viewBox* will be applied to each inner figure,
-             *padding* applied to each inner figure,
-             
-             if *svgLayout* = `overlay()` then the inner figures will be overlayed,
-             
+             *padding* applied to each inner figure,       
+             if *svgLayout* = `overlay()` then the inner figures will be overlayed,        
              if *svgLayout* = `grid(ncols)` then the inner figure will be laid next to each other
              
 

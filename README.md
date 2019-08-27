@@ -1,6 +1,6 @@
 # racytoscal
 
-The idea is to add a graphical interface to rascal which is as concise as possible and takes a much as possible advantage of *svg*, *html*, and *css*, such that the full functionallity of those tools can be used. A second goal was providing an interface for building graphs. It uses the tool *cytoscape*, which includes *dagre*. This is the reason of the name racytoscal which is a connection of rascal and cytoscape.
+The idea is to add a graphical interface to rascal which is as concise as possible and takes a much as possible advantage of *svg*, *html*, and *css*, such that the full functionallity of those tools can be used. A second goal was providing an interface for building graphs. It uses the tool *cytoscape*, which includes *dagre*. This is the reason of the name *racytoscal* which is a connection between *rascal* and *cytoscape*.
 
 An unit which is a directory containing a pair of files. A `.html` and a `.rsc` file. An example is the directory simple which contains the files *Graph.rsc* and *Graph.html*.
 ```
@@ -42,6 +42,37 @@ public void main() {
     openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>); 
     }   
 ```
-The command `openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>)` opens an `.html`-file and attaches the `html`-string *output* to the `<div id='attach'>` line standing in that file. All the other commands produce `.html`-strings.
+The command `openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>)` opens an `.html`-file and attaches the `html`-string *output* to the `<div id='attach'>` line standing in that file. 
+
+## SVG Commands
+
+* `svg(int width , int height,  SVG content ..., ViewBox viewBox= <0, 0, width, height>)`
+    produces an `.svg` string from a *content* of type *list\[SVG\]* with attributes *width*, *height*, an *viewBox*.
+    
+* 
+    ```
+    box(tuple[Pos, Pos] pos, SVG inner ..., str id = "", str class = "", str style = ""
+              ,num vshrink = 1, num hshrink = 1, shrink = 1, num strokeWidth = 2
+              ,ViewBox viewBox=<0, 0, 100, 100>
+              ,Dim padding = pxl(<0,0,0,0,>)
+              ,SVGLayout svgLayout = overlay()
+    ```  
+     where *pos* is the position with respect to the viewBox of the outer SVG figure,
+             *inner* is the list of inner figures,
+             *hshrink* the relative size with respect to the width of the outer SVG figure,
+             *vshrink* the relative size with respect to the height of the outer SVG figure,
+             *strokeWidth* the width of the stroke with respect to the viewPort of the outer figure,
+             *viewBox* will be applied to each inner figure,
+             *padding* applied to each inner figure,
+             
+             if *svgLayout* = `overlay()` then the inner figures will be overlayed,
+             
+             if *svgLayout* = `grid(ncols)` then the inner figure will be laid next to each other
+             
+
+
+
+
+
 
 

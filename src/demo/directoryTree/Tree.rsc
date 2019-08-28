@@ -70,6 +70,7 @@ str callbackTapend(str id) {
  public void main() {
     int n=8;
     lrel[loc, loc] rl  = genTree(|project://racytoscal|, 4);
+    // println(rl);
     // lrel[int, int] rl  = genTree(5, 3);
     list[Ele] edges = [e_("<esc(a[0])>_<esc(a[1])>", esc(a[0]), esc(a[1]))
         |a<-rl];
@@ -93,7 +94,7 @@ str callbackTapend(str id) {
                   <"node", style(
                     width = "15px",
                     height= "15px", 
-                    backgroundColor="antiquewhite", shape=ellipse(),
+                    backgroundColor="antiquewhite", shape=NodeShape::ellipse(),
                     borderWidth = "2", borderColor="brown"
                    ,padding = "10" 
                   )>
@@ -102,6 +103,7 @@ str callbackTapend(str id) {
           ,\layout = dagre("")
         )
       ); 
+    // println(output);
     openBrowser(|project://racytoscal/src/demo/directoryTree/Tree.html|, output, tapstart = callbackTapstart, tapend=callbackTapend);  
     }
     

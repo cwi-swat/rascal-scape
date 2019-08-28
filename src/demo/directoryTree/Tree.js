@@ -3,7 +3,7 @@
  */
 
 window.addEventListener("load", function(evt) {
-	                   cy.nodes().style({
+	                   cy["cy"].nodes().style({
 	                	    'overlay-color':'red',
 	                	    'overlay-opacity':0,
 	                	    'text-opacity':'0',

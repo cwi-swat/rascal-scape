@@ -1009,8 +1009,10 @@ public SVG frame(num hshrink, num vshrink, tuple[str \class, list[str] d] xAxe, 
                     | int i<-[0..size(xAxe.d)], num x := i*dxX]
                    , vshrink= shift, hshrink = hshrink*(shrnk+2*shift), class=xAxe.class
                     , viewBox=viewBoxXaxe)
-                ,width=width, height = height, strokeWidth=0,
-                viewBox=<0, 0, width, height>);
+               // ,width=width, height = height
+                    , strokeWidth=0
+                ,viewBox=<0, 0, width, height>
+               );
     return r;
     }
    

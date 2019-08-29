@@ -3,7 +3,6 @@ import Prelude;
 import Racytoscal;
 import util::Math;
 
-
 public void main() {
     list[Ele]  nodes = 
         [
@@ -48,25 +47,23 @@ public void main() {
                   <"node", style(
                     width = "50px",
                     height= "50px", 
-                    // backgroundColor="antiquewhite",
-                    shape=ellipse(),
+                    shape=NodeShape::ellipse(),
                     backgroundFill="radial-gradient",
                     backgroundGradientStopPositions="0% 20% 25% 30% 40% 50% 60% 70% 80& 90% 100%",
                     backgroundGradientStopColors= "lightsteelblue steelblue",
                     backgroundOpacity=1.0,
                     borderWidth = "0" , borderColor="antiquewhite"
                   )>
-                  , <"edge", style(lineColor="khaki"
+                ,<"edge", style(lineColor="khaki"
                      ,textBackgroundColor="whitesmoke", textBackgroundPadding=1
                      ,textBackgroundOpacity=1, textOpacity= 1
                      ,color="grey"
                      ,fontSize="20pt"
-                     )>
-                  ,
-                  <"edge#sjin,#aleph,#mem", style(lineColor="pink")>
-                  ,
-                   <"edge#waf,#pe,#gimel, #lamed, #nun, #kaf, #beth, #he, #tav", style(lineColor="lightblue")>
-                  ]
+                   )>
+                ,<"edge#sjin,#aleph,#mem", style(lineColor="pink")>
+                ,<"edge#waf,#pe,#gimel, #lamed, #nun, #kaf, #beth, #he, #tav"
+                                          ,style(lineColor="lightblue")>
+                ]
          ,\layout = preset("")
         )
       ); 

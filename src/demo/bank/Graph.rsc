@@ -83,7 +83,7 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                   <"node", style(
                     width = "5px"
                    ,height= "5px" 
-                   ,shape=ellipse()
+                   ,shape=NodeShape::ellipse()
                    ,borderWidth = "2", borderColor="brown"
                    ,padding = "10" 
                    ,backgroundColor="antiquewhite"

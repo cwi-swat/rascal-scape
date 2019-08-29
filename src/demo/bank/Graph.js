@@ -111,7 +111,7 @@ function step(id, current0, next) {
 }
 
 function nextStep(current0, current) {
-	   var src = cy.$('#'+current.loc);
+	   var src = cy['cy'].$('#'+current.loc);
 	   var eles = src.neighborhood('edge');
 	   var i = 0;
 	   var labels = [];

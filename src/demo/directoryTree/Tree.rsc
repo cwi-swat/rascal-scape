@@ -74,22 +74,23 @@ str callbackTapend(str id) {
     // lrel[int, int] rl  = genTree(5, 3);
     list[Ele] edges = [e_("<esc(a[0])>_<esc(a[1])>", esc(a[0]), esc(a[1]))
         |a<-rl];
-    list[Ele]  nodes = [n_(esc(i)
-       , style=style(
-          , label=label(isEmpty(i.file)?i.path:i.file 
-            ,vAlign="center"
-            )
-            )
-       ) | loc i<-dup(carrier(rl))];
+    list[Ele]  nodes = 
+         [n_(esc(i)
+              ,style=style(
+                 label=label(isEmpty(i.file)?i.path:i.file ,vAlign="center")
+                )
+            )|loc i<-dup(carrier(rl))
+         ];
     str output = genScript("cy", cytoscape(
         elements= nodes+edges
        ,styles = [<"edge", style(  
                  curveStyle=taxi(taxiDirection=downward()),
                  arrowShape=[
                      ArrowShape::triangle(
-                     arrowScale=2, arrowColor="red", pos = target())]
-                     ,lineColor="blue"
-               )
+                         arrowScale=2, arrowColor="red", pos = target())
+                         ]
+                         ,lineColor="blue"
+                        )
                   >,
                   <"node", style(
                     width = "15px",
@@ -103,7 +104,6 @@ str callbackTapend(str id) {
           ,\layout = dagre("")
         )
       ); 
-    // println(output);
     openBrowser(|project://racytoscal/src/demo/directoryTree/Tree.html|, output, tapstart = callbackTapstart, tapend=callbackTapend);  
     }
     

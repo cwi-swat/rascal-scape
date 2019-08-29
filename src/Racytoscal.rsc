@@ -754,7 +754,7 @@ str toString(list[tuple[str attach, str content]] htmls) {
  public list[tuple[Pos, Pos]] getPositions() = [LT, LC, LB, CT, CC, CB, RT, RC, RB];
  
  public SVG box(tuple[Pos, Pos] pos, SVG inner ..., str id= "", str class= "", str style="", num width=100, num height=100, num vshrink = 1.0, num hshrink = 1.0, 
-     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, 100, 100>, Dim padding = pxl(<0,0,0, 0>)
+     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, 1000, 1000>, Dim padding = pxl(<0,0,0, 0>)
      , SVGLayout svgLayout = overlay()) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      // println("<vshrink?> <vshrink>");

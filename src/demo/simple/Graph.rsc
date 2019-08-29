@@ -12,8 +12,8 @@ str pickColor() {
     }
     
 SVG cell(tuple[Pos, Pos] pos) = box(CC
-            ,box(pos, class="kernel", shrink=0.3)
-         ,class="cell",shrink=1); 
+            ,box(pos, class="kernel", shrink=0.3, strokeWidth=20)
+         ,class="cell",shrink=1, strokeWidth=20); 
     
 public void main() {
     str output = svg( 600, 600, box(LT, [cell(p)|p<-getPositions()]

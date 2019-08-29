@@ -44,7 +44,7 @@ public void main() {
         elements= nodes1
        ,styles = [
                   <"node", style(
-                    shape=ellipse(),
+                    shape=NodeShape::ellipse(),
                     backgroundOpacity=0.0,
                     borderWidth = "4"              
                   )>
@@ -56,7 +56,7 @@ public void main() {
         elements= nodes2
        ,styles = [
                   <"node", style(
-                    shape=ellipse(),
+                    shape=NodeShape::ellipse(),
                     backgroundOpacity=0.0,
                     borderWidth = "4"              
                   )>

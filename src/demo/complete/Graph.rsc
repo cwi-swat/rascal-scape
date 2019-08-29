@@ -27,7 +27,7 @@ public void main() {
                     width = "15px",
                     height= "15px", 
                     // backgroundColor="antiquewhite",
-                    shape=ellipse(),
+                    shape=NodeShape::ellipse(),
                     backgroundFill="radial-gradient",
                     backgroundGradientStopColors="antiquewhite brown",
                     borderWidth = "2", borderColor="brown"

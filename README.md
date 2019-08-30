@@ -30,9 +30,9 @@ import Prelude;
 import Racytoscal;
 import util::Math;
 
-public list[tuple[Pos, Pos]] getPositions() = [LT, LC, LB, CT, CC, CB, RT, RC, RB];
+public list[Position] getPositions() = [LT, LC, LB, CT, CC, CB, RT, RC, RB];
 
-SVG cell(tuple[Pos, Pos] pos) = box(CC
+SVG cell(Position pos) = box(CC
             ,box(pos, class="kernel", shrink=0.3)
          ,class="cell",shrink=1); 
     
@@ -50,7 +50,7 @@ The command `openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"at
     produces an `.svg` string from a *content* of type *list\[SVG\]* with attributes *width*, *height*, and *viewBox*.
 *  
 ``` 
-   SVG box(tuple[Pos, Pos] pos, SVG inner ..., str id = "", str class = "", str style = ""
+   SVG box(Position pos, SVG inner ..., str id = "", str class = "", str style = ""
               ,num vshrink = 1, num hshrink = 1, shrink = 1, num strokeWidth = 2
               ,ViewBox viewBox=<0, 0, 100, 100>
               ,Dim padding = pxl(<0,0,0,0>)
@@ -78,6 +78,28 @@ produces a rect with attributes *width*, *height*, and *viewBox* on *pos*.
 places the html code defined in string  *html* in position *pos* with respect to the viewbox of the parent. 
 * `SVG path(str graph, str id= "", str class= "", str style= "")` adds the svg path definition (as defined in the format after `path -d`) in string  *graph* . Coordinates are relative to the viewbox defined in the parent.
              
+## Coord
+The *x*- and *y*- coordinate can be of a box can be
+* L(x)  stands for left *x* of a box
+* C(x)  stands for center *x* of a box
+* R(x)  stands for right *x* of a box
+* L(y)  stands for top *y* of a box
+* C(y)  stands for center *y* of a box
+* R(y)  stands for bottom *y* of a box
+
+*L1*, *C1* and, *R1* are the relative versions of *L*, *C*, and *R*. 
+
+## Position
+ So
+ * LT stands for  `<L1(0),  L1(0)>` (LeftTop)
+ * LC stands for  `<L1(0),  C1(0.5)>` (LeftCenter)
+ * LB stands for `<L1(0), R1(1)>`  (LeftBottom)
+ * CT stands for `<C1(0.5), L1(0)>` (CenterTop)
+ * CC stands for `<C1(0.5), C1(0.5)>` (CenterCenter)
+ * CB stands for `<C1(0.5), R1(1)>` (CenterBottom)
+ * RT stands for `<R1(1), L1(0)>` (RightTop)
+ * RC stands for `<R1(1), C1(0.5)>` (RightCenter)
+ * RB stands for `<R1(1), R1(1)>` (RightBottom)
 
 
 

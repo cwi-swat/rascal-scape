@@ -4,9 +4,10 @@ import util::Math;
 import util::HtmlDisplay;
 import util::Webserver;
 
-alias Position = tuple[int x, int y];
-alias ViewBox = tuple[num x, num y, num width, num height];
-alias Padding = tuple[num top,  num right, num bottom, num left];
+
+public alias Position = tuple[Coord, Coord];
+public alias ViewBox = tuple[num x, num y, num width, num height];
+public alias Padding = tuple[num top,  num right, num bottom, num left];
 
 num cut = 0.01;
 
@@ -727,33 +728,32 @@ str toString(list[tuple[str attach, str content]] htmls) {
        
   data SVGLayout = grid(int nCols)|overlay();
        
-  data Pos = L(num  left) | R(num right) |C(num center)|L1(num  left1) | R1(num right1) |C1(num center1);
+  data Coord = L(num  left) | R(num right) |C(num center)|L1(num  left1) | R1(num right1) |C1(num center1);
   
   data Dim = pxl(num dim)|pct(num dim)|pxl(Padding tpl)|pct(Padding tpl);
        
   data SVG  (ViewBox viewBox= <0, 0, 100, 100>, list[SVG] inner =[], str id = "", str class= "", str frameClass = "", SVG parent= root(),
           Dim padding = pxl(<0, 0, 0, 0>), SVGLayout svgLayout = overlay())
-        = rect(Pos x, Pos y, Dim width, Dim height, num strokeWidth, str style)
-        | ellipse(Pos x, Pos y, Dim width, Dim height, num strokeWidth, str style)
-        | foreignObject(Pos x, Pos y, Dim width, Dim height, num strokeWidth, str style, str html)
+        = rect(Coord x, Coord y, Dim width, Dim height, num strokeWidth, str style)
+        | ellipse(Coord x, Coord y, Dim width, Dim height, num strokeWidth, str style)
+        | foreignObject(Coord x, Coord y, Dim width, Dim height, num strokeWidth, str style, str html)
         | text(num x1, num y1,  str style, str txt)
         | path(str style, str txt)
         | root()
         ;
  
- public tuple[Pos, Pos] LT = <L1(0), L1(0)>;
- public tuple[Pos, Pos] LC = <L1(0), C1(0.5)>;
- public tuple[Pos, Pos] LB = <L1(0), R1(1)>;
- public tuple[Pos, Pos] CT = <C1(0.5), L1(0)>;
- public tuple[Pos, Pos] CC = <C1(0.5), C1(0.5)>;
- public tuple[Pos, Pos] CB = <C1(0.5), R1(1)>;
- public tuple[Pos, Pos] RT = <R1(1), L1(0)>;
- public tuple[Pos, Pos] RC = <R1(1), C1(0.5)>;
- public tuple[Pos, Pos] RB = <R1(1), R1(1)>;
+ public Position LT = <L1(0), L1(0)>;
+ public Position LC = <L1(0), C1(0.5)>;
+ public Position LB = <L1(0), R1(1)>;
+ public Position CT = <C1(0.5), L1(0)>;
+ public Position CC = <C1(0.5), C1(0.5)>;
+ public Position CB = <C1(0.5), R1(1)>;
+ public Position RT = <R1(1), L1(0)>;
+ public Position RC = <R1(1), C1(0.5)>;
+ public Position RB = <R1(1), R1(1)>;
  
- public list[tuple[Pos, Pos]] getPositions() = [LT, LC, LB, CT, CC, CB, RT, RC, RB];
  
- public SVG box(tuple[Pos, Pos] pos, SVG inner ..., str id= "", str class= "", str style="", num width=100, num height=100, num vshrink = 1.0, num hshrink = 1.0, 
+ public SVG box(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=100, num height=100, num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, 1000, 1000>, Dim padding = pxl(<0,0,0, 0>)
      , SVGLayout svgLayout = overlay()) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
@@ -765,8 +765,8 @@ str toString(list[tuple[str attach, str content]] htmls) {
      return c;
  }
  
- public SVG ellipse(tuple[Pos, Pos] pos, SVG inner ..., str id= "", str class= "", str style="", num width=100, num height=100, num vshrink = 1.0, num hshrink = 1.0, 
-     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, 100, 100>,  Dim padding = pxl(<0,0,0, 0>)) {
+ public SVG ellipse(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=100, num height=100, num vshrink = 1.0, num hshrink = 1.0, 
+     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, 1000, 1000>,  Dim padding = pxl(<0,0,0, 0>)) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      // println("<padding>");
      SVG c =  ellipse(pos[0], pos[1], ((hshrink?)||(shrink?))?pct(hshrink*100) :pxl(width) 
@@ -777,7 +777,7 @@ str toString(list[tuple[str attach, str content]] htmls) {
  
  
  
- public SVG htmlObject(tuple[Pos, Pos] pos, str html, str id= "", str class= "", str frameClass = "", str style="", int width=100, int height=100, num vshrink = 1.0, num hshrink = 1.0, 
+ public SVG htmlObject(Position pos, str html, str id= "", str class= "", str frameClass = "", str style="", int width=100, int height=100, num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, int strokeWidth=2) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      // println("<vshrink?> <vshrink>");
@@ -801,7 +801,7 @@ str toString(list[tuple[str attach, str content]] htmls) {
      return c;
  }
  
-num posX(num dim, num width, Pos p, num lw) {
+num posX(num dim, num width, Coord p, num lw) {
     switch(p) {
        case L1(num x): return x*dim+lw/2;
        case R1(num x): return x*dim-width +lw/2;
@@ -813,7 +813,7 @@ num posX(num dim, num width, Pos p, num lw) {
     return 0;
     }
     
-num posY(num dim, num height, Pos p, num lw) {
+num posY(num dim, num height, Coord p, num lw) {
     switch(p) {
        case L1(num y): return y*dim+lw/2;
        case R1(num y): return y*dim-height +lw/2;
@@ -904,25 +904,28 @@ str eval(ViewBox vb,  num lw0, SVG c) {
       num width  = 0, height = 0;
       list[SVG] inner = c.inner;
       switch (c) {
-          case fig:rect(Pos x1, Pos y1, Dim widthDim, Dim heightDim, num lw1, str style1): {
+          case fig:rect(Coord x1, Coord y1, Dim widthDim, Dim heightDim, num lw1, str style1): {
+                 num width1 = checkShrink(vb2.width, widthDim), height1 = checkShrink(vb2.height, heightDim);
+                 Padding p = getPadding(vb1.width,vb1.height, c.padding);   
+                 x = posX(vb2.width, width1, x1, lw1)+p.left; y = posY(vb2.height, height1,  y1, lw1)+p.top; 
+                 width = width1-lw1-p.left-p.right; height  = height1-lw1-p.top-p.bottom; lw = lw1;
+                 style1+=";stroke-width:<_(lw)>"; 
+                 r= "\<rect <useId(c)> <useClass(c)> x=\"<_(x)>\" y=\"<_(y)>\"  width=\"<_(width)>\" height=\"<_(height)>\" style=\"<style1>\" /\>";
+                 }
+          case fig:ellipse(Coord x1, Coord y1, Dim widthDim, Dim heightDim, num lw1, str style1): {
                  num width1 = checkShrink(vb2.width, widthDim), height1 = checkShrink(vb2.height, heightDim);
                  Padding p = getPadding(vb1.width,vb1.height, c.padding);
                  x = posX(vb2.width, width1, x1, lw1)+p.left; y = posY(vb2.height, height1,  y1, lw1)+p.top; 
                  width = width1-lw1-p.left-p.right; height  = height1-lw1-p.top-p.bottom; lw = lw1;
-                 r= "\<rect <useId(c)> <useClass(c)> x=\"<_(x)>\" y=\"<_(y)>\"  width=\"<_(width)>\" height=\"<_(height)>\" style=\"<style1>\" stroke-width=\"<_(lw)>\"/\>";
+                 style1+=";stroke-width:<_(lw)>"; 
+                 r= "\<ellipse <useId(c)> <useClass(c)> cx=\"<_(x+width/2)>\" cy=\"<_(y+height/2)>\"  rx=\"<_(width/2)>\" ry=\"<_(height/2)>\" style=\"<style1>\"/\>";
                  }
-          case fig:ellipse(Pos x1, Pos y1, Dim widthDim, Dim heightDim, num lw1, str style1): {
-                 num width1 = checkShrink(vb2.width, widthDim), height1 = checkShrink(vb2.height, heightDim);
-                 Padding p = getPadding(vb1.width,vb1.height, c.padding);
-                 x = posX(vb2.width, width1, x1, lw1)+p.left; y = posY(vb2.height, height1,  y1, lw1)+p.top; 
-                 width = width1-lw1-p.left-p.right; height  = height1-lw1-p.top-p.bottom; lw = lw1;
-                 r= "\<ellipse <useId(c)> <useClass(c)> cx=\"<_(x+width/2)>\" cy=\"<_(y+height/2)>\"  rx=\"<_(width/2)>\" ry=\"<_(height/2)>\" style=\"<style1>\" stroke-width=\"<_(lw)>\"/\>";
-                 }
-          case fig:foreignObject(Pos x1, Pos y1, Dim widthDim, Dim heightDim, num lw1, str style1, str html): {
+          case fig:foreignObject(Coord x1, Coord y1, Dim widthDim, Dim heightDim, num lw1, str style1, str html): {
                  num width1 = checkShrink(vb2.width, widthDim), height1 = checkShrink(vb2.height, heightDim);
                  x = posX(vb2.width, width1, x1, lw1); y = posY(vb2.height, height1,  y1, lw1); width = width1-lw1; height  = height1-lw1; lw = lw1;
+                 style1+=";stroke-width:<_(lw)>"; 
                  r= "\<rect <useFrameClass(c)> x=\"<_(x)>\" y=\"<_(y)>\"  width=\"<_(width)>\" height=\"<_(height)>\" style=\"<style1>\" stroke-width=\"<lw>\"/\>";
-                 r+= "\<foreignObject <useClass(c)> x=\"<_(x+lw/2)>\" y=\"<_(y+lw/2)>\" width=\"<_(width-lw)>\" height=\"<_(height-lw)>\"  style=\"<style1>\" stroke-width=\"<lw>\"\>
+                 r+= "\<foreignObject <useClass(c)> x=\"<_(x+lw/2)>\" y=\"<_(y+lw/2)>\" width=\"<_(width-lw)>\" height=\"<_(height-lw)>\"  style=\"<style1>\"\>
                     '\<div class=\"htmlObject\"\>
                     '<html>
                     '\</div\>

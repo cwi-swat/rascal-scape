@@ -36,15 +36,16 @@ public void main() {
                         +
                          [<"right",[<1, x>, <1-x, 1>]>|num x<-[0,0.01..1]]
         , viewBox = <0, 0, 1, 1>, width = width, height = height)
-         , ellipse(CC, text(50, 50, "Hallo"), shrink = 0.3, id="sign", strokeWidth=16
+         , ellipse(CC, text(500, 500, "Hallo", class="text"), shrink = 0.3, id="sign", strokeWidth=16
            )
+           , strokeWidth = 2
         )
         ,
-        frame(1, 1/PI(), <"x-axe", ["0","\u03C0/2","\u03C0","3\u03C0/2","2\u03C0"]>
+        box(LT, frame(1, 1/PI(), <"x-axe", ["0","\u03C0/2","\u03C0","3\u03C0/2","2\u03C0"]>
                         ,<"y-axe", ["-1","0","1"]>
                         ,<"sin",[<x, sin(x)>|num x<-[0,step..2*PI()+step]]>
                         ,<"cos",[<x, cos(x)>|num x<-[0,step..2*PI()+step]]>
-        , viewBox = <0, -1, 2*PI(), 2>)
+        , viewBox = <0, -1, 2*PI(), 2>), strokeWidth=2)
         , shrink = 0.8, strokeWidth = 0, svgLayout=grid(2)
         )
         );

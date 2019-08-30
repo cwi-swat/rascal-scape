@@ -64,8 +64,9 @@ where *pos* is the position with respect to the viewBox of the outer SVG figure,
              *viewBox* will be applied to each inner figure,
              *padding* applied to each inner figure,       
              if *svgLayout* = `overlay()` then the inner figures will be overlayed,        
-             if *svgLayout* = `grid(ncols)` then the inner figure will be laid next to each other,
-produces a rect with attributes *width*, *height*, and *viewBox* on *pos*.
+             if *svgLayout* = `grid(ncols)` then the inner figure will be laid next to each other 
+             (after *ncols* a new row will be started),
+the result is a rect with attributes *width*, *height*, and *viewBox* on position *pos*.
 * `SVG ellipse` has the same parameters as `box`. There are no parameters *rx* and *ry*.
 * `SVG text(num x, num y, str txt, str id= "", str class= "", str style= "")` places *txt* in position *(x,y)* with 
    respect to the viewbox of the parent figure.
@@ -101,7 +102,12 @@ The *x*- and *y*- coordinate can be of a box can be
  * RC stands for `<R1(1), C1(0.5)>` (RightCenter)
  * RB stands for `<R1(1), R1(1)>` (RightBottom)
 
+## Dim
 
+* `pxl(dim)` the size in pixels
+* `pct(dim)` the size in procents
+* `pxl(padding)`
+* `pct(padding)` padding is the tuple *<top, right, bottom, left>*
 
 
 

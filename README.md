@@ -1,7 +1,4 @@
 # racytoscal  
-![Screenshot](Simple.png)
-
-
 
 
 The idea is to add a graphical interface to rascal which is as concise as possible and takes a much as possible advantage of *svg*, *html*, and *css*, such that the full functionallity of those tools can be used. A second goal was providing an interface for building graphs. It uses the tool *cytoscape*, which includes *dagre*. This is the reason of the name *racytoscal* which is a connection between *rascal* and *cytoscape*.
@@ -47,6 +44,7 @@ public void main() {
     }   
 ```
 The command `openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>)` opens an `.html`-file and attaches the `html`-string *output* to the `<div id='attach'>` line standing in that file. 
+The belonging picture is stored in `images/Simple.png`.
 
 ## SVG Commands
 
@@ -113,6 +111,116 @@ The *x*- and *y*- coordinate can be of a box can be
 * `pxl(padding)`
 * `pct(padding)` padding is the tuple *<top, right, bottom, left>*
 
+## Frame
+The command
+```
+SVG frame(num hshrink, num vshrink, tuple[str \class, list[str] d] xAxe, tuple[str className, list[str] d] yAxe
+    , tuple[str className, lrel[num x, num y] d] graphs... ,ViewBox viewBox =<0, 0, 1000, 1000>,
+    num width = 1000, num height = 1000)
+```
+displays a set of graphs in a coordinate system. 
+`hshrink` and `vshrink`  defines the proportion of the relative sizes, `xAxe` and `yAxe` are lists of labels, to each axe must be assigned a class name. `graphs` are a set of relations, where each relation defines a graph. To each graph must be assigned a class name. 
+An example of this:
 
-
+```
+public void main() {
+     num step = 0.1;
+     int width =1600, height = 800;
+     str output = svg(width, height, 
+       box(CC, 
+          box(LT, frame(1, 1, <"x-axe", ["<i>"|num i<-[0,0.1..1]]>
+                        ,<"y-axe", ["<i>"|num i<-[0,0.1..1]]>
+                        ,[<"left",[<0, x>, <1-x, 0>]>|num x<-[0,0.01..1]]
+                        +
+                         [<"right",[<1, x>, <1-x, 1>]>|num x<-[0,0.01..1]]
+        , viewBox = <0, 0, 1, 1>, width = width, height = height)
+         , ellipse(CC, text(500, 500, "Hallo", class="text"), shrink = 0.3, id="sign", strokeWidth=16
+           )
+           , strokeWidth = 2
+        )
+        ,
+        box(LT, frame(1, 1/PI(), <"x-axe", ["0","\u03C0/2","\u03C0","3\u03C0/2","2\u03C0"]>
+                        ,<"y-axe", ["-1","0","1"]>
+                        ,<"sin",[<x, sin(x)>|num x<-[0,step..2*PI()+step]]>
+                        ,<"cos",[<x, cos(x)>|num x<-[0,step..2*PI()+step]]>
+        , viewBox = <0, -1, 2*PI(), 2>), strokeWidth=2)
+        , shrink = 0.8, strokeWidth = 0, svgLayout=grid(2)
+        )
+        );
+     openBrowser(|project://racytoscal/src/demo/frame/Graph.html|, <"attach", output>); 
+     }
+```
+The belonging `.html`:
+```
+<!DOCTYPE html>
+<html>
+<head>
+<title>Frame</title>
+<style>
+path.x-axe{stroke-width:0.01;stroke:lightgrey}
+path.y-axe {stroke-width:0.01;stroke:lightgrey}
+rect{fill:none; stroke:black}
+rect.x-axe{fill:none; stroke-width:0; stroke:black}
+rect.y-axe{fill:none; stroke-width:0; stroke:black}
+.frame{fill:antiquewhite; stroke:red}
+.tst{fill:lightgray; stroke:green}
+.inner-tst{fill:lightblue; stroke:orange}
+.text {
+    fill:darkblue;
+    font-size:120pt;
+    font-style:italic;
+    }
+text {
+    font-style:italic;
+    text-anchor:middle;
+    dominant-baseline:middle;
+    }
+text.x-axe {
+    fill:darkblue;
+    font-size:12pt;
+    }
+text.y-axe {
+    fill:darkblue;
+    stroke-width:0;
+    font-size:12pt;
+    }
+ #sign {
+    stroke: orange;
+    fill:yellow;
+    }
+ .sin {
+      stroke-width:0.01;
+      stroke:green;
+      fill:none
+       }
+ .cos {
+      stroke-width:0.01;
+      stroke:red;
+      fill:none
+       }
+ .left {
+      stroke-width:0.001;
+      stroke:green;
+      fill:none
+       }
+ .right {
+      stroke-width:0.001;
+      stroke:red;
+      fill:none
+       }
+ .axe {
+      stroke:green;
+      fill:none
+     }
+title {display:block}
+</style>
+</head>
+<body onunload="handleOnClose()">
+<div id='attach'>
+<script src="init"></script>
+</div>
+</body>
+</html>
+```
+The result is found in `images/Frame.png`
 

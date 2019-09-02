@@ -1,5 +1,5 @@
 # racytoscal  
-![GitHub Logo](Simple.png)
+http://github.com/BertLisser/racytoscal/Simple.png
 
 
 

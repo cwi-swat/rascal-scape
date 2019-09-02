@@ -1,5 +1,6 @@
 # racytoscal  
-http://github.com/BertLisser/racytoscal/Simple.png
+![Screenshot](Simple.png)
+
 
 
 

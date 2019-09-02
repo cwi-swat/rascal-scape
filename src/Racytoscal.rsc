@@ -982,7 +982,7 @@ list[SVG] graph(ViewBox viewBox, tuple[str \class, lrel[num x, num y] d] graphs.
     
 public SVG frame(num hshrink, num vshrink, tuple[str \class, list[str] d] xAxe, tuple[str \class, list[str] d] yAxe
     , tuple[str \class, lrel[num x, num y] d] graphs... ,ViewBox viewBox =<0, 0, 100, 100>,
-    num width = 800, num height = 800) {
+    num width = 1000, num height = 1000) {
     num shrnk = 0.9;
     println("width: <width>");
     num shift = (1-shrnk)/2;

@@ -1,5 +1,5 @@
 # racytoscal  
-![GitHub Logo](/images/logo.png)
+![GitHub Logo](Simple.png)
 
 
 

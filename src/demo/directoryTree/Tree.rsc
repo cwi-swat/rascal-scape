@@ -53,9 +53,8 @@ import util::Math;
  str esc(loc v)= escape(v.path, (".":"_", "/":"_"));
  
  str callbackTapstart(str id) {
-   // println("start: <id>");
     Style styl = style(
-       textBackgroundOpacity=1, textBackgroundColor="lightgrey", textBackgroundPadding=10, textOpacity=1, color="black");
+       textBackgroundOpacity=1, textBackgroundColor="lightgrey", textBackgroundPadding=10, textOpacity=1, color="red");
     str r = "{\"styles\":<Racytoscal::toString([<"node#<id>", styl>])>}";
     return r;
     }
@@ -69,14 +68,15 @@ str callbackTapend(str id) {
  
  public void main() {
     int n=8;
-    lrel[loc, loc] rl  = genTree(|project://racytoscal|, 4);
+    // lrel[loc, loc] rl  = genTree(|project://racytoscal/src|, 4);
+    lrel[loc, loc] rl  = genTree(|file:///Users/bertl/white|, 4);
     // println(rl);
     // lrel[int, int] rl  = genTree(5, 3);
     list[Ele] edges = [e_("<esc(a[0])>_<esc(a[1])>", esc(a[0]), esc(a[1]))
         |a<-rl];
     list[Ele]  nodes = 
          [n_(esc(i)
-              ,style=style(
+              ,style=style(color=i.file,
                  label=label(isEmpty(i.file)?i.path:i.file ,vAlign="center")
                 )
             )|loc i<-dup(carrier(rl))
@@ -98,6 +98,7 @@ str callbackTapend(str id) {
                     backgroundColor="antiquewhite", shape=NodeShape::ellipse(),
                     borderWidth = "2", borderColor="brown"
                    ,padding = "10" 
+                   ,fontSize= "10pt"
                   )>
                   ]
          //,\layout = breadthfirst("directed:true")

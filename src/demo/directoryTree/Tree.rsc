@@ -54,7 +54,7 @@ import util::Math;
  
  str callbackTapstart(str id) {
     Style styl = style(
-       textBackgroundOpacity=1, textBackgroundColor="lightgrey", textBackgroundPadding=10, textOpacity=1, color="red");
+       textBackgroundOpacity=1, textBackgroundColor="lightgrey", textBackgroundPadding=10, textOpacity=1, color="black");
     str r = "{\"styles\":<Racytoscal::toString([<"node#<id>", styl>])>}";
     return r;
     }
@@ -68,8 +68,8 @@ str callbackTapend(str id) {
  
  public void main() {
     int n=8;
-    // lrel[loc, loc] rl  = genTree(|project://racytoscal/src|, 4);
-    lrel[loc, loc] rl  = genTree(|file:///Users/bertl/white|, 4);
+    lrel[loc, loc] rl  = genTree(|project://racytoscal/src|, 4);
+    // lrel[loc, loc] rl  = genTree(|file:///Users/bertl/white|, 4);
     // println(rl);
     // lrel[int, int] rl  = genTree(5, 3);
     list[Ele] edges = [e_("<esc(a[0])>_<esc(a[1])>", esc(a[0]), esc(a[1]))
@@ -84,13 +84,13 @@ str callbackTapend(str id) {
     str output = genScript("cy", cytoscape(
         elements= nodes+edges
        ,styles = [<"edge", style(  
-                 curveStyle=taxi(taxiDirection=downward()),
-                 arrowShape=[
-                     ArrowShape::triangle(
+                    curveStyle=taxi(taxiDirection=downward()),
+                    arrowShape=[
+                      ArrowShape::triangle(
                          arrowScale=2, arrowColor="red", pos = target())
-                         ]
-                         ,lineColor="blue"
-                        )
+                      ]
+                      ,lineColor="blue"
+                      )
                   >,
                   <"node", style(
                     width = "15px",

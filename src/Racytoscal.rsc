@@ -14,7 +14,7 @@ num cut = 0.01;
 num _(num x) = round(x, cut);
 
 
-public data Ele = n_(str id, Style style = style(), Position position= <-1, -1>)
+public data Ele = n_(str id, Style style = style(), tuple[int x, int y] position= <-1, -1>)
          | e_(str id, str source, str target, Style style = style())
          ;
          

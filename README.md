@@ -44,7 +44,7 @@ public void main() {
     }   
 ```
 The command `openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>)` opens an `.html`-file and attaches the `html`-string *output* to the `<div id='attach'>` line standing in that file. 
-The belonging picture is stored in [Simple](images/Simple.md).
+The belonging picture is stored in [Simple.png](images/Simple.md).
 
 ## SVG Commands
 
@@ -220,5 +220,5 @@ title {display:block}
 </body>
 </html>
 ```
-The result is found in `images/Frame.png`
+The result is found [Frame.png](images/Frame.md)
 

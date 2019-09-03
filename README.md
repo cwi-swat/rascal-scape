@@ -276,6 +276,38 @@ public void main() {
     openBrowser(|project://racytoscal/src/demo/directoryTree/Tree.html|, output);  
     }
 ```
-
+The belonging `.html` file is:
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+<title>index</title>
+<script src="lib/cytoscape.umd.js"></script>
+<script src="lib/dagre.min.js"></script>
+<script src="lib/cytoscape-dagre.js"></script>
+<script src="lib/racytoscal.js"></script>
+<!-- <script src="src/demo/directoryTree/Tree.js"></script> -->
+<style>
+#cy {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+title {display:block}
+</style>
+</head>
+<body onunload="handleOnClose()">
+<h2>Directory structure</h2>
+<div id='cy'>
+<script src="init"></script>
+</div>
+</body>
+</html>
+```
 The result is found in [Tree.png](images/Tree.md)
 

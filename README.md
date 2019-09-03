@@ -220,5 +220,62 @@ title {display:block}
 </body>
 </html>
 ```
-The result is found [Frame.png](images/Frame.md)
+The result is found in [Frame.png](images/Frame.md)
+
+## Cytoscape
+
+* The main abstract data type is `CytoScape` which contains the data type `NodeShape`, `EdgeShape`, `Layout`, and `Style`.
+
+* The command `str genScript(str attach, CytoScape cytoScape)` generates the script which will be send to the browser.
+
+Here follows an example which generates a directory tree.
+
+```
+module demo::directoryTree::Tree
+import Racytoscal;
+import Prelude;
+import util::Math;
+
+str esc(loc v)= escape(v.path, (".":"_", "/":"_"));
+
+public void main() {
+    lrel[loc, loc] rl  = genTree(|file:///Users/bertl/white|, 4);
+    list[Ele] edges = [e_("<esc(a[0])>_<esc(a[1])>", esc(a[0]), esc(a[1]))
+        |a<-rl];
+    list[Ele]  nodes = 
+         [n_(esc(i)
+              ,style=style(color=i.file,
+                 label=label(isEmpty(i.file)?i.path:i.file ,vAlign="center")
+                )
+            )|loc i<-dup(carrier(rl))
+         ];
+    str output = genScript("cy", cytoscape(
+        elements= nodes+edges
+       ,styles = [<"edge", style(  
+                    curveStyle=taxi(taxiDirection=downward()),
+                    arrowShape=[
+                      ArrowShape::triangle(
+                         arrowScale=2, arrowColor="red", pos = target())
+                      ]
+                      ,lineColor="blue"
+                      )
+                  >,
+                  <"node", style(
+                    width = "15px",
+                    height= "15px", 
+                    backgroundColor="antiquewhite", shape=NodeShape::ellipse(),
+                    borderWidth = "2", borderColor="brown"
+                   ,padding = "10" 
+                   ,fontSize= "10pt"
+                  )>
+                  ]
+         //,\layout = breadthfirst("directed:true")
+          ,\layout = dagre("")
+        )
+      ); 
+    openBrowser(|project://racytoscal/src/demo/directoryTree/Tree.html|, output);  
+    }
+```
+
+The result is found in [Tree.png](images/Tree.md)
 

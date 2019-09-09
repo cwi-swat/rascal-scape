@@ -32,9 +32,11 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
  public void main() {
        tuple[str lab, int pt, int account, int interest, int amount] current = <"start", 0, -1, -1, -1>;
        str nextStep(str path) {
+          // println("NextStep <path>");
           list[str] args  = split("/", path);
           Style style1 = style(backgroundColor="antiquewhite");
           Style style2 = style(backgroundColor="red");
+          if (args[0]=="core") return "";
           str lab  ="";
           tuple[str lab, int pt, int account, int interest, int amount] current0 = current;
           if (size(args)>=2 && args[1]!="none") {
@@ -48,6 +50,7 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
              }  
           else {
             lab = current0.lab;
+            // println(lab);
             switch (lab) {
                 case "openAccount": {
                       current.interest = toInt(args[3]);

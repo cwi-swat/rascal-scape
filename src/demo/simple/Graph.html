@@ -17,7 +17,7 @@ text {
     }
 .cell{fill:steelblue;stroke:lightblue}
 .kernel{fill:yellow;stroke:salmon}
-rect{stroke-width:0}
+rect{stroke-width:0; fill:none}
 .htmlObject {
    display:table;
    height:100%;
@@ -26,7 +26,7 @@ rect{stroke-width:0}
 title {display:block}
 </style>
 </head>
-<body onunload="handleOnClose()">
+<body onbeforeunload="handleOnClose();">
 <div id='attach'>
 <script src="init"></script>
 </div>

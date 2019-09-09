@@ -60,6 +60,7 @@ window.addEventListener("load", function(evt) {
 	                   document.getElementById("enter-button").addEventListener("click", enterAccount) ;
                        });
 
+
 // Create buttons to choose between outgoing states,
 function step(id, current0, next) {
 	var table =document.createElement("table");

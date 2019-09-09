@@ -76,7 +76,9 @@ str callbackTapend(str id) {
         |a<-rl];
     list[Ele]  nodes = 
          [n_(esc(i)
-              ,style=style(color=i.file,
+              ,style=style(
+                 // color=i.file,
+                 color = "darkgrey",
                  label=label(isEmpty(i.file)?i.path:i.file ,vAlign="center")
                 )
             )|loc i<-dup(carrier(rl))

@@ -1,4 +1,4 @@
-module demo::simple::Graph
+module demo::chart::Graph
 import Prelude;
 import Racytoscal;
 import util::Math;
@@ -29,21 +29,18 @@ public void main() {
 loc site;
     
 public str nesting(list[str] colors, num shrink = 1.0, num strokeWidth = 10) {
-     list[SVG] step(list[SVG] aggr, str color, num shrink = 1.0)  {
-     return [
-         box(RC, aggr, shrink = shrink, strokeWidth=strokeWidth, style="stroke:<color>")
-        ,box(LC, aggr, shrink = shrink, strokeWidth=strokeWidth, style="stroke:<color>")
-        ];
+     SVG step(SVG aggr, str color, num shrink = 1.0)  {
+     return box(RC, aggr, shrink = shrink, strokeWidth=strokeWidth, style="stroke:<color>");
      }
     str output = svg( 600, 600, 
-    ([box(CC, style="stroke:<head(colors)>", shrink = shrink, strokeWidth=strokeWidth)]|step(it, color, shrink = shrink)|color<-tail(colors))
+    (box(RC, style="stroke:<head(colors)>", shrink = shrink, strokeWidth=strokeWidth)|step(it, color, shrink = shrink)|color<-tail(colors))
     ,viewBox=<0, 0, 1000, 1000>);
     return output;
     }
  
  public void main() { 
-    str output = nesting(take(4, colors), strokeWidth=40, shrink = 0.4);
-    site = openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>);  
+    str output = nesting(take(12, colors), strokeWidth=40, shrink = 0.98);
+    site = openBrowser(|project://racytoscal/src/demo/chart/Graph.html|, <"attach", output>);  
     } 
     
 public void exit() = disconnect(site);   

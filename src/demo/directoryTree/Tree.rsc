@@ -5,6 +5,8 @@ import util::Math;
 
  lrel[int, int] genCircle(int n) = [<i%n, (i+2)%n>|int i<-[0..n]];
  
+ loc site;
+ 
  lrel[int, int] genTree(int n, int depth) { 
       int name=1;
       lrel[int, int] result = [];
@@ -107,7 +109,9 @@ str callbackTapend(str id) {
           ,\layout = dagre("")
         )
       ); 
-    openBrowser(|project://racytoscal/src/demo/directoryTree/Tree.html|, output, tapstart = callbackTapstart, tapend=callbackTapend);  
+    site = openBrowser(|project://racytoscal/src/demo/directoryTree/Tree.html|, output, tapstart = callbackTapstart, tapend=callbackTapend);  
     }
+    
+ public void exit() = disconnect(site);
     
 

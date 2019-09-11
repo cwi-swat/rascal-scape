@@ -1019,3 +1019,4 @@ public SVG frame(num hshrink, num vshrink, tuple[str \class, list[str] d] xAxe, 
     return r;
     }
    
+ public void disconnect(loc site) = shutdown(site);

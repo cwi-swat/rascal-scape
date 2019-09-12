@@ -5,6 +5,16 @@ import lang::json::IO;
 
 data Point = point(list[tuple[num x , num y]] pnt)|vec(list[num z] v);
 
+data Color = rgba(int r, int g, int b, num a);
+
+Color Black = rgba(1, 1, 1, 1);
+Color Red = rgba(255, 99, 132, 1);
+Color Blue = rgba(54, 162, 235, 1);
+Color Yellow = rgba(255, 206, 86, 1);
+Color Green = rgba(75, 192, 192, 1);
+Color Purple = rgba(153, 102, 255, 1);
+Color Orange = rgba(255, 159, 64, 1);
+Color DefaultColor = rgba(0,0,0,0.1);
 
 public map[str, value] adt2map(node t) {
    map[str, value] q = getKeywordParameters(t);
@@ -28,13 +38,77 @@ public str adt2json(node t) {
    
               
  data DataSet(str label=""
-             ,Point \data=vec([])
+             , Point \data=vec([])
+             , Color backgroundColor = defaultColor
+             , str borderCapStyle = "butt"
+ // butt, round, square
+             , Color borderColor = defaultColor
+             , list[num] borderDash = []
+             , num borderDashOffset = 0
+             , str borderJoinStyle = "miter"
+ // bevel, round, miter
+             , num borderWidth = 1
+             , str cubicInterpolationMode = "default"
+             , value fill = false
+             , int lineTension = 0
+             , Color pointBackgroundColor  = defaultColor
+             , Color pointBorderColor  = defaultColor
+             , num pointBorderWidth = 0
+             , num pointHitRadius = 0
+             , Color pointHoverBackgroundColor  = defaultColor
+             , Color pointHoverBorderColor  = defaultColor
+             , int pointHoverBorderWidth = 1
+             , num pointRadius = 0  
+             , num pointRotation = 0
+             , str pointStyle = "circle" 
+// circle cross crossRot dash line rect rectRounded rectRot star triangle
+             , bool showLine = true
+             , bool spanGaps = false
+             , value steppedLine = false
+             , str xAxisId = ""
+             , str yAxisId = ""
              ) = dataSet();
     
  
  data Data(list[str] labels = [], list[DataSet] datasets=[]) = \data();
  
- data Options = options();
+ data GridLine(
+        bool display = true
+      , bool circular = true
+      , Color color = defaultColor()
+      , list[num] borderDash = []
+      , num borderDashOffset = 0
+      , num lineWidth = 1
+      , bool drawBorder = true
+      , bool drawOnChartArea = true
+      , bool drawTicks = true
+      , num tickMarkLength = 10
+      , Color zeroLineColor = defaultColor
+      , list[num] zeroLineBorderDash = []
+      , bool offsetGridLines = false
+      ) = gridLine();
+      
+data ScaleLabel(bool display = true
+    ) = scaleLabel();
+    
+data Ticks(
+      bool display = true
+    , Color fontColor = Black()
+   ) = ticks();
+ 
+ data Axe(
+         str \type = ""
+         // linear, logarithmic, category, time
+        ,str position = ""
+        ,bool offset = false
+        ,str id = ""
+        ,GridLine  gridLine = gridLine()
+        ,ScaleLabel scaleLabel = scaleLabel()
+        ,Ticks ticks = ticks()
+        ) = axe();
+        
+ 
+ data Options = options(list[Axe] scales=[]);
  
  data Config(str \type ="", Data \data=\data(), Options options = options())=config();
    

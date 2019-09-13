@@ -11,79 +11,13 @@
 <script src="lib/dagre.min.js"></script>
 <script src="lib/cytoscape-dagre.js"></script>
 <script src="lib/racytoscal.js"></script>
+<script src="lib/Chart.bundle.min.js"></script>
 <style>
-#cy {
-    width: 600px;
-    height: 600px;
-    display: block;
-    border: 1px solid powderblue;
-    }
-
-path.x-axe{stroke-width:0.01;stroke:lightgrey}
-path.y-axe {stroke-width:0.01;stroke:lightgrey}
-rect{fill:none; stroke:black}
-rect.x-axe{fill:none; stroke-width:0; stroke:black}
-rect.y-axe{fill:none; stroke-width:0; stroke:black}
-.frame{fill:antiquewhite; stroke:red}
-.tst{fill:lightgray; stroke:green}
-.inner-tst{fill:lightblue; stroke:orange}
-.text {
-    fill:darkblue;
-    font-size:120pt;
-    font-style:italic;
-    }
-text {
-    font-style:italic;
-    text-anchor:middle;
-    dominant-baseline:middle;
-    }
-text.x-axe {
-    fill:darkblue;
-    font-size:12pt;
-    }
-text.y-axe {
-    fill:darkblue;
-    stroke-width:0;
-    font-size:12pt;
-    }
- #sign {
-    stroke: orange;
-    fill:yellow;
-    }
- .sin {
-      stroke-width:0.01;
-      stroke:green;
-      fill:none
-       }
- .cos {
-      stroke-width:0.01;
-      stroke:red;
-      fill:none
-       }
- .left {
-      stroke-width:0.001;
-      stroke:green;
-      fill:none
-       }
- .right {
-      stroke-width:0.001;
-      stroke:red;
-      fill:none
-       }
- .axe {
-      stroke:green;
-      fill:none
-     }
-.htmlObject {
-   display:table;
-   height:100%;
-   margin:auto;
-   }
-title {display:block}
+div:{width:400px;height:400px}
 </style>
-</head>
 <body onbeforeunload="handleOnClose()">
-<div id='attach'>
+<div>
+<canvas id='attach'></canvas>
 <script src="init"></script>
 </div>
 </body>

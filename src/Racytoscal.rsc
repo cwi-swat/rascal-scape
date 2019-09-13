@@ -11,7 +11,7 @@ public alias Padding = tuple[num top,  num right, num bottom, num left];
 
 num cut = 0.01;
 
-num _(num x) = round(x, cut);
+public num _(num x) = round(x, cut);
 
 
 public data Ele = n_(str id, Style style = style(), tuple[int x, int y] position= <-1, -1>)

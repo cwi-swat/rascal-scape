@@ -11,7 +11,7 @@ data Point = point(list[tuple[num x , num y]] pnt)|vec(list[num z] v);
 
 alias Color = str;
 
-Color none = "rgba(220, 220, 220, 0)";
+public Color noneColor = "rgba(220, 220, 220, 0)";
 
 //Color Black = rgba(1, 1, 1, 1);
 //Color Red = rgba(255, 99, 132, 1);
@@ -21,7 +21,7 @@ Color none = "rgba(220, 220, 220, 0)";
 //Color Purple = rgba(153, 102, 255, 1);
 //Color Orange = rgba(255, 159, 64, 1);
 //Color DefaultColor = rgba(0,0,0,0.1);
-str defaultColor="";
+public str defaultColor="";
 
 public map[str, value] adt2map(node t) {
    map[str, value] q = getKeywordParameters(t);
@@ -152,67 +152,23 @@ data Ticks(
  data Options = options(Scales scales=scales(), Title title=title());
  
  data Config(str \type ="", Data \data=\data(), Options options = options())=config();
-   
- public void main() {
-     num step = PI()/2;  
-     list[str] pi = ["0","\u03C0/2","\u03C0","3\u03C0/2","2\u03C0"];
-     Config config = config(\type="line"
-       , \data=
-         \data(
-              // labels = ["a", "b", "c"]
-              datasets=
-              [dataSet(
-                 \label="sin"
-                 ,backgroundColor= none
-                 , pointBackgroundColor="red"
-                 , pointBorderColor="red"
-                 , borderColor="red"
-                 ,\data=point(
-                   [<x, sin(x)>|num x<-[0,step..2*PI()+step]]
-                  )
-              ,xAxisId="x"
-              ,yAxisId="y"
-                  )
-               ,
-               dataSet(
-               \label="cos"
-               ,\data=point(
-                   [<x, cos(x)>|num x<-[0,step..2*PI()+step]]
-                  )
-              ,xAxisId="x"
-              ,yAxisId="y")                                
-              ])
-       , options=options(title=title(text="aap")
-            ,scales = scales(xAxes=[axis(position="bottom", \type="linear", display = true
-               , scaleLabel = scaleLabel(display=true, labelString="x")
-               , ticks=ticks(
-                 , min = 0
-                 , max = 2*PI()
-                 , stepSize=PI()/2
-                 , callback = func(arguments=["value", "index", "values"], body =
-                         "return v[index];")
-                        
-               ), id = "x")]
-               , yAxes = [axis(position="left", \type="linear", display = true, ticks=ticks( 
-               min = -2
-               ,max = 2
-               ,stepSize = 1
-               ), id = "y")
-               ]
-            ))
-       );
-     println(adt2json(config));
-     str output = chart("attach", config);
-     openBrowser(|project://racytoscal/src/demo/frame/Graph.html|, output); 
+ 
+ public Func tickNames(list[str] names) {
+     str t = intercalate(",", ["\\\"<v>\\\""|str v<-names]);
+     return func(arguments=["value", "index", "values"]
+     , body = "var v = [<t>];return v[index];");
      }
      
- str chart(str attach, Config config) {
+ public str genScript(str attach, Config config) {
      str parameters = adt2json(config);
      // println(parameters);
      str r = 
-     "var ctx = document.getElementById(\'<attach>\').getContext(\'2d\');
+     "var div = document.getElementById(\'<attach>\');
+     'var ctx = document.createElement(\'canvas\');
+     'ctx.setAttribute(\'id\', \'-<attach>\');
+     'div.appendChild(ctx);
      '// alert(JSON.stringify(JSON.parse(\'<parameters>\')));
-     'new Chart(ctx, JSON.parse(\'<parameters>\'));
+     'chart[\"<attach>\"] = new Chart(ctx, walkThroughCardConfiguration(JSON.parse(\'<parameters>\')));
      ";
      return r;
      }

@@ -3,6 +3,7 @@ import Prelude;
 import util::Math;
 import util::HtmlDisplay;
 import util::Webserver;
+extend Chart;
 
 
 public alias Position = tuple[Coord, Coord];

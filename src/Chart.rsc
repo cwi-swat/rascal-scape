@@ -23,9 +23,12 @@ public Color noneColor = "rgba(220, 220, 220, 0)";
 //Color DefaultColor = rgba(0,0,0,0.1);
 public str defaultColor="";
 
+value newLine(value v) = (str s:=v)?replaceAll(s,"\n",""):v;
+
 public map[str, value] adt2map(node t) {
    map[str, value] q = getKeywordParameters(t);
-   map[str, value] r = (replaceLast(d,"_",""):q[d]|d<-q);
+   map[str, value] r = (d:newLine(q[d])|d<-q);
+   for (str x<-domain(r)) {if (x notin getKeys(t)) throw "Illegal keyword parameter: <x>";}
    for (d<-r) {
         if (vec(list[num] y):= r[d]) r[d] = [_(d)|d<-y]; 
         if (point(list[tuple[num, num]] z):= r[d]) r[d] = [("x":_(s[0]),"y":_(s[1]))|s<-z]; 
@@ -43,8 +46,35 @@ public str adt2json(node t) {
    return toJSON(adt2map(t), true);
    }
    
+set[str] getKeys(node v) {
+    switch (v) {
+        case DataSet q: return q.keys;
+        case Data q: return q.keys;
+        case GridLine q: return q.keys;
+        case ScaleLabel q: return q.keys;
+        case Title q: return q.keys;
+        case Ticks q: return q.keys;
+        case Axis q: return q.keys;
+        case Scales q: return q.keys;
+        case Legend q: return q.keys;
+        case Label q: return q.keys;
+        case Func q: return q.keys;
+        case Options q: return q.keys;
+        case Config q: return q.keys;
+        case Tooltips q: return q.keys;
+        case Callbacks q: return q.keys;
+        }
+    }
+   
               
- data DataSet(str label=""
+ data DataSet(
+             set[str] keys = {"label","data","backgroundColor","borderCapStyle","borderColor"
+                 ,"borderDash","borderDashOffset","borderJoinStyle","borderWidth"
+                 ,"cubicInterpolationMode","fill","lineTension","pointBackgroundColor"
+                 ,"pointBorderColor","pointBorderWidth","pointHitRadius","pointHoverBackgroundColor"
+                 ,"pointHoverBorderColor","pointHoverBorderWidth","pointRadius","pointRotation"
+                 ,"pointStyle", "showLine","spanGaps","steppedLine","xAxisId","yAxisId"}
+             , str label=""
              , Point \data=vec([])
              , Color backgroundColor = defaultColor
              , str borderCapStyle = "butt"
@@ -77,12 +107,18 @@ public str adt2json(node t) {
              ) = dataSet();
     
  
- data Data(list[str] labels = [], list[DataSet] datasets=[]) = \data();
+ data Data(
+      set[str] keys = {"labels", "datasets"}
+      , list[str] labels = []
+      , list[DataSet] datasets=[]) = \data();
  
  data GridLine(
-        bool display = true
+       set[str] keys = {"display", "circular","defaultColor"
+          ,"borderDash","borderDashOffset","lineWidth","drawBorder","drawOnChartArea"
+          ,"drawTicks","tickMarkLength","zeroLineColor","zeroLineBorderDash","offsetGridLines"}
+      , bool display = true
       , bool circular = true
-      , Color color = defaultColor()
+      , Color color = defaultColor
       , list[num] borderDash = []
       , num borderDashOffset = 0
       , num lineWidth = 1
@@ -93,9 +129,13 @@ public str adt2json(node t) {
       , Color zeroLineColor = defaultColor
       , list[num] zeroLineBorderDash = []
       , bool offsetGridLines = false
+      // If true, grid lines will be shifted to be between labels. 
       ) = gridLine();
       
-data ScaleLabel(bool display = true
+data ScaleLabel(
+      set[str] keys = {"display","labelString","lineHeight","fontColor"
+        ,"fontSize","fontStyle","fontFamily","padding"}
+      , bool display = true
       , str labelString = ""
       , value lineHeight = ""
       , Color fontColor = "black"
@@ -105,7 +145,10 @@ data ScaleLabel(bool display = true
       , value padding = 0
     ) = scaleLabel();
     
-data Title(bool display = true
+data Title(
+      set[str] keys = {"display","text","position","lineHeight","fontColor"
+       ,"fontSize","fontStyle","fontFamily","padding"}
+      , bool display = true
       , str text = ""
       , str position="top"
       , value lineHeight = ""
@@ -117,9 +160,11 @@ data Title(bool display = true
     ) = title();
     
 data Ticks(
-      bool display = true
+      set[str] keys = {"display","fontColor","beginAtZero","min","max"
+      ,"maxTickLimits","precision","stepSize","suggestedMax","suggestMin","callback"}
+    ,  bool display = true
     , Color fontColor = Black()
-    , bool beginAtZer0 = false
+    , bool beginAtZero = false
     , num min = 0
     , num max = 0
     , num maxTickLimits = 11
@@ -131,7 +176,9 @@ data Ticks(
    ) = ticks();
  
  data Axis(
-         str \type = ""
+         set[str] keys = {"type","position","offset","display","id","gridLine","scaleLabel"
+                        ,"ticks"}
+         ,str \type = ""
          // linear, logarithmic, category, time
         ,str position = ""
         ,bool offset = false
@@ -143,15 +190,80 @@ data Ticks(
         ) = axis();
         
  data Scales(
-        list[Axis] xAxes = []
+        set[str] keys = {"xAxes", "yAxes"}
+        , list[Axis] xAxes = []
         ,list[Axis] yAxes = []
         ) = scales();
+        
+ data Legend(
+        set[str] keys = {"display","position","fullWidth","onclick","onhover","onLeave",
+           "reverselabels"}
+        , bool display = true
+        ,str position = "top"
+        ,bool fullWidth = true
+        ,Func onclick = fun()
+        ,Func onhover = fun()
+        ,Func onLeave = fun()
+        ,bool reverse = true
+        ,Chart::Label labels = Chart::label
+        ) = legend();
+        
+ data Label(
+        set[str] keys = {"boxWidth","fontSize","fontStyle","fontColor","fontFamily", "padding"
+            // ,"generateLabels" ,"filter"
+            ,"usePointStyle"}
+        ,num boxWidth = 40
+        ,num fontSize = 12
+        ,str fontStyle = ""
+        ,str fontColor = ""
+        ,str fontFamily = ""
+        ,num padding = 10
+        ,bool usePointStyle = false
+        ) = label();
   
- data Func(list[str] arguments =[], str  body= "") = func();       
+ data Func(
+    set[str] keys = {"arguments", "body"}
+    ,list[str] arguments =[]
+    ,str  body= "") = func();      
  
- data Options = options(Scales scales=scales(), Title title=title());
+ data Options = options(
+     set[str] keys = {"scales", "title", "legend","tooltips"}
+     , Scales scales=scales()
+     , Title title=title()
+     , Legend legend = legend()
+     , Tooltips tooltips = tooltips()
+     );
+     
+ data Tooltips(
+     set[str] keys = {"enabled","costum","mode","intersect","position","callbacks"
+          ,"backgroundColor","titleFontFamily","titleFontSize","titleFontStyle","titleFontColor"
+          ,"titleSpacing","titleMarginBottom"}
+     ,bool enabled = true
+     ,Func costum = func()
+     ,str mode = "nearest"
+     ,bool intersect = true
+     ,str position = "average"
+     // average, nearest
+     ,Callbacks callbacks = callbacks()
+     ,Color backgroundColor = defaultColor
+     ,str titleFontFamily = ""
+     ,num titleFontSize = 12
+     ,str titleFontStyle = ""
+     ,Color titleFontColor = defaultColor
+     ,num titleSpacing  = 2
+     ,num titleMarginBottom = 6
+     ) = tooltips();
+     
+ data Callbacks (
+     set[str] keys = {"label"}
+     ,Func label = func()
+    ) = callbacks();  
  
- data Config(str \type ="", Data \data=\data(), Options options = options())=config();
+ data Config(
+     set[str] keys = {"type","data","options"}
+     ,str \type ="" 
+     ,Data \data=\data()
+     ,Options options = options())=config();
  
  public Func tickNames(list[str] names) {
      str t = intercalate(",", ["\\\"<v>\\\""|str v<-names]);

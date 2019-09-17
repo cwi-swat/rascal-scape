@@ -3,6 +3,7 @@ import Prelude;
 import Racytoscal;
 import util::Math;
 
+
 public void main() {
      num step = PI()/2;  
      list[str] pi = ["0","\u03C0/2","\u03C0","3\u03C0/2","2\u03C0"];
@@ -30,7 +31,7 @@ public void main() {
                   )
              )                                
               ])
-       , options=options(aap="4", title=title(display=true,text="aap")
+       , options=options(title=title(display=true,text="aap")
             ,scales = scales(xAxes=[
                 axis(
                    position="bottom", \type="linear", display = true
@@ -43,7 +44,14 @@ public void main() {
                   ticks=ticks(min = -1,max = 1,stepSize = 1)
                   )
                ]
-            ))
+            )
+            , tooltips = tooltips(callbacks=callbacks(\label=
+                 func(arguments=["tooltipItem", "data"], body=
+                   "var label=data.datasets[tooltipItem.datasetIndex].label;
+                   'var idx=tooltipItem.index;
+                   'return label+\\\":aap:\\\"+idx;"
+                  )))
+            )
        );
      println(adt2json(config("blue")));
      str output1 = genScript("attach1", config("red"));

@@ -5,7 +5,9 @@ import Racytoscal;
 import util::Math;
 
 
-data Point = point(list[tuple[num x , num y]] pnt)|vec(list[num z] v);
+data Points = points(list[tuple[num x , num y]] pnt)
+              |bubble(list[tuple[num x , num y, num r]] pnt3d)
+              |vec(list[num z] v);
 
 // data Color = rgba(int r, int g, int b, num a);
 
@@ -31,7 +33,8 @@ public map[str, value] adt2map(node t) {
    for (str x<-domain(r)) {if (x notin getKeys(t)) throw "Illegal keyword parameter: <x>";}
    for (d<-r) {
         if (vec(list[num] y):= r[d]) r[d] = [_(d)|d<-y]; 
-        if (point(list[tuple[num, num]] z):= r[d]) r[d] = [("x":_(s[0]),"y":_(s[1]))|s<-z]; 
+        if (points(list[tuple[num, num]] z):= r[d]) r[d] = [("x":_(s[0]),"y":_(s[1]))|s<-z];
+        if (bubble(list[tuple[num, num, num]] z):= r[d]) r[d] = [("x":_(s[0]),"y":_(s[1]),"r":_(s[2]))|s<-z];  
         if (node n := r[d]) {
            r[d] = adt2map(n);
         }
@@ -57,12 +60,17 @@ set[str] getKeys(node v) {
         case Axis q: return q.keys;
         case Scales q: return q.keys;
         case Legend q: return q.keys;
-        case Label q: return q.keys;
+        case Labels q: return q.keys;
         case Func q: return q.keys;
         case Options q: return q.keys;
         case Config q: return q.keys;
         case Tooltips q: return q.keys;
         case Callbacks q: return q.keys;
+        case Point q: return q.keys;
+        case Line q: return q.keys;
+        case Arc q: return q.keys;
+        case Rectangle q: return q.keys;
+        case Elements q: return q.keys;
         }
     }
    
@@ -73,9 +81,9 @@ set[str] getKeys(node v) {
                  ,"cubicInterpolationMode","fill","lineTension","pointBackgroundColor"
                  ,"pointBorderColor","pointBorderWidth","pointHitRadius","pointHoverBackgroundColor"
                  ,"pointHoverBorderColor","pointHoverBorderWidth","pointRadius","pointRotation"
-                 ,"pointStyle", "showLine","spanGaps","steppedLine","xAxisId","yAxisId"}
+                 ,"pointStyle", "showLine","spanGaps","steppedLine","xAxisId","yAxisId","stack"}
              , str label=""
-             , Point \data=vec([])
+             , Points \data=vec([])
              , Color backgroundColor = defaultColor
              , str borderCapStyle = "butt"
  // butt, round, square
@@ -104,6 +112,7 @@ set[str] getKeys(node v) {
              , value steppedLine = false
              , str xAxisId = ""
              , str yAxisId = ""
+             , str stack = ""
              ) = dataSet();
     
  
@@ -177,7 +186,7 @@ data Ticks(
  
  data Axis(
          set[str] keys = {"type","position","offset","display","id","gridLine","scaleLabel"
-                        ,"ticks"}
+                        ,"ticks","stacked"}
          ,str \type = ""
          // linear, logarithmic, category, time
         ,str position = ""
@@ -187,6 +196,7 @@ data Ticks(
         ,GridLine  gridLine = gridLine()
         ,ScaleLabel scaleLabel = scaleLabel()
         ,Ticks ticks = ticks()
+        ,bool stacked = false
         ) = axis();
         
  data Scales(
@@ -197,7 +207,7 @@ data Ticks(
         
  data Legend(
         set[str] keys = {"display","position","fullWidth","onclick","onhover","onLeave",
-           "reverselabels"}
+           "reverse","labels"}
         , bool display = true
         ,str position = "top"
         ,bool fullWidth = true
@@ -205,10 +215,10 @@ data Ticks(
         ,Func onhover = fun()
         ,Func onLeave = fun()
         ,bool reverse = true
-        ,Chart::Label labels = Chart::label
+        ,Chart::Labels labels = Chart::labels
         ) = legend();
         
- data Label(
+ data Labels(
         set[str] keys = {"boxWidth","fontSize","fontStyle","fontColor","fontFamily", "padding"
             // ,"generateLabels" ,"filter"
             ,"usePointStyle"}
@@ -219,25 +229,92 @@ data Ticks(
         ,str fontFamily = ""
         ,num padding = 10
         ,bool usePointStyle = false
-        ) = label();
+        ) = labels();
   
  data Func(
     set[str] keys = {"arguments", "body"}
     ,list[str] arguments =[]
-    ,str  body= "") = func();      
+    ,str  body= "") = func();
+    
+data Point(
+     set[str] keys = {"radius","pointStyle", "rotation"
+         , "backgroundColor",  "borderWidth", "borderColor"
+         ,"hitRadius", "hoverRadius", "hoverBorderWidth"}
+         ,num radius = 3
+         ,str pointStyle  = ""
+         , num rotation = 0 //degrees
+         , str backgroundColor=""
+         , num borderWidth=1
+         , str borderColor=""
+         , num hitRadius=1
+         , num hoverRadius=4
+         , num hoverBorderWidth=1
+    ) =point();
+    
+data Line(
+   set[str] keys = {"tension","backgroundColor", "borderWidth"
+         , "borderColor",  "borderCapStyle", "borderDash"
+         ,"borderDashOffset", "borderJoinStyle", "capBezierPoints"
+         ,"fill", "stepped"}
+      , num tension = 0.4
+      , Color backgroundColor = defaultColor
+      , num borderWidth =3
+      , Color borderColor = defaultColor
+      , str borderCapStyle = "butt"
+      , list[num] borderDash = []
+      , num borderDashOffset = 0
+      , str borderJoinStyle = ""
+      , bool capBezierPoints = false
+      , value fill = true
+      , bool stepped = false   
+   ) = line();
+   
+data Rectangle(
+   set[str] keys = {"backgroundColor", "borderWidth", "borderColor", "borderSkipped"}
+   , Color backgroundColor = defaultColor
+   , num borderWidth = 3
+   , Color borderColor = "#fff"
+   , str borderSkipped = "bottom"
+   ) = rectangle();
+   
+data Arc(
+  set[str] keys = {"backgroundColor", "borderWidth", "borderColor", "borderAlign"}
+  , Color backgroundColor = defaultColor
+  , num borderWidth = 2
+  , Color borderColor = "#fff"
+  , str borderAlign = "center"
+  ) = arc();
+    
+data Elements(
+      set[str] keys = {"rectangle", "arc", "line", "point"}
+      ,Rectangle rectangle = rectangle()
+      ,Arc arc = arc()
+      ,Line line = line()
+      ,Point point = point()
+     ) = elements();  
+         
  
  data Options = options(
-     set[str] keys = {"scales", "title", "legend","tooltips"}
+     set[str] keys = {"scales", "title", "legend", "tooltips", "elements"}
      , Scales scales=scales()
      , Title title=title()
      , Legend legend = legend()
      , Tooltips tooltips = tooltips()
+     , Elements elements = elements()
      );
      
  data Tooltips(
      set[str] keys = {"enabled","costum","mode","intersect","position","callbacks"
-          ,"backgroundColor","titleFontFamily","titleFontSize","titleFontStyle","titleFontColor"
-          ,"titleSpacing","titleMarginBottom"}
+          ,"backgroundColor"
+          ,"titleFontFamily","titleFontSize","titleFontStyle","titleFontColor"
+          ,"titleSpacing","titleMarginBottom"
+          ,"bodyFontFamily","bodyFontSize","bodyFontStyle","bodyFontColor"
+          ,"bodySpacing","bodyMarginBottom"
+          ,"footerFontFamily","footerFontSize","footerFontStyle","footerFontColor"
+          ,"footerSpacing","footerMarginBottom"
+          ,"xPadding", "yPadding", "caretPadding", "caretSize"
+          ,"cornerRadius", "multiKeyBackground", "displayColors", "borderColor","borderWidth"
+          }
      ,bool enabled = true
      ,Func costum = func()
      ,str mode = "nearest"
@@ -252,11 +329,35 @@ data Ticks(
      ,Color titleFontColor = defaultColor
      ,num titleSpacing  = 2
      ,num titleMarginBottom = 6
+     ,str bodyFontFamily = ""
+     ,num bodyFontSize = 12
+     ,str bodyFontStyle = ""
+     ,Color bodyFontColor = defaultColor
+     ,num bodySpacing  = 2
+     ,num bodyMarginBottom = 6
+     ,str footerFontFamily = ""
+     ,num footerFontSize = 12
+     ,str footerFontStyle = ""
+     ,Color footerFontColor = defaultColor
+     ,num footerSpacing  = 2
+     ,num footerMarginBottom = 6
+     ,num xPadding = 6
+     ,num yPadding = 6
+     ,num caretPadding = 2
+     ,num caretSize = 5
+     ,num cornerRadius=6
+     ,str multiKeyBackground=""
+     ,bool displayColors=true
+     ,str borderColor=""
+     ,num borderWidth = 0
      ) = tooltips();
      
  data Callbacks (
-     set[str] keys = {"label"}
+     set[str] keys = {"label","labelColor","labelTextColor", "title"}
      ,Func label = func()
+     ,Func labelColor = func()
+     ,Func labelTextColor = func()
+     ,Func title = func()
     ) = callbacks();  
  
  data Config(
@@ -264,11 +365,13 @@ data Ticks(
      ,str \type ="" 
      ,Data \data=\data()
      ,Options options = options())=config();
+     
+public str toJavascriptArray(list[str] names) = "[<intercalate(",", ["\\\"<v>\\\""|str v<-names])>]"; 
  
- public Func tickNames(list[str] names) {
-     str t = intercalate(",", ["\\\"<v>\\\""|str v<-names]);
+public Func tickNames(list[str] names) {
+     str t = toJavascriptArray(names);
      return func(arguments=["value", "index", "values"]
-     , body = "var v = [<t>];return v[index];");
+     , body = "var v = <t>;return v[index];");
      }
      
  public str genScript(str attach, Config config) {

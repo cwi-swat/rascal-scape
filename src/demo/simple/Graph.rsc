@@ -1,12 +1,12 @@
 module demo::simple::Graph
 import Prelude;
-import Racytoscal;
+extend Racytoscal;
 import util::Math;
 
 list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
      , "seagreen","skyblue", "slategray","steelblue", "yellow"];
      
-public list[tuple[str name , Position pos]] getPositions() = [
+public list[tuple[str name , Racytoscal::Position pos]] getPositions() = [
       <"LT", LT>, <"LC", LC>, <"LB", LB>
     , <"CT", CT>, <"CC", CC>, <"CB", CB>, <"RT", RT>, <"RC", RC>, <"RB", RB>];
      
@@ -15,7 +15,7 @@ str pickColor() {
     return "<colors[d]>";
     }
     
-SVG cell(tuple[str name, Position pos] p) = box(CC
+SVG cell(tuple[str name, Racytoscal::Position pos] p) = box(CC
             ,box(p.pos, text(500, 500, p.name), class="kernel", shrink=0.4, strokeWidth=40)
          ,class="cell",shrink=1, strokeWidth=60); 
 /*   
@@ -26,7 +26,6 @@ public void main() {
     } 
 */
    
-loc site;
     
 public str nesting(list[str] colors, num shrink = 1.0, num strokeWidth = 10) {
      list[SVG] step(list[SVG] aggr, str color, num shrink = 1.0)  {
@@ -40,11 +39,12 @@ public str nesting(list[str] colors, num shrink = 1.0, num strokeWidth = 10) {
     ,viewBox=<0, 0, 1000, 1000>);
     return output;
     }
+   
  
- public void main() { 
-    str output = nesting(take(4, colors), strokeWidth=40, shrink = 0.4);
-    site = openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>);  
+ public App def() { 
+    str output = nesting(take(4, colors), strokeWidth=40, shrink = 0.4); 
+    App ap = app( |project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>);
+    return ap;
     } 
-    
-public void exit() = disconnect(site);   
+      
  

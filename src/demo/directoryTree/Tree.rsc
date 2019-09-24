@@ -1,11 +1,10 @@
 module demo::directoryTree::Tree
-import Racytoscal;
+extend Racytoscal;
 import Prelude;
 import util::Math;
 
  lrel[int, int] genCircle(int n) = [<i%n, (i+2)%n>|int i<-[0..n]];
  
- loc site;
  
  lrel[int, int] genTree(int n, int depth) { 
       int name=1;
@@ -68,7 +67,7 @@ str callbackTapend(str id) {
     return r;
     }
  
- public void main() {
+ public App def() {
     int n=8;
     lrel[loc, loc] rl  = genTree(|project://racytoscal/src|, 4);
     // lrel[loc, loc] rl  = genTree(|file:///Users/bertl/white|, 4);
@@ -85,7 +84,7 @@ str callbackTapend(str id) {
                 )
             )|loc i<-dup(carrier(rl))
          ];
-    str output = genScript("cy", cytoscape(
+    Cytoscape cy = cytoscape(
         elements= nodes+edges
        ,styles = [<"edge", style(  
                     curveStyle=taxi(taxiDirection=downward()),
@@ -107,11 +106,10 @@ str callbackTapend(str id) {
                   ]
          //,\layout = breadthfirst("directed:true")
           ,\layout = dagre("")
-        )
-      ); 
-    site = openBrowser(|project://racytoscal/src/demo/directoryTree/Tree.html|, output, tapstart = callbackTapstart, tapend=callbackTapend);  
+      );  
+    App ap = app(|project://racytoscal/src/demo/directoryTree/Tree.html|, <"cy", cy>, tapstart = callbackTapstart, tapend=callbackTapend);
+    return ap; 
     }
-    
- public void exit() = disconnect(site);
+   
     
 

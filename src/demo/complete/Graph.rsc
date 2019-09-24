@@ -1,6 +1,6 @@
 module demo::complete::Graph
 import Prelude;
-import Racytoscal;
+extend Racytoscal;
 import util::Math;
 
 map[str, str] color = ();
@@ -12,12 +12,12 @@ str callbackTap(str id) {
     return executeInBrowser(styles=[<"edge#<id>", styl>]);
     }
     
-public void main() {
+public App def() {
     int n=5;
     list[Ele]  nodes = [n_("<i>")|int i<-[0..n]];
     list[Ele] edges = [*[e_("<i>_<j>", "<i>", "<j>")|int j<-[0..i]]|int i<-[0..n]];
     color = (s:"blue"|e_(str s, _, _)<-edges);
-    str output = genScript("cy", cytoscape(
+    Cytoscape cy = cytoscape(
         elements= nodes+edges
        ,styles = [<"edge", style(  
                  curveStyle=straight(),lineColor="blue"
@@ -35,7 +35,8 @@ public void main() {
                   )>
                   ]
           ,\layout = circle("")
-        )
-      ); 
-    openBrowser(|project://racytoscal/src/demo/complete/Graph.html|, output, tap = callbackTap);  
+      );   
+     App ap = app(|project://racytoscal/src/demo/complete/Graph.html|, <"cy", cy>
+           ,display = true, tap = callbackTap);  
+    return ap;
     }

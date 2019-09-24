@@ -5,9 +5,18 @@ import util::Math;
 
 
 public void main() {
-     num step = PI()/2;  
-     list[str] pi = ["0","\u03C0/2","\u03C0","3\u03C0/2","2\u03C0"];
-     Config config(str color) = config(\type="line"
+     
+     
+     // println(adt2json(config("blue")));
+     str output1 = genScript("attach1", config("red"));
+     str output2 = genScript("attach2", config("green"));
+     openBrowser(|project://racytoscal/src/demo/chart/Chart.html|, output1+output2); 
+     }
+
+public App def() { 
+    num step = PI()/2;  
+    list[str] pi = ["0","\u03C0/2","\u03C0","3\u03C0/2","2\u03C0"];
+    Config config(str color) = config(\type="line"
        , \data=\data(
               datasets= [dataSet(
                  \label="sin"
@@ -70,11 +79,10 @@ public void main() {
                        )
             )
        );
-     // println(adt2json(config("blue")));
-     str output1 = genScript("attach1", config("red"));
-     str output2 = genScript("attach2", config("green"));
-     openBrowser(|project://racytoscal/src/demo/chart/Chart.html|, output1+output2); 
-     }
-    
-public void exit() = disconnect(site);   
+    App ap = app(|project://racytoscal/src/demo/chart/Chart.html|
+            , <"attach1", config("red")>
+            , <"attach2", config("green")>
+            );
+    return ap;
+    } 
  

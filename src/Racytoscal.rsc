@@ -5,6 +5,8 @@ import util::HtmlDisplay;
 import util::Webserver;
 extend Chart;
 
+public alias App = tuple[void() serve, void() stop, str() content];
+public alias Script = tuple[str container, value val];
 
 public alias Position = tuple[Coord, Coord];
 public alias ViewBox = tuple[num x, num y, num width, num height];
@@ -556,10 +558,10 @@ public str genScript(str container, Cytoscape cy, str extra ="") {
   return r;
   }
   
-public str genScript(str container, str content) {
+public str genScript(str container, str htmlContent) {
   str r= 
   "attach[\"<container>\"] = document.getElementById(\'<container>\');
-  'attach[\"<container>\"].innerHTML=\'<replaceAll(content,"\n"," ")>\';
+  'attach[\"<container>\"].innerHTML=\'<replaceAll(htmlContent,"\n"," ")>\';
   ";
   return r;
   }
@@ -583,6 +585,53 @@ public loc openBrowser(loc html, tuple[str container, str content] attach, bool 
           ,timer=timer
           );  
     }
+    
+str toScript(list[Script] contents) {
+    str r = "";
+    for (Script v<-contents) {
+        value val = v.val;
+        switch (val) {
+            case c:Cytoscape: r+=genScript(v.container, c);
+            case s:String: r+=genScript(v.container, s);
+            case d:Config: r+=genScript(v.container, d);
+            }
+        }
+        return r;
+    }
+    
+public App app(loc html, Script contents...,loc site = |http://localhost:8081|
+   , bool display = true 
+    ,str(str id) tapstart = str(str id){return "";}
+    ,str(str id) tapend = str(str id){return "";}
+    ,str(str id) tap = str(str id){return "";}
+    ,str(str id) click = str(str id){return "";}
+    ,str(str id) keypress = str(str id){return "";}
+    ,str(str id) load = str(str id){return "";}
+    ,str(str id) timer = str(str id){return "";}
+    ) {
+    str content = toScript(contents);
+    App r = <() {
+         openBrowser(html, content
+          ,tapstart=tapstart
+          ,tapend=tapend
+          ,tap=tap
+          ,click=click
+          ,keypress=keypress
+          ,load=load
+          ,timer=timer
+          ,display = display
+          );
+         }
+    ,() {
+         println("exit");
+         disconnect(site);   
+         }
+    ,str() {
+        return content;
+        }
+    >;
+    return r;
+    }
   
 public loc openBrowser(loc html, bool display = true 
     ,str(str id) tapstart = str(str id){return "";}
@@ -601,6 +650,7 @@ public loc openBrowser(loc html, bool display = true
           ,keypress=keypress
           ,load=load
           ,timer=timer
+          ,display = display
           );
     }
     
@@ -667,7 +717,7 @@ public loc openBrowser(loc html, str script, bool display = true
        return response(base + path); 
        } 
         
-       while (true) {
+       // while (true) {
           try {
             println("Trying ... <site>");
             serve(site, page);
@@ -675,9 +725,10 @@ public loc openBrowser(loc html, str script, bool display = true
             return site;
             }  
           catch IO(_): {
-            site.port += 1; 
-            }
+            //  site.port += 1; 
+            throw "Illegal site <site>";
        }
+       // }
     }
     
 str toCssString(list[tuple[str sel, str key, str val]] css) {

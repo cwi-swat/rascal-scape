@@ -168,7 +168,7 @@ str getColor(str kind) {
          }
     }
 
-public void main() {
+public App def() {
     current = [];
     str onLoad(str path) {
          return executeInBrowser(table=[<"attach","table","cells", width, height >]
@@ -266,7 +266,7 @@ public void main() {
          }
     return "";             
     }
-    openBrowser(|project://racytoscal/src/demo/tetris/Graph.html|, "",load = onLoad, click=onClick
-       , timer = onTimer, keypress = onKeypress
-    );  
+    App ap = app(|project://racytoscal/src/demo/tetris/Graph.html|,load = onLoad, click=onClick
+       , timer = onTimer, keypress = onKeypress);
+    return ap;       
     }

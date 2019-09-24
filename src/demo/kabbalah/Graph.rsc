@@ -1,9 +1,9 @@
 module demo::kabbalah::Graph
 import Prelude;
-import Racytoscal;
+extend Racytoscal;
 import util::Math;
 
-public void main() {
+public App def() {
     list[Ele]  nodes = 
         [
          n_("keter", position=<300, 160> ,style = style(label = label("\u05DB\u05EA\u05E8", vAlign = "center")))
@@ -41,7 +41,8 @@ public void main() {
                       ,e_("kaf", "chessed", "nezach", style=style(label=label("\u05DB")))
                       ];
    // println(size(edges));
-    str output = genScript("cy", cytoscape(
+    // str output = genScript("cy", 
+     Cytoscape cy = cytoscape(
         elements= nodes + edges
        ,styles = [
                   <"node", style(
@@ -65,7 +66,7 @@ public void main() {
                                           ,style(lineColor="lightblue")>
                 ]
          ,\layout = preset("")
-        )
-      ); 
-    openBrowser(|project://racytoscal/src/demo/kabbalah/Graph.html|, output, display = true);  
+        );
+    App ap = app(|project://racytoscal/src/demo/kabbalah/Graph.html|, <"cy", cy>, display = true);  
+    return ap;
     }

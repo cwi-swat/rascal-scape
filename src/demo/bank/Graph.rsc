@@ -29,7 +29,7 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
    return <eles, styles>;
    }
    
- public void main() {
+ public App def() {
        tuple[str lab, int pt, int account, int interest, int amount] current = <"start", 0, -1, -1, -1>;
        str nextStep(str path) {
           // println("NextStep <path>");
@@ -92,10 +92,11 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                    ,backgroundColor="antiquewhite"
                   )>
                   ]+eles[1];
-       str output = genScript("cy", cytoscape(elements= eles[0], styles= styles,\layout = 
+       Cytoscape cy  = cytoscape(elements= eles[0], styles= styles,\layout = 
        dagre("nodeSep:50,ranker:\"network-simplex\",rankDir:\"TB\", edgeSep:50,rankSep:200")  
-       // circle("")
-       ),extra="var current={\'lab\':\'start\', \'loc\':-1,\'account\':-1,\'interest\':-1, \'amount\':-1};");
-       openBrowser(|project://racytoscal/src/demo/bank/Graph.html|, output, click = nextStep
-       ,load = nextStep);  
+       );
+       App ap = app(|project://racytoscal/src/demo/bank/Graph.html|, <"cy", cy>, display = true
+           ,click = nextStep ,load = nextStep
+       ); 
+       return ap;
        }

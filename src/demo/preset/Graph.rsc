@@ -1,6 +1,6 @@
 module demo::preset::Graph
 import Prelude;
-import Racytoscal;
+extend Racytoscal;
 import util::Math;
 
 list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
@@ -11,7 +11,7 @@ str pickColor() {
     return "<colors[d]>";
     }
 
-public void main() {
+public App def() {
     int n1 = 3, n2 =5;
     str onTap(str path) {
        // println(path);
@@ -40,7 +40,7 @@ public void main() {
          )
         )|int i<-[0..n2]];
     // list[Ele] edges = [e_("<i>_<i+1>", "<i>", "<i+1>")|int i<-[0..n-1]];
-    str output1 = genScript("cy1", cytoscape(
+     Cytoscape cy1 =cytoscape(
         elements= nodes1
        ,styles = [
                   <"node", style(
@@ -50,9 +50,8 @@ public void main() {
                   )>
                   ]
          ,\layout = preset("")
-        )
       ); 
-      str output2 = genScript("cy2", cytoscape(
+      Cytoscape cy2 = cytoscape(
         elements= nodes2
        ,styles = [
                   <"node", style(
@@ -62,7 +61,8 @@ public void main() {
                   )>
                   ]
          ,\layout = preset("")
-        )
       ); 
-    openBrowser(|project://racytoscal/src/demo/preset/Graph.html|, output1+output2,tap = onTap);  
+     App ap = app(|project://racytoscal/src/demo/preset/Graph.html|, <"cy1", cy1>, <"cy2", cy2>
+     , display = true, tap = onTap);  
+    return ap; 
     }

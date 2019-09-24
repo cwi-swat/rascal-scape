@@ -25,10 +25,10 @@ public void main() {
  */
 
    
-public void main() {
+public App def() {
      num step = 0.1;
      int width =1600, height = 800;
-     str output = svg(width, height, 
+     str html = svg(width, height, 
        box(CC, 
           box(LT, frame(1, 1, <"x-axe", ["<i>"|num i<-[0,0.1..1]]>
                         ,<"y-axe", ["<i>"|num i<-[0,0.1..1]]>
@@ -49,7 +49,8 @@ public void main() {
         , shrink = 0.8, strokeWidth = 0, svgLayout=grid(2)
         )
         );
-     openBrowser(|project://racytoscal/src/demo/frame/Graph.html|, <"attach", output>); 
+      App ap = app(|project://racytoscal/src/demo/frame/Graph.html|, <"attach", html>);
+      return ap;
      }
 
        

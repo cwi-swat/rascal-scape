@@ -31,8 +31,8 @@ public map[str, value] adt2map(node t) {
    map[str, value] q = getKeywordParameters(t);
    map[str, value] r = (d:newLine(q[d])|d<-q);
    for (str x<-domain(r)) {if (x notin getKeys(t)) throw "Illegal keyword parameter: <x>";}
-   for (d<-r) {
-        if (vec(list[num] y):= r[d]) r[d] = [_(d)|d<-y]; 
+   for (str d<-r) {
+        if (vec(list[num] y):= r[d]) r[d] = [_(g)|num g<-y];
         if (points(list[tuple[num, num]] z):= r[d]) r[d] = [("x":_(s[0]),"y":_(s[1]))|s<-z];
         if (bubble(list[tuple[num, num, num]] z):= r[d]) r[d] = [("x":_(s[0]),"y":_(s[1]),"r":_(s[2]))|s<-z];  
         if (node n := r[d]) {

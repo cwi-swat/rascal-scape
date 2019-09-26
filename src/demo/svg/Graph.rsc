@@ -1,6 +1,6 @@
 module demo::svg::Graph
 import Prelude;
-import Racytoscal;
+extend Racytoscal;
 import util::Math;
 
 list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
@@ -30,9 +30,9 @@ public void tst() {
     }
 
 
-public void short() { 
+public App def() { 
     str styl = "fill:beige; stroke:red";
-    str output = svg(800,800
+    str html = svg(800,800
          , htmlObject(LT, centerText(
                                        "Zie haar lonken in het leven"
                                        ,"Kijk haar spelen met de wind"
@@ -44,17 +44,18 @@ public void short() {
          , box(LC, text(10, 10, "Ik weet niet waarop ik wachtte",    class="text")
                  , text(10, 20, "Toen die avond in de stad",    class="text")
                  , text(10, 30, "Ik naar huis liep en ik zag je",    class="text")
-                    , style=styl, viewBox = <0, 0, 100, 50>, hshrink = 0.6, vshrink=0.3, style=styl)
+                    , style=styl, viewBox = <0, 0, 200, 100>, hshrink = 0.6, vshrink=0.3, style=styl)
           , box(LB, text(10, 10, "Roos tussen het vuil en nat",    class="text")
                  , text(10, 20, "Ongebroken mooi, je lachte wat",    class="text")
-                 , style=styl, viewBox = <0, 0, 100, 50>, hshrink = 0.3, vshrink=0.3, style=styl)
+                 , style=styl, viewBox = <0, 0, 200, 100>, hshrink = 0.6, vshrink=0.3, style=styl)
           )
           ; 
-    // openBrowser(|project://racytoscal/src/demo/svg/Graph.html|, genScript("attach", output));
+    
     str onload(str path) {
-         return executeInBrowser(html=[<"attach", output>]);               
+         return executeInBrowser(html=[<"attach", html>]);               
     }     
-    openBrowser(|project://racytoscal/src/demo/svg/Graph.html|, load=onload); 
+    App ap = app(|project://racytoscal/src/demo/svg/Graph.html|, <"attach", html>);  
+    return ap;
     }
 
     

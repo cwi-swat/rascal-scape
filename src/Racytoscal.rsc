@@ -887,6 +887,10 @@ public SVG addParent(SVG parent, SVG s) {
        }
  
 public list[SVG] addParent(SVG parent, list[SVG] content) =  [addParent(parent, c)|SVG c<-content]; 
+
+str toString(SVG content) {
+    str inside = "<for(SVG c <- content){>  <eval(viewBox, 0, c)> <}>";
+    }
   
 public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, width, height>) {
       SVG parent =  root(viewBox = viewBox);

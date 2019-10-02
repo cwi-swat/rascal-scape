@@ -10,23 +10,31 @@ str pickColor() {
     int d = arbInt(size(colors));
     return "<colors[d]>";
     }
+    
+public list[tuple[str name , Racytoscal::Position pos]] getPositions() = [
+      <"LT", LT>, <"LC", LC>, <"LB", LB>
+    , <"CT", CT>, <"CC", CC>, <"CB", CB>, <"RT", RT>, <"RC", RC>, <"RB", RB>];
      
-public void tst() { 
+public App tst() { 
     str styl = "fill:beige; stroke:red";
-    str output = svg(800,800      
+    str html(ViewBox viewBox)  = svg(400,400      
          , box(LT
-                  ,[ellipse(pos , ellipse(pos, shrink=0.5, class="inner-tst")
+                  ,[ellipse(pos[1] , ellipse(pos[1], shrink=0.5, class="inner-tst")
                            , shrink=0.3, class = "tst", padding=pct(<0, 0, 0, 0>)
                     )|pos<-getPositions()]
-                    , style=styl, viewBox = <0, 0, 200, 200>
+                    , style=styl, viewBox = <0, 0, 100, 100>
                         , hshrink = 1.0, vshrink=1.0
                        , id="frame", strokeWidth=4)
-          )
+          , viewBox = viewBox)
           ; 
     str onload(str path) {
-         return executeInBrowser(html=[<"attach", output>]);               
+         return executeInBrowser(html=[<"attach1", html>,<"attach2", html>]);               
     }     
-    openBrowser(|project://racytoscal/src/demo/svg/Graph.html|, load=onload); 
+    App ap = app(|project://racytoscal/src/demo/svg/Graph.html|
+       , <"attach1", html(<0, 0, 400, 400>)>, <"attach2", html(<0, 0, 200, 200>)>
+       //, load = onload
+       );  
+    return ap; 
     }
 
 

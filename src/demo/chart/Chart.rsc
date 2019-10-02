@@ -3,44 +3,35 @@ import Prelude;
 import Racytoscal;
 import util::Math;
 
-
-public void main() {
-     
-     
-     // println(adt2json(config("blue")));
-     str output1 = genScript("attach1", config("red"));
-     str output2 = genScript("attach2", config("green"));
-     openBrowser(|project://racytoscal/src/demo/chart/Chart.html|, output1+output2); 
-     }
-
 public App def() { 
     num step = PI()/2;  
     list[str] pi = ["0","\u03C0/2","\u03C0","3\u03C0/2","2\u03C0"];
     Config config(str color) = config(\type="line"
        , \data=\data(
-              datasets= [dataSet(
+              datasets= [
+                 dataSet(
                  \label="sin"
                   ,backgroundColor= "yellow"
-                  , pointBackgroundColor="antiquewhite"
-                  , pointBorderColor="blue"
-                  , borderColor=color
-                  , fill = false
-                 ,\data=points(
-                   [<x, sin(x)>|num x<-[0,step..2*PI()+step]]
+                  ,pointBackgroundColor="antiquewhite"
+                  ,pointBorderColor="blue"
+                  ,borderColor=color
+                  ,fill = false
+                  ,\data=points(
+                         [<x, sin(x)>|num x<-[0,step..2*PI()+step]]
                   )
               ,xAxisId="x"
               ,yAxisId="y"
-                  )
-               ,
-               dataSet(
-               \label="cos"
-               ,backgroundColor= "grey"
-               , pointBackgroundColor="antiquewhite"
-               , pointBorderColor="magenta"
-               , borderColor=color
-               , fill = false
-               ,\data=points(
-                   [<x, cos(x)>|num x<-[0,step..2*PI()+step]]
+              )
+                 ,
+                 dataSet(
+                  \label="cos"
+                  ,backgroundColor= "grey"
+                  ,pointBackgroundColor="antiquewhite"
+                  ,pointBorderColor="magenta"
+                  ,borderColor=color
+                  ,fill = false
+                  ,\data=points(
+                       [<x, cos(x)>|num x<-[0,step..2*PI()+step]]
                   )
              )                                
               ])
@@ -52,14 +43,14 @@ public App def() {
                   ,ticks=ticks(min = 0,max = 2*PI(),stepSize=PI()/2,callback = tickNames(pi)                   
                     ))]
                , yAxes = [
-                  axis(
-                  position="left", \type="linear", display = true
-                   ,scaleLabel = scaleLabel(display= true,labelString="y")
-                  , ticks=ticks(min = -1,max = 1,stepSize = 1)
+                axis(
+                   position="left", \type="linear", display = true
+                  ,scaleLabel = scaleLabel(display= true,labelString="y")
+                  ,ticks=ticks(min = -1,max = 1,stepSize = 1)
                   )
                ]
             )
-            , tooltips = tooltips(backgroundColor="darkblue"
+            ,tooltips = tooltips(backgroundColor="darkblue"
                  ,callbacks=callbacks(
                    \label=
                        func(arguments=["tooltipItem", "data"], body=
@@ -80,8 +71,8 @@ public App def() {
             )
        );
     App ap = app(|project://racytoscal/src/demo/chart/Chart.html|
-            , <"attach1", config("red")>
-            , <"attach2", config("green")>
+             ,<"attach1", config("red")>
+             ,<"attach2", config("green")>
             );
     return ap;
     } 

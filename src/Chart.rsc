@@ -4,78 +4,17 @@ import lang::json::IO;
 import Racytoscal;
 import util::Math;
 
-
 data Points = points(list[tuple[num x , num y]] pnt)
               |bubble(list[tuple[num x , num y, num r]] pnt3d)
               |vec(list[num z] v);
 
-// data Color = rgba(int r, int g, int b, num a);
-
-alias Color = str;
+public alias Color = str;
 
 public Color noneColor = "rgba(220, 220, 220, 0)";
 
-//Color Black = rgba(1, 1, 1, 1);
-//Color Red = rgba(255, 99, 132, 1);
-//Color Blue = rgba(54, 162, 235, 1);
-//Color Yellow = rgba(255, 206, 86, 1);
-//Color Green = rgba(75, 192, 192, 1);
-//Color Purple = rgba(153, 102, 255, 1);
-//Color Orange = rgba(255, 159, 64, 1);
-//Color DefaultColor = rgba(0,0,0,0.1);
 public str defaultColor="";
 
-value newLine(value v) = (str s:=v)?replaceAll(s,"\n",""):v;
-
-public map[str, value] adt2map(node t) {
-   map[str, value] q = getKeywordParameters(t);
-   map[str, value] r = (d:newLine(q[d])|d<-q);
-   for (str x<-domain(r)) {if (x notin getKeys(t)) throw "Illegal keyword parameter: <x>";}
-   for (str d<-r) {
-        if (vec(list[num] y):= r[d]) r[d] = [_(g)|num g<-y];
-        if (points(list[tuple[num, num]] z):= r[d]) r[d] = [("x":_(s[0]),"y":_(s[1]))|s<-z];
-        if (bubble(list[tuple[num, num, num]] z):= r[d]) r[d] = [("x":_(s[0]),"y":_(s[1]),"r":_(s[2]))|s<-z];  
-        if (node n := r[d]) {
-           r[d] = adt2map(n);
-        }
-        if (list[node] l:=r[d]) {
-           r[d] = [adt2map(e)|e<-l];
-           }     
-      }
-   return r;
-   } 
-
-public str adt2json(node t) {
-   return toJSON(adt2map(t), true);
-   }
-   
-set[str] getKeys(node v) {
-    switch (v) {
-        case DataSet q: return q.keys;
-        case Data q: return q.keys;
-        case GridLine q: return q.keys;
-        case ScaleLabel q: return q.keys;
-        case Title q: return q.keys;
-        case Ticks q: return q.keys;
-        case Axis q: return q.keys;
-        case Scales q: return q.keys;
-        case Legend q: return q.keys;
-        case Labels q: return q.keys;
-        case Func q: return q.keys;
-        case Options q: return q.keys;
-        case Config q: return q.keys;
-        case Tooltips q: return q.keys;
-        case Callbacks q: return q.keys;
-        case Point q: return q.keys;
-        case Line q: return q.keys;
-        case Arc q: return q.keys;
-        case Rectangle q: return q.keys;
-        case Elements q: return q.keys;
-        }
-    }
-   
-              
- data DataSet(
+public data DataSet(
              set[str] keys = {"label","data","backgroundColor","borderCapStyle","borderColor"
                  ,"borderDash","borderDashOffset","borderJoinStyle","borderWidth"
                  ,"cubicInterpolationMode","fill","lineTension","pointBackgroundColor"
@@ -115,13 +54,12 @@ set[str] getKeys(node v) {
              , str stack = ""
              ) = dataSet();
     
- 
- data Data(
+ public data Data(
       set[str] keys = {"labels", "datasets"}
       , list[str] labels = []
       , list[DataSet] datasets=[]) = \data();
  
- data GridLine(
+ public  data GridLine(
        set[str] keys = {"display", "circular","defaultColor"
           ,"borderDash","borderDashOffset","lineWidth","drawBorder","drawOnChartArea"
           ,"drawTicks","tickMarkLength","zeroLineColor","zeroLineBorderDash","offsetGridLines"}
@@ -141,7 +79,7 @@ set[str] getKeys(node v) {
       // If true, grid lines will be shifted to be between labels. 
       ) = gridLine();
       
-data ScaleLabel(
+public data ScaleLabel(
       set[str] keys = {"display","labelString","lineHeight","fontColor"
         ,"fontSize","fontStyle","fontFamily","padding"}
       , bool display = true
@@ -154,7 +92,7 @@ data ScaleLabel(
       , value padding = 0
     ) = scaleLabel();
     
-data Title(
+public data Title(
       set[str] keys = {"display","text","position","lineHeight","fontColor"
        ,"fontSize","fontStyle","fontFamily","padding"}
       , bool display = true
@@ -168,7 +106,7 @@ data Title(
       , value padding = 0
     ) = title();
     
-data Ticks(
+public data Ticks(
       set[str] keys = {"display","fontColor","beginAtZero","min","max"
       ,"maxTickLimits","precision","stepSize","suggestedMax","suggestMin","callback"}
     ,  bool display = true
@@ -184,7 +122,7 @@ data Ticks(
     , Func callback = func()
    ) = ticks();
  
- data Axis(
+ public data Axis(
          set[str] keys = {"type","position","offset","display","id","gridLine","scaleLabel"
                         ,"ticks","stacked"}
          ,str \type = ""
@@ -201,14 +139,14 @@ data Ticks(
         
  data Scales(
         set[str] keys = {"xAxes", "yAxes"}
-        , list[Axis] xAxes = []
+        ,list[Axis] xAxes = []
         ,list[Axis] yAxes = []
         ) = scales();
         
- data Legend(
+ public data Legend(
         set[str] keys = {"display","position","fullWidth","onclick","onhover","onLeave",
            "reverse","labels"}
-        , bool display = true
+        ,bool display = true
         ,str position = "top"
         ,bool fullWidth = true
         ,Func onclick = fun()
@@ -218,7 +156,7 @@ data Ticks(
         ,Chart::Labels labels = Chart::labels
         ) = legend();
         
- data Labels(
+ public  data Labels(
         set[str] keys = {"boxWidth","fontSize","fontStyle","fontColor","fontFamily", "padding"
             // ,"generateLabels" ,"filter"
             ,"usePointStyle"}
@@ -231,12 +169,12 @@ data Ticks(
         ,bool usePointStyle = false
         ) = labels();
   
- data Func(
+ public data Func(
     set[str] keys = {"arguments", "body"}
     ,list[str] arguments =[]
     ,str  body= "") = func();
     
-data Point(
+public data Point(
      set[str] keys = {"radius","pointStyle", "rotation"
          , "backgroundColor",  "borderWidth", "borderColor"
          ,"hitRadius", "hoverRadius", "hoverBorderWidth"}
@@ -251,7 +189,7 @@ data Point(
          , num hoverBorderWidth=1
     ) =point();
     
-data Line(
+public  data Line(
    set[str] keys = {"tension","backgroundColor", "borderWidth"
          , "borderColor",  "borderCapStyle", "borderDash"
          ,"borderDashOffset", "borderJoinStyle", "capBezierPoints"
@@ -269,7 +207,7 @@ data Line(
       , bool stepped = false   
    ) = line();
    
-data Rectangle(
+public data Rectangle(
    set[str] keys = {"backgroundColor", "borderWidth", "borderColor", "borderSkipped"}
    , Color backgroundColor = defaultColor
    , num borderWidth = 3
@@ -277,7 +215,7 @@ data Rectangle(
    , str borderSkipped = "bottom"
    ) = rectangle();
    
-data Arc(
+public data Arc(
   set[str] keys = {"backgroundColor", "borderWidth", "borderColor", "borderAlign"}
   , Color backgroundColor = defaultColor
   , num borderWidth = 2
@@ -285,7 +223,7 @@ data Arc(
   , str borderAlign = "center"
   ) = arc();
     
-data Elements(
+public data Elements(
       set[str] keys = {"rectangle", "arc", "line", "point"}
       ,Rectangle rectangle = rectangle()
       ,Arc arc = arc()
@@ -293,8 +231,7 @@ data Elements(
       ,Point point = point()
      ) = elements();  
          
- 
- data Options = options(
+ public data Options = options(
      set[str] keys = {"scales", "title", "legend", "tooltips", "elements"}
      , Scales scales=scales()
      , Title title=title()
@@ -303,7 +240,7 @@ data Elements(
      , Elements elements = elements()
      );
      
- data Tooltips(
+ public data Tooltips(
      set[str] keys = {"enabled","costum","mode","intersect","position","callbacks"
           ,"backgroundColor"
           ,"titleFontFamily","titleFontSize","titleFontStyle","titleFontColor"
@@ -360,7 +297,7 @@ data Elements(
      ,Func title = func()
     ) = callbacks();  
  
- data Config(
+public data Config(
      set[str] keys = {"type","data","options"}
      ,str \type ="" 
      ,Data \data=\data()
@@ -374,7 +311,7 @@ public Func tickNames(list[str] names) {
      , body = "var v = <t>;return v[index];");
      }
      
- public str genScript(str attach, Config config) {
+public str genScript(str attach, Config config) {
      str parameters = adt2json(config);
      // println(parameters);
      str r = 
@@ -387,3 +324,52 @@ public Func tickNames(list[str] names) {
      ";
      return r;
      }
+     
+private value newLine(value v) = (str s:=v)?replaceAll(s,"\n",""):v;
+
+private map[str, value] adt2map(node t) {
+   map[str, value] q = getKeywordParameters(t);
+   map[str, value] r = (d:newLine(q[d])|d<-q);
+   for (str x<-domain(r)) {if (x notin getKeys(t)) throw "Illegal keyword parameter: <x>";}
+   for (str d<-r) {
+        if (vec(list[num] y):= r[d]) r[d] = [_(g)|num g<-y];
+        if (points(list[tuple[num, num]] z):= r[d]) r[d] = [("x":_(s[0]),"y":_(s[1]))|s<-z];
+        if (bubble(list[tuple[num, num, num]] z):= r[d]) r[d] = [("x":_(s[0]),"y":_(s[1]),"r":_(s[2]))|s<-z];  
+        if (node n := r[d]) {
+           r[d] = adt2map(n);
+        }
+        if (list[node] l:=r[d]) {
+           r[d] = [adt2map(e)|e<-l];
+           }     
+      }
+   return r;
+   } 
+
+private str adt2json(node t) {
+   return toJSON(adt2map(t), true);
+   }
+   
+private set[str] getKeys(node v) {
+    switch (v) {
+        case DataSet q: return q.keys;
+        case Data q: return q.keys;
+        case GridLine q: return q.keys;
+        case ScaleLabel q: return q.keys;
+        case Title q: return q.keys;
+        case Ticks q: return q.keys;
+        case Axis q: return q.keys;
+        case Scales q: return q.keys;
+        case Legend q: return q.keys;
+        case Labels q: return q.keys;
+        case Func q: return q.keys;
+        case Options q: return q.keys;
+        case Config q: return q.keys;
+        case Tooltips q: return q.keys;
+        case Callbacks q: return q.keys;
+        case Point q: return q.keys;
+        case Line q: return q.keys;
+        case Arc q: return q.keys;
+        case Rectangle q: return q.keys;
+        case Elements q: return q.keys;
+        }
+    }

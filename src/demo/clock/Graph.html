@@ -12,20 +12,23 @@
 <!-- <script src="lib/cytoscape-dagre.js"></script> -->
 <script src="lib/racytoscal.js"></script>
 <style>
-.pointer{fill:antiquewhite; stroke:red}
 .frame{fill:antiquewhite}
 .outer{fill:none; stroke:green}
 .inner{fill:lightblue; stroke:orange}
 .mayor{fill:none; stroke-width:10; stroke:black;}
 .minor{fill:none; stroke-width:5; stroke:grey;}
 .bound{fill:lightgrey;stroke:green}
-.mayorC{fill:none}
+.mayorC{fill:none; stroke:none; stroke-width:5}
 .minorC{fill:none}
+.pointer{fill:red; stroke: blue; stroke-width:4}
 .text {
     fill:darkblue;
-    font-size:8pt;
+    font-size:50pt;
     font-style:italic;
+    text-anchor:middle;
+    dominant-baseline:middle;
     }
+ .label{stroke-width:5;fill:none; stroke:none}
 .text-axe {
     fill:darkblue;
     font-style:italic;
@@ -42,11 +45,15 @@
    height:100%;
    margin:auto;
    }
+#slider {width:200}
 title {display:block}
 </style>
 </head>
 <body>
 <div id='attach'>
+</div>
+<div>
+<input id="slider" type="range" min=0 max=60 value=0 step=1 />
 </div>
 <script src="init"></script>
 </body>

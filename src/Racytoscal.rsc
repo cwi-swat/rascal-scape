@@ -26,6 +26,7 @@ data SVG  (ViewBox viewBox= <0, 0, 100, 100>, list[SVG] inner =[], str id = "", 
         | foreignObject(Coord x, Coord y, Dim width, Dim height, num strokeWidth, str style, str html)
         | text(num x1, num y1,  str style, str txt)
         | path(str style, str txt)
+        | transform(str txt)
         | root()
         ;
  
@@ -47,6 +48,7 @@ public App app(loc html, Script contents...,loc site = |http://localhost:8081|
     ,str(str id) tap = str(str id){return "";}
     ,str(str id) click = str(str id){return "";}
     ,str(str id) keypress = str(str id){return "";}
+    ,str(str id) change = str(str id){return "";}
     ,str(str id) load = str(str id){return "";}
     ,str(str id) timer = str(str id){return "";}
     ) {
@@ -61,6 +63,7 @@ public App app(loc html, Script contents...,loc site = |http://localhost:8081|
           ,load=load
           ,timer=timer
           ,display = display
+          ,change=change
           );
          }
     ,() {
@@ -76,16 +79,23 @@ public App app(loc html, Script contents...,loc site = |http://localhost:8081|
   
 public str executeInBrowser(lrel[str, Style] styles=[], tuple[str, str] \layout=<"","">, str extra="\"extra\":\"none\"",
        list[tuple[str attach, str tableId, str cellId, int width, int height]] table = [],
-       list[tuple[str sel, str key, str val]] css = [], list[str] onclick=[], list[str] onkeypress=[], int setInterval= -1, str path = ""
+       list[tuple[str sel, str key, str val]] css = []
+       , list[tuple[str sel, str val]] transform = []
+       , list[str] onclick=[]
+       , list[str] onkeypress=[]
+       , list[str] onchange=[]
+       , int setInterval= -1, str path = ""
        ,bool sync = true, list[tuple[str attach, str content]] html = []) {
        return 
        "{<extra>
        '<if((\layout?)){>,\"layout\":[\"<\layout[0]>\", \"<\layout[1]>\"]<}>
        '<if((\styles?)){>,\"styles\":<toString(styles)><}>
        '<if((\css?)){>,\"css\":[<toCssString(css)>]<}>
+       '<if((\transform?)){>,\"transform\":[<toTransformString(transform)>]<}>
        '<if((\table?)){>,\"table\":[<toString(table)>]<}>
        '<if((\onclick?)){>,\"onclick\":[<toSelString(onclick)>]<}>
        '<if((\onkeypress?)){>,\"onkeypress\":[<toSelString(onkeypress)>]<}>
+       '<if((\onchange?)){>,\"onchange\":[<toSelString(onchange)>]<}>
        '<if((\setInterval?) && setInterval>0){>,\"setInterval\":\"<setInterval>\"<}>
        '<if((\setInterval?) && setInterval<=0){>,\"clearInterval\":\"<setInterval>\"<}>
        '<if((\path?)){>,\"path\":\"<\path>\"<}>
@@ -130,7 +140,6 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, wid
 public SVG htmlObject(Position pos, str html, str id= "", str class= "", str frameClass = "", str style="", int width=100, int height=100, num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, int strokeWidth=2) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
-     // println("<vshrink?> <vshrink>");
      SVG c =  foreignObject(pos[0], pos[1], ((hshrink?)||(shrink?))?pct(hshrink*100) :pxl(width) 
                                  , ((vshrink?)||(shrink?))?pct(vshrink*100) :pxl(height)
                                  , strokeWidth, style, html, id = id, class=class, frameClass = frameClass);
@@ -138,7 +147,6 @@ public SVG htmlObject(Position pos, str html, str id= "", str class= "", str fra
  }
  
  public SVG text(num x, num y, str txt, str id= "", str class= "", str style= "") {
-     // println("<vshrink?> <vshrink>");
      SVG c = text(x, y, style, txt, id =id, class = class);
      return c;
  }
@@ -184,7 +192,6 @@ public SVG frame(num hshrink, num vshrink, tuple[str \class, list[str] d] xAxe, 
                     | int i<-[0..size(xAxe.d)], num x := i*dxX]
                    , vshrink= shift, hshrink = hshrink*(shrnk+2*shift), class=xAxe.class
                     , viewBox=viewBoxXaxe)
-               // ,width=width, height = height
                     , strokeWidth=0
                 ,viewBox=<0, 0, width, height>
                );
@@ -193,11 +200,11 @@ public SVG frame(num hshrink, num vshrink, tuple[str \class, list[str] d] xAxe, 
     
 // Private
  
-private num posX(num dim, num width, Coord p, num lw) {
+private num posX(num dim, num offset, num width, Coord p, num lw) {
     switch(p) {
-       case L1(num x): return x*dim+lw/2;
-       case R1(num x): return x*dim-width +lw/2;
-       case C1(num x): return x*dim-width/2+lw/2;
+       case L1(num x): return offset+x*dim+lw/2;
+       case R1(num x): return offset+x*dim-width +lw/2;
+       case C1(num x): return offset+x*dim-width/2+lw/2;
        case L(num x): return x+lw/2;
        case R(num x): return x-width +lw/2;
        case C(num x): return x-width/2+lw/2;
@@ -205,11 +212,11 @@ private num posX(num dim, num width, Coord p, num lw) {
     return 0;
     }
     
-private num posY(num dim, num height, Coord p, num lw) {
+private num posY(num dim, num offset, num height, Coord p, num lw) {
     switch(p) {
-       case L1(num y): return y*dim+lw/2;
-       case R1(num y): return y*dim-height +lw/2;
-       case C1(num y): return y*dim-height/2+lw/2;
+       case L1(num y): return offset+y*dim+lw/2;
+       case R1(num y): return offset+y*dim-height +lw/2;
+       case C1(num y): return offset+y*dim-height/2+lw/2;
        case L(num y): return y+lw/2;
        case R(num y): return y-height+lw/2;
        case C(num y): return y-height/2+lw/2;
@@ -217,9 +224,14 @@ private num posY(num dim, num height, Coord p, num lw) {
     return 0;
     }
     
+private SVG newParent(SVG d, SVG parent) {d.parent = parent; return d;}
+    
 private SVG addParent(SVG parent, SVG s) {
        s.parent = parent;
        s.inner = addParent(s, s.inner);
+       if (_rotate(_):=s || _rotate(_,_,_):=s || translate(_,_):=s || scale(_,_):=s) {
+              s.inner = [newParent(d, parent)|SVG d<-s.inner];
+          }
        return s;
        }
  
@@ -227,7 +239,7 @@ private str toString(SVG content) {
     str inside = "<for(SVG c <- content){>  <eval(viewBox, 0, c)> <}>";
     }
   
-// Private
+
 private  list[SVG] addParent(SVG parent, list[SVG] content) =  [addParent(parent, c)|SVG c<-content];       
 private str useId(SVG c) {
    if ((c.id?) && !isEmpty(c.id)) return "id=\"<c.id>\"";
@@ -292,24 +304,27 @@ private str eval(ViewBox vb,  num lw0, SVG c) {
           case fig:rect(Coord x1, Coord y1, Dim widthDim, Dim heightDim, num lw1, str style1): {
                  num width1 = checkShrink(vb2.width, widthDim), height1 = checkShrink(vb2.height, heightDim);
                  Padding p = getPadding(vb1.width,vb1.height, c.padding);   
-                 x = posX(vb2.width, width1, x1, lw1)+p.left; y = posY(vb2.height, height1,  y1, lw1)+p.top; 
+                 x = posX(vb2.width, vb2.x, width1, x1, lw1)+p.left; 
+                 y = posY(vb2.height,vb2.y, height1,  y1, lw1)+p.top; 
                  width = width1-lw1-p.left-p.right; height  = height1-lw1-p.top-p.bottom; lw = lw1;
                  style1+=";stroke-width:<_(lw)>"; 
-                 r= "\<rect <useId(c)> <useClass(c)> x=\"<_(x)>\" y=\"<_(y)>\"  width=\"<_(width)>\" height=\"<_(height)>\" style=\"<style1>\" /\>";
+                 r+= "\<rect <useId(c)> <useClass(c)> x=\"<_(x)>\" y=\"<_(y)>\"  width=\"<_(width)>\" height=\"<_(height)>\" style=\"<style1>\" /\>";
                  }
           case fig:ellipse(Coord x1, Coord y1, Dim widthDim, Dim heightDim, num lw1, str style1): {
                  num width1 = checkShrink(vb2.width, widthDim), height1 = checkShrink(vb2.height, heightDim);
                  Padding p = getPadding(vb1.width,vb1.height, c.padding);
-                 x = posX(vb2.width, width1, x1, lw1)+p.left; y = posY(vb2.height, height1,  y1, lw1)+p.top; 
+                 x = posX(vb2.width, vb2.x, width1, x1, lw1)+p.left; 
+                 y = posY(vb2.height, vb2.y, height1,  y1, lw1)+p.top; 
                  width = width1-lw1-p.left-p.right; height  = height1-lw1-p.top-p.bottom; lw = lw1;
                  style1+=";stroke-width:<_(lw)>"; 
-                 r= "\<ellipse <useId(c)> <useClass(c)> cx=\"<_(x+width/2)>\" cy=\"<_(y+height/2)>\"  rx=\"<_(width/2)>\" ry=\"<_(height/2)>\" style=\"<style1>\"/\>";
+                 r+= "\<ellipse <useId(c)> <useClass(c)> cx=\"<_(x+width/2)>\" cy=\"<_(y+height/2)>\"  rx=\"<_(width/2)>\" ry=\"<_(height/2)>\" style=\"<style1>\"/\>";
                  }
           case fig:foreignObject(Coord x1, Coord y1, Dim widthDim, Dim heightDim, num lw1, str style1, str html): {
                  num width1 = checkShrink(vb2.width, widthDim), height1 = checkShrink(vb2.height, heightDim);
-                 x = posX(vb2.width, width1, x1, lw1); y = posY(vb2.height, height1,  y1, lw1); width = width1-lw1; height  = height1-lw1; lw = lw1;
+                 x = posX(vb2.width, vb2.x, width1, x1, lw1); 
+                 y = posY(vb2.height, vb2.y, height1,  y1, lw1); width = width1-lw1; height  = height1-lw1; lw = lw1;
                  style1+=";stroke-width:<_(lw)>"; 
-                 r= "\<rect <useFrameClass(c)> x=\"<_(x)>\" y=\"<_(y)>\"  width=\"<_(width)>\" height=\"<_(height)>\" style=\"<style1>\" stroke-width=\"<lw>\"/\>";
+                 r+= "\<rect <useFrameClass(c)> x=\"<_(x)>\" y=\"<_(y)>\"  width=\"<_(width)>\" height=\"<_(height)>\" style=\"<style1>\" stroke-width=\"<lw>\"/\>";
                  r+= "\<foreignObject <useClass(c)> x=\"<_(x+lw/2)>\" y=\"<_(y+lw/2)>\" width=\"<_(width-lw)>\" height=\"<_(height-lw)>\"  style=\"<style1>\"\>
                     '\<div class=\"htmlObject\"\>
                     '<html>
@@ -318,24 +333,31 @@ private str eval(ViewBox vb,  num lw0, SVG c) {
                     ";
                 }
           case fig:text(num x, num y, str style, str txt): {
-                 r= "\<text <useId(c)> <useClass(c)> x=\"<_(x)>\" y=\"<_(y)>\"  style=\"<style>\"\>
+                 r+= "\<text <useId(c)> <useClass(c)> x=\"<_(x)>\" y=\"<_(y)>\"  style=\"<style>\"\>
                     '<txt>
                     '\</text\>       
                     ";
                  }
           case fig:path(str style, str txt): {
-                 r= "\<path <useId(c)> <useClass(c)> d=\"<txt>\" style=\"<style>\"/\>       
+                 r+= "\<path <useId(c)> <useClass(c)> d=\"<txt>\" style=\"<style>\"/\>       
                     ";
                  }
+          case fig:transform(str txt): {
+                r+="\<g  <useId(c)> transform=\"<txt>\"\>";
+                for (SVG b<-fig.inner) {
+                     r+= eval(vb,  lw0, b);
+                     }
+                r+="\</g\>";
+                return r;
+                }
           }
       if (getName(c) notin ["foreignObject", "text", "path"]) {  
-        num h = height-lw, w = width-lw;
-        // int h = 10, w = 10;
-        // println("height=<height> ub0=<vb.height>  ub1=<vb1.height> h=<h> ub=<vb.height*vb1.height/h>"); 
-        ViewBox newVb = <vb1.x, vb1.y, _((vb.width*vb1.width)/w),  _((vb.height*vb1.height)/h)>;
+        num h = height-lw, w = width-lw;   
+        ViewBox newVb = <_(vb1.x), _(vb1.y), _((vb.width*vb1.width)/w),  _((vb.height*vb1.height)/h)>;
+        if (!isEmpty(c.inner)) {
         if (overlay():=c.svgLayout)
         r+= "
-          ' \<svg x=\"<x+lw/2>\"  y=\"<y+lw/2>\"  viewBox=\"<newVb.x> <newVb.y> <_(newVb.width)> <_(newVb.height)>\" 
+          ' \<svg x=\"<_(x+lw/2)>\"  y=\"<_(y+lw/2)>\"  viewBox=\"<newVb.x> <newVb.y> <_(newVb.width)> <_(newVb.height)>\" 
           ' preserveAspectRatio=\"none\"\>
           ' <for(SVG s<-c.inner){> <eval(newVb, lw, s)><}>
           ' \</svg\>
@@ -344,9 +366,19 @@ private str eval(ViewBox vb,  num lw0, SVG c) {
          r+=gridLayout(x, y, w, h, lw, nCols, newVb, c.inner);
          }
        }
+       }
       // println(r);
       return r;
       }
+      
+public SVG rotate(num rad, SVG body..., str id = "") = transform("rotate(<_(180*rad/PI())>)", inner = body, id = id);
+
+public SVG rotate(num rad, num x, num y, SVG body...,str id = "" ) = 
+    transform("rotate(<_(180*rad/PI())>,<_(x)>,<_(y)>)", inner = body, id = id);
+
+public SVG translate(num x, num y, SVG body..., str id = "") = transform("translate(<_(x)>,<_(y)>)", inner = body, id = id);
+
+public SVG scale(num x, num y, SVG body..., str id = "") = transform("scale(<_(x)>,<_(y)>)", inner = body, id = id);
       
 public str div(str txt..., str class = "") = "
     '<for (str t<-txt){> \<div <if ((class?) && !isEmpty(class)){>class=\"<class>\"<}> \> <t> \</div\><}>";
@@ -356,8 +388,9 @@ public str div(str txt..., str class = "") = "
 public void disconnect(loc site) = shutdown(site);
 
 // Private 
-private num cut = 0.01;
-private  num _(num x) = round(x, cut);
+private num cut1 = 0.01;
+private num cut2 = 0.000001;
+public  num _(num x) = round(x, x>1.5?cut1:cut2);
  
  private str genScript(str container, str htmlContent) {
   str r= 
@@ -375,6 +408,7 @@ private loc openBrowser(loc html, tuple[str container, str content] attach, bool
     ,str(str id) keypress = str(str id){return "";}
     ,str(str id) load = str(str id){return "";}
     ,str(str id) timer = str(str id){return "";}
+    ,str(str id) change = str(str id){return "";}
     ) {  
     return openBrowser(html, genScript(attach.container, attach.content)
           ,tapstart=tapstart
@@ -384,6 +418,7 @@ private loc openBrowser(loc html, tuple[str container, str content] attach, bool
           ,keypress=keypress
           ,load=load
           ,timer=timer
+          ,change=change
           );  
     }
     
@@ -395,6 +430,7 @@ private loc openBrowser(loc html, bool display = true
     ,str(str id) keypress = str(str id){return "";}
     ,str(str id) load = str(str id){return "";}
     ,str(str id) timer = str(str id){return "";}
+    ,str(str id) change = str(str id){return "";}
     ) {
       return openBrowser(html, ""
           ,tapstart=tapstart
@@ -405,6 +441,7 @@ private loc openBrowser(loc html, bool display = true
           ,load=load
           ,timer=timer
           ,display = display
+          ,change=  change
           );
     }
     
@@ -416,6 +453,7 @@ private loc openBrowser(loc html, str script, bool display = true
     ,str(str id) keypress = str(str id){return "";}
     ,str(str id) load = str(str id){return "";}
     ,str(str id) timer = str(str id){return "";}
+    ,str(str id) change = str(str id){return "";}
     ) {
   	loc site = |http://localhost:8081|;
   	loc base = |project://racytoscal|;
@@ -427,6 +465,11 @@ private loc openBrowser(loc html, str script, bool display = true
       Response page(get(/^\/click\/<path:\S+>$/)) { 
         // println("HELP0:<id>");
         return response(click(path));
+      }
+      
+      Response page(get(/^\/change\/<path:\S+>$/)) { 
+        // println("HELP0:<id>");
+        return response(change(path));
       }
       
       Response page(get(/^\/keypress\/<path:\S+>$/)) { 
@@ -514,6 +557,14 @@ private list[SVG] graph(ViewBox viewBox, tuple[str \class, lrel[num x, num y] d]
     list[str] r =[];
     for (cs<-css) {
          r+= "{\"sel\":\"<cs.sel>\",\"key\":\"<cs.key>\",\"val\":\"<cs.val>\"}";
+         }
+    return intercalate(",", r);
+    }
+    
+ private str toTransformString(list[tuple[str sel, str val]] transforms) {
+    list[str] r =[];
+    for (transform<-transforms) {
+         r+= "{\"sel\":\"<transform.sel>\",\"val\":\"<transform.val>\"}";
          }
     return intercalate(",", r);
     }

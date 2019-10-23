@@ -221,7 +221,6 @@ public App def() {
        }
        
     str onClick(str path) {
-         // println("onClick: <path>");
          /*
          switch (path) {
                case "T_table": return new("T");
@@ -266,7 +265,7 @@ public App def() {
          }
     return "";             
     }
-    App ap = app(|project://racytoscal/src/demo/tetris/Graph.html|,load = onLoad, click=onClick
-       , timer = onTimer, keypress = onKeypress);
+    App ap = app(|project://racytoscal/src/demo/tetris/Graph.html|,load = onLoad, click=<[], onClick>
+       , timer = onTimer, keypress = <[], onKeypress>);
     return ap;       
     }

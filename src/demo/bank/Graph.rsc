@@ -96,7 +96,7 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
        dagre("nodeSep:50,ranker:\"network-simplex\",rankDir:\"TB\", edgeSep:50,rankSep:200")  
        );
        App ap = app(|project://racytoscal/src/demo/bank/Graph.html|, <"cy", cy>, display = true
-           ,click = nextStep ,load = nextStep
+           ,click = <[], nextStep> ,load = nextStep
        ); 
        return ap;
        }

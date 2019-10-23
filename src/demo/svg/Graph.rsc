@@ -60,7 +60,7 @@ public App def() {
           ; 
     
     str onload(str path) {
-         return executeInBrowser(html=[<"attach", html>]);               
+         return executeInBrowser(html=[<"attach1", html>]);               
     }     
     App ap = app(|project://racytoscal/src/demo/svg/Graph.html|, <"attach", html>);  
     return ap;

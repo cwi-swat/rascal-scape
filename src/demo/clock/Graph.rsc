@@ -25,10 +25,6 @@ int strokeWidth = 18;
 int r = 400;
 int lmayor = 30;
 int lminor = 15;
-
-str onLoad(str path) {
-         return executeInBrowser(onchange=["slider"]);             
-    }
     
 str onChange(str path) {
     int rot = toInt(split("/", path)[1]);
@@ -86,7 +82,7 @@ public App def() {
           ; 
     // println(html(<0, 0, 100, 100>));   
     App ap = app(|project://racytoscal/src/demo/clock/Graph.html|
-       , <"attach", html(<0, 0, 100, 100>)>, load = onLoad, change = onChange
+       , <"attach", html(<0, 0, 100, 100>)>, change = <["slider"], onChange>
        );  
     return ap; 
     }

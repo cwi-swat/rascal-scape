@@ -8,6 +8,8 @@ extend Cytoscape;
 
 public alias App = tuple[void() serve, void() stop, str() content];
 public alias Script = tuple[str container, value val];
+public alias Callback = str(str);
+public alias React = tuple[list[str] ids, Callback callback];
 
 public alias Position = tuple[Coord, Coord];
 public alias ViewBox = tuple[num x, num y, num width, num height];
@@ -18,6 +20,8 @@ data SVGLayout = grid(int nCols)|overlay();
 data Coord = L(num  left) | R(num right) |C(num center)|L1(num  left1) | R1(num right1) |C1(num center1);
   
 data Dim = pxl(num dim)|pct(num dim)|pxl(Padding tpl)|pct(Padding tpl);
+
+str nullCallback(str id) = "";
        
 data SVG  (ViewBox viewBox= <0, 0, 100, 100>, list[SVG] inner =[], str id = "", str class= "", str frameClass = "", SVG parent= root(),
           Dim padding = pxl(<0, 0, 0, 0>), SVGLayout svgLayout = overlay())
@@ -43,14 +47,14 @@ data SVG  (ViewBox viewBox= <0, 0, 100, 100>, list[SVG] inner =[], str id = "", 
 
 public App app(loc html, Script contents...,loc site = |http://localhost:8081|
    , bool display = true 
-    ,str(str id) tapstart = str(str id){return "";}
-    ,str(str id) tapend = str(str id){return "";}
-    ,str(str id) tap = str(str id){return "";}
-    ,str(str id) click = str(str id){return "";}
-    ,str(str id) keypress = str(str id){return "";}
-    ,str(str id) change = str(str id){return "";}
-    ,str(str id) load = str(str id){return "";}
-    ,str(str id) timer = str(str id){return "";}
+    ,React click = <[], nullCallback>
+    ,React keypress = <[], nullCallback>
+    ,React change = <[], nullCallback>
+   , Callback tapstart = nullCallback
+    ,Callback tapend =  nullCallback
+    ,Callback tap = nullCallback
+    ,Callback load =  nullCallback
+    ,Callback timer = nullCallback
     ) {
     str content = toScript(contents);
     App r = <() {
@@ -401,14 +405,15 @@ public  num _(num x) = round(x, x>1.5?cut1:cut2);
   }
   
 private loc openBrowser(loc html, tuple[str container, str content] attach, bool display = true 
-    ,str(str id) tapstart = str(str id){return "";}
-    ,str(str id) tapend = str(str id){return "";}
-    ,str(str id) tap = str(str id){return "";}
-    ,str(str id) click = str(str id){return "";}
-    ,str(str id) keypress = str(str id){return "";}
-    ,str(str id) load = str(str id){return "";}
-    ,str(str id) timer = str(str id){return "";}
-    ,str(str id) change = str(str id){return "";}
+    ,React click = <[],nullCallback>
+    ,React keypress = <[],nullCallback>
+    ,React change = <[],nullCallback>
+    ,Callback tapstart = nullCallback
+    ,Callback tapend = nullCallback
+    ,Callback tap = nullCallback  
+    ,Callback load = <[],nullCallback>
+    ,Callback timer = <[],nullCallback>
+    
     ) {  
     return openBrowser(html, genScript(attach.container, attach.content)
           ,tapstart=tapstart
@@ -423,14 +428,14 @@ private loc openBrowser(loc html, tuple[str container, str content] attach, bool
     }
     
 private loc openBrowser(loc html, bool display = true 
-    ,str(str id) tapstart = str(str id){return "";}
-    ,str(str id) tapend = str(str id){return "";}
-    ,str(str id) tap = str(str id){return "";}
-    ,str(str id) click = str(str id){return "";}
-    ,str(str id) keypress = str(str id){return "";}
-    ,str(str id) load = str(str id){return "";}
-    ,str(str id) timer = str(str id){return "";}
-    ,str(str id) change = str(str id){return "";}
+    ,React click = <[],nullCallback>
+    ,React keypress = <[],nullCallback>
+    ,React change = <[],nullCallback>
+    ,Callback tapstart = nullCallback
+    ,Callback tapend = nullCallback
+    ,Callback tap = nullCallback
+    ,Callback load = nullCallback
+    ,Callback timer = nullCallback 
     ) {
       return openBrowser(html, ""
           ,tapstart=tapstart
@@ -446,14 +451,15 @@ private loc openBrowser(loc html, bool display = true
     }
     
 private loc openBrowser(loc html, str script, bool display = true 
-    ,str(str id) tapstart = str(str id){return "";}
-    ,str(str id) tapend = str(str id){return "";}
-    ,str(str id) tap = str(str id){return "";}
-    ,str(str id) click = str(str id){return "";}
-    ,str(str id) keypress = str(str id){return "";}
-    ,str(str id) load = str(str id){return "";}
-    ,str(str id) timer = str(str id){return "";}
-    ,str(str id) change = str(str id){return "";}
+    ,React click = <[], nullCallback>
+    ,React keypress = <[], nullCallback>
+     ,React change = <[], nullCallback>
+    ,Callback tapstart = nullCallback
+    ,Callback tapend =  nullCallback
+    ,Callback tap = nullCallback
+    ,Callback load = nullCallback
+    ,Callback timer = nullCallback
+   
     ) {
   	loc site = |http://localhost:8081|;
   	loc base = |project://racytoscal|;
@@ -464,17 +470,17 @@ private loc openBrowser(loc html, str script, bool display = true
       
       Response page(get(/^\/click\/<path:\S+>$/)) { 
         // println("HELP0:<id>");
-        return response(click(path));
+        return response(click.callback(path));
       }
       
       Response page(get(/^\/change\/<path:\S+>$/)) { 
         // println("HELP0:<id>");
-        return response(change(path));
+        return response(change.callback(path));
       }
       
       Response page(get(/^\/keypress\/<path:\S+>$/)) { 
         // println("HELP0:<id>");
-        return response(keypress(path));
+        return response(keypress.callback(path));
       }
       
        Response page(get(/^\/timer\/<path:\S+>$/)) { 
@@ -502,6 +508,9 @@ private loc openBrowser(loc html, str script, bool display = true
       
       Response page(get(/^\/init$/)) { 
         // println("INIT");
+        for (str id <-click.ids) {script+="addHandler(\"click\", \"<id>\", true, fromRascal);\n";}
+        for (str id <-keypress.ids) {script+="addHandler(\"keypress\", \"<id>\", true, fromRascal);\n";}
+        for (str id <-change.ids) {script+="addHandler(\"change\", \"<id>\", true, fromRascal);\n";}
 	    return response(script);
       }
      

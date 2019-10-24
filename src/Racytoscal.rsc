@@ -508,9 +508,14 @@ private loc openBrowser(loc html, str script, bool display = true
       
       Response page(get(/^\/init$/)) { 
         // println("INIT");
-        for (str id <-click.ids) {script+="addHandler(\"click\", \"<id>\", true, fromRascal);\n";}
-        for (str id <-keypress.ids) {script+="addHandler(\"keypress\", \"<id>\", true, fromRascal);\n";}
-        for (str id <-change.ids) {script+="addHandler(\"change\", \"<id>\", true, fromRascal);\n";}
+        script+="
+        'if (typeof clickCallback===\'undefined\') clickCallback = fromRascal;
+	    'if (typeof changeCallback===\'undefined\') changeCallback = fromRascal;
+	    'if (typeof keypressCallback===\'undefined\') keypressCallback = fromRascal;
+	    ";
+        for (str id <-click.ids) {script+="addHandlerClick(\"click\", \"<id>\", true, clickCallback);\n";}
+        for (str id <-keypress.ids) {script+="addHandlerKeypress(\"keypress\", \"<id>\", true, keypressCallback);\n";}
+        for (str id <-change.ids) {script+="addHandlerValue(\"change\", \"<id>\", true, changeCallback);\n";}
 	    return response(script);
       }
      

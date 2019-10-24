@@ -11,6 +11,7 @@ public App def() {
     list[Ele] edges = [*[e_("<i>_<j>", "<i>", "<j>")|int j<-[0..i]]|int i<-[0..n]];
     map[str, str] color = (s:"blue"|e_(str s, _, _)<-edges);
     str callbackTap(str id) {
+        if (size(id)==1) return "";
         color[id] = (color[id]=="blue"?"red":"blue");
         // println(color[id]);
         Style styl = style(lineColor=color[id]);

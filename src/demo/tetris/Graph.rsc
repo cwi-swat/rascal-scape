@@ -172,8 +172,8 @@ public App def() {
     current = [];
     str onLoad(str path) {
          return executeInBrowser(table=[<"attach","table","cells", width, height >]
-                                       , onclick=["rotate","left", "right", "up", "down", "fall", "reset"]
-                                       , onkeypress=["manager"]
+                                      // , onclick=["rotate","left", "right", "up", "down", "fall", "reset"]
+                                      // , onkeypress=["manager"]
                                        , setInterval=300
                                        , sync = false
                                        , html=[<"test", "Number of fields <width*height>">]
@@ -221,16 +221,6 @@ public App def() {
        }
        
     str onClick(str path) {
-         /*
-         switch (path) {
-               case "T_table": return new("T");
-               case "I_table": return new("I");
-               case "Z_table": return new("Z");
-               case "L_table": return new("L");
-               case "L1_table": return new("L1");
-               case "O_table": return new("O");
-               }
-         */
          if (size(current)>=1) {
          el old = current[-1];
          rel[int, int] state = old.state;
@@ -252,8 +242,6 @@ public App def() {
           case "fall": {
                  fall();
                  list[tuple[str, str, str]] oldArg = [<v,"background-color",getColor(current[-1].kind)>|v<-fig("",old,current[-1].kind)];
-                 //str kind = rFig[arbInt(6)];
-                 // current+=[<0, 0, 0, {},kind>];
                  return executeInBrowser(css=clear(state)+oldArg
                                                  // +[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)]
                                                  ,
@@ -265,7 +253,11 @@ public App def() {
          }
     return "";             
     }
-    App ap = app(|project://racytoscal/src/demo/tetris/Graph.html|,load = onLoad, click=<[], onClick>
-       , timer = onTimer, keypress = <[], onKeypress>);
+    App ap = app(|project://racytoscal/src/demo/tetris/Graph.html|
+         ,load = onLoad
+         , click=<["rotate","left", "right", "up", "down", "fall", "reset"], onClick>
+         , keypress = <["manager"], onKeypress>
+         , timer = onTimer
+         );
     return ap;       
     }

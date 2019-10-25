@@ -28,22 +28,33 @@ and
 ```
 module demo::simple::Graph
 import Prelude;
-import Racytoscal;
-import util::Math;
-
-public list[Position] getPositions() = [LT, LC, LB, CT, CC, CB, RT, RC, RB];
-
-SVG cell(Position pos) = box(CC
-            ,box(pos, class="kernel", shrink=0.3)
-         ,class="cell",shrink=1); 
+extend Racytoscal;
+   
+public list[tuple[str name , Racytoscal::Position pos]] getPositions() = [
+      <"LT", LT>, <"LC", LC>, <"LB", LB>
+    , <"CT", CT>, <"CC", CC>, <"CB", CB>, <"RT", RT>, <"RC", RC>, <"RB", RB>];
+     
     
-public void main() {
-    str output = svg( 800, 800, box(LT, [cell(p)|p<-getPositions()]
-        ,svgLayout=grid(3)));    
-    openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>); 
-    }   
+SVG cell(tuple[str name, Racytoscal::Position pos] p) = box(CC
+            ,box(p.pos, text(500, 500, p.name), class="kernel", shrink=0.4, strokeWidth=40)
+         ,class="cell",height=1000, width=1000, strokeWidth=60); 
+           
+public str rows() {
+    str output = svg( 1000, 400, box(LT, [cell(p)|p<-getPositions()]
+        ,svgLayout=grid(5)));    
+    return output;
+    }
+    
+public App def() { 
+    str output = rows(); 
+    App ap = app( |project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>);
+    return ap;
+    } 
 ```
-The command `openBrowser(|project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>)` opens an `.html`-file and attaches the `html`-string *output* to the `<div id='attach'>` line standing in that file. 
+The user must call the function *app* and assign the returned value to a variable *ap* of type *App*.
+The browser will be opened with a connection to the defined `.html` file updated with the generated `.html` -string *output* by entering the command *ap.serve()*. 
+The `html`-string *output* will be attached to the `<div id='attach'>` line standing in the `.html` file. 
+The connection will be clossed by enetering the command *ap.stop()*.
 The belonging picture is stored in [Simple.png](images/Simple.md).
 
 ## SVG Commands

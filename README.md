@@ -1,7 +1,7 @@
 # racytoscal  
 
 
-racytoscal is an added graphical functionality to rascal which makes use of *svg*, *html*, *css*, *cytoscape*, and *dagre*.  The name *racytoscal* which indicates the connection between *rascal* and *cytoscape*.
+racytoscal is an added graphical functionality to rascal which makes use of *svg*, *html*, *css*, *cytoscape*, and *dagre*.  The name *racytoscal* indicates the connection between *rascal* and *cytoscape*.
 
 An unit is a directory containing a `.html` and a `.rsc` file. An example is the unit *simple* which contains the files *Graph.rsc* and *Graph.html*.
 ```
@@ -82,10 +82,11 @@ places the html code defined in string  *html* in position *pos* with respect to
 * `SVG path(str graph, str id= "", str class= "", str style= "")` adds the svg path definition (as defined in the format after `path -d`) in string  *graph* . Coordinates are relative to the viewbox defined in the parent.
              
 ## Coord
-The *x*- and *y*- coordinate can be of a box can be
+The *x*- coordinate of a figure has the format:
 * L(x)  stands for left *x* of a box
 * C(x)  stands for center *x* of a box
 * R(x)  stands for right *x* of a box
+The *y*- coordinate of a figure has the format:
 * L(y)  stands for top *y* of a box
 * C(y)  stands for center *y* of a box
 * R(y)  stands for bottom *y* of a box
@@ -93,7 +94,8 @@ The *x*- and *y*- coordinate can be of a box can be
 *L1*, *C1* and, *R1* are the relative versions of *L*, *C*, and *R*. 
 
 ## Position
- So
+ Is a tuple consisting of a *x*- coordinate and a *y*- coordinate.
+ The abbreviations: 
  * LT stands for  `<L1(0),  L1(0)>` (LeftTop)
  * LC stands for  `<L1(0),  C1(0.5)>` (LeftCenter)
  * LB stands for `<L1(0), R1(1)>`  (LeftBottom)
@@ -105,7 +107,7 @@ The *x*- and *y*- coordinate can be of a box can be
  * RB stands for `<R1(1), R1(1)>` (RightBottom)
 
 ## Dim
-
+Is an abstract data type consisting of constructors *pxl* en *pct*.
 * `pxl(dim)` the size in pixels
 * `pct(dim)` the size in procents
 * `pxl(padding)`

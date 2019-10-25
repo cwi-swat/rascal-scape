@@ -131,6 +131,94 @@ Is an abstract data type consisting of constructors *pxl* en *pct*.
 * `pxl(padding)`
 * `pct(padding)` padding is the tuple *<top, right, bottom, left>*
 
+
+## Cytoscape
+
+* The main abstract data type is `CytoScape` which contains the data type `NodeShape`, `EdgeShape`, `Layout`, and `Style`.
+
+Here follows an example which generates a tree.
+
+```
+module demo::directoryTree::Tree
+import Racytoscal;
+import Prelude;
+
+public App def() {
+    lrel[loc, loc] rl  = [
+    ,<"white","white_green">,<"white","white_grey">,<"white","white_black">         
+    ,<"white_grey","white_grey_blue">,<"white_grey","white_grey_red">
+    ,<"white_black","white_black_orange">
+    ]
+    list[Ele] edges = [e_("<a[0]><a[1]>", a[0], a[1])
+        |a<-rl];
+    list[Ele]  nodes = 
+         [n_(i
+              ,style=style(color=split(i,"_")[-1]),
+                 label=label(split(i,"_")[-1] ,vAlign="center")
+                )
+            )|loc i<-dup(carrier(rl))
+         ];
+    Cytoscape cy = cytoscape(elements= nodes+edges
+       ,styles = [<"edge", style(  
+                    curveStyle=taxi(taxiDirection=downward()),
+                    arrowShape=[
+                      ArrowShape::triangle(
+                         arrowScale=2, arrowColor="red", pos = target())
+                      ]
+                      ,lineColor="blue"
+                      )
+                   >
+                  ,<"node", style(
+                    width = "15px",
+                    height= "15px", 
+                    backgroundColor="antiquewhite", shape=NodeShape::ellipse(),
+                    borderWidth = "2", borderColor="brown"
+                   ,padding = "10" 
+                   ,fontSize= "10pt"
+                  )>
+                  ]
+         //,\layout = breadthfirst("directed:true")
+          ,\layout = dagre("")
+        )
+      ); 
+    return app(|project://racytoscal/src/demo/directoryTree/Tree.html|, <"cy", cy>);  
+    }
+```
+The belonging `.html` file is:
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+<title>index</title>
+<script src="lib/cytoscape.umd.js"></script>
+<script src="lib/dagre.min.js"></script>
+<script src="lib/cytoscape-dagre.js"></script>
+<script src="lib/racytoscal.js"></script>
+<!-- <script src="src/demo/directoryTree/Tree.js"></script> -->
+<style>
+#cy {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+title {display:block}
+</style>
+</head>
+<body onunload="handleOnClose()">
+<h2>Directory structure</h2>
+<div id='cy'>
+<script src="init"></script>
+</div>
+</body>
+</html>
+```
+The result is found in [Tree.png](images/Tree.md)
+
 ## Frame
 The command
 ```
@@ -242,92 +330,4 @@ title {display:block}
 ```
 The result is found in [Frame.png](images/Frame.md)
 
-## Cytoscape
-
-* The main abstract data type is `CytoScape` which contains the data type `NodeShape`, `EdgeShape`, `Layout`, and `Style`.
-
-* The command `str genScript(str attach, CytoScape cytoScape)` generates the script which will be send to the browser.
-
-Here follows an example which generates a directory tree.
-
-```
-module demo::directoryTree::Tree
-import Racytoscal;
-import Prelude;
-import util::Math;
-
-str esc(loc v)= escape(v.path, (".":"_", "/":"_"));
-
-public void main() {
-    lrel[loc, loc] rl  = genTree(|file:///Users/bertl/white|, 4);
-    list[Ele] edges = [e_("<esc(a[0])>_<esc(a[1])>", esc(a[0]), esc(a[1]))
-        |a<-rl];
-    list[Ele]  nodes = 
-         [n_(esc(i)
-              ,style=style(color=i.file,
-                 label=label(isEmpty(i.file)?i.path:i.file ,vAlign="center")
-                )
-            )|loc i<-dup(carrier(rl))
-         ];
-    str output = genScript("cy", cytoscape(
-        elements= nodes+edges
-       ,styles = [<"edge", style(  
-                    curveStyle=taxi(taxiDirection=downward()),
-                    arrowShape=[
-                      ArrowShape::triangle(
-                         arrowScale=2, arrowColor="red", pos = target())
-                      ]
-                      ,lineColor="blue"
-                      )
-                  >,
-                  <"node", style(
-                    width = "15px",
-                    height= "15px", 
-                    backgroundColor="antiquewhite", shape=NodeShape::ellipse(),
-                    borderWidth = "2", borderColor="brown"
-                   ,padding = "10" 
-                   ,fontSize= "10pt"
-                  )>
-                  ]
-         //,\layout = breadthfirst("directed:true")
-          ,\layout = dagre("")
-        )
-      ); 
-    openBrowser(|project://racytoscal/src/demo/directoryTree/Tree.html|, output);  
-    }
-```
-The belonging `.html` file is:
-```
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-<title>index</title>
-<script src="lib/cytoscape.umd.js"></script>
-<script src="lib/dagre.min.js"></script>
-<script src="lib/cytoscape-dagre.js"></script>
-<script src="lib/racytoscal.js"></script>
-<!-- <script src="src/demo/directoryTree/Tree.js"></script> -->
-<style>
-#cy {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 999;
-}
-title {display:block}
-</style>
-</head>
-<body onunload="handleOnClose()">
-<h2>Directory structure</h2>
-<div id='cy'>
-<script src="init"></script>
-</div>
-</body>
-</html>
-```
-The result is found in [Tree.png](images/Tree.md)
 

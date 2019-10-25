@@ -54,7 +54,14 @@ public App def() {
 The user must call the function *app* and assign the returned value to a variable *ap* of type *App*.
 The browser will be opened with a connection to the defined `.html` file updated with the generated `.html` -string *output* by entering the command *ap.serve()*. 
 The `html`-string *output* will be attached to the `<div id='attach'>` line standing in the `.html` file. 
-The connection will be clossed by enetering the command *ap.stop()*.
+The connection will be closed by entering the command *ap.stop()*.
+So in console:
+```
+rascal> import demo::simple::Graph;
+rascal> ap=def();
+rascal> ap.serve();
+rascal> ap.stop();
+```
 The belonging picture is stored in [Simple.png](images/Simple.md).
 
 ## SVG Commands

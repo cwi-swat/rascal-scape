@@ -40,8 +40,8 @@ SVG cell(tuple[str name, Racytoscal::Position pos] p) = box(CC
          ,class="cell",height=1000, width=1000, strokeWidth=60); 
            
 public str rows() {
-    str output = svg( 1000, 400, box(LT, [cell(p)|p<-getPositions()]
-        ,svgLayout=grid(5)));    
+    str output = svg( 600, 600, box(LT, [cell(p)|p<-getPositions()]
+        ,svgLayout=grid(3)));    
     return output;
     }
     

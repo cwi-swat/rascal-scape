@@ -104,6 +104,7 @@ The *x*- coordinate of a figure has the format:
 * L(x)  stands for left *x* of a box
 * C(x)  stands for center *x* of a box
 * R(x)  stands for right *x* of a box
+
 The *y*- coordinate of a figure has the format:
 * L(y)  stands for top *y* of a box
 * C(y)  stands for center *y* of a box
@@ -144,7 +145,7 @@ import Racytoscal;
 import Prelude;
 
 public App def() {
-    lrel[loc, loc] rl  = [
+    lrel[str, str] rl  = [
     ,<"white","white_green">,<"white","white_grey">,<"white","white_black">         
     ,<"white_grey","white_grey_blue">,<"white_grey","white_grey_red">
     ,<"white_black","white_black_orange">
@@ -156,7 +157,7 @@ public App def() {
               ,style=style(color=split(i,"_")[-1]),
                  label=label(split(i,"_")[-1] ,vAlign="center")
                 )
-            )|loc i<-dup(carrier(rl))
+            )|str i<-dup(carrier(rl))
          ];
     Cytoscape cy = cytoscape(elements= nodes+edges
        ,styles = [<"edge", style(  

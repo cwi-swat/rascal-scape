@@ -140,24 +140,26 @@ Is an abstract data type consisting of constructors *pxl* en *pct*.
 Here follows an example which generates a tree.
 
 ```
-module demo::directoryTree::Tree
+module demo::tree::Graph
 import Racytoscal;
 import Prelude;
 
 public App def() {
     lrel[str, str] rl  = [
-    ,<"white","white_green">,<"white","white_grey">,<"white","white_black">         
-    ,<"white_grey","white_grey_blue">,<"white_grey","white_grey_red">
-    ,<"white_black","white_black_orange">
-    ]
-    list[Ele] edges = [e_("<a[0]><a[1]>", a[0], a[1])
-        |a<-rl];
+     <"brown","brown_green">,<"brown","brown_grey">,<"brown","brown_black">         
+    ,<"brown_grey","brown_grey_blue">,<"brown_grey","brown_grey_red">
+    ,<"brown_black","brown_black_orange">
+    ];
+    println([split("_", i)[-1]|str i<-dup(carrier(rl))]);
+    list[Ele] edges = [e_("<a[0]><a[1]>", a[0], a[1])|a<-rl];
     list[Ele]  nodes = 
          [n_(i
-              ,style=style(color=split(i,"_")[-1]),
-                 label=label(split(i,"_")[-1] ,vAlign="center")
-                )
-            )|str i<-dup(carrier(rl))
+              ,style=style(
+                 borderColor=split("_", i)[-1]
+                 ,color=split("_", i)[-1]
+                 ,label=label(split("_", i)[-1] ,vAlign="center")
+                ))
+            |str i<-dup(carrier(rl))
          ];
     Cytoscape cy = cytoscape(elements= nodes+edges
        ,styles = [<"edge", style(  
@@ -170,19 +172,19 @@ public App def() {
                       )
                    >
                   ,<"node", style(
-                    width = "15px",
-                    height= "15px", 
-                    backgroundColor="antiquewhite", shape=NodeShape::ellipse(),
-                    borderWidth = "2", borderColor="brown"
-                   ,padding = "10" 
-                   ,fontSize= "10pt"
+                     width = "15px"
+                    ,height= "15px" 
+                    ,backgroundColor="antiquewhite"
+                    ,shape=NodeShape::ellipse()
+                    ,borderWidth = "2" // , borderColor="brown"
+                    ,padding = "10" 
+                    ,fontSize= "8pt"
+                    ,textOpacity=1
                   )>
                   ]
-         //,\layout = breadthfirst("directed:true")
           ,\layout = dagre("")
-        )
-      ); 
-    return app(|project://racytoscal/src/demo/directoryTree/Tree.html|, <"cy", cy>);  
+        ); 
+    return app(|project://racytoscal/src/demo/tree/Graph.html|, <"cy", cy>);  
     }
 ```
 The belonging `.html` file is:
@@ -197,7 +199,6 @@ The belonging `.html` file is:
 <script src="lib/dagre.min.js"></script>
 <script src="lib/cytoscape-dagre.js"></script>
 <script src="lib/racytoscal.js"></script>
-<!-- <script src="src/demo/directoryTree/Tree.js"></script> -->
 <style>
 #cy {
   position: absolute;
@@ -210,8 +211,8 @@ The belonging `.html` file is:
 title {display:block}
 </style>
 </head>
-<body onunload="handleOnClose()">
-<h2>Directory structure</h2>
+<body>
+<h2>Tree</h2>
 <div id='cy'>
 <script src="init"></script>
 </div>

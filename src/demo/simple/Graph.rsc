@@ -17,14 +17,14 @@ str pickColor() {
     
 SVG cell(tuple[str name, Racytoscal::Position pos] p) = box(CC
             ,box(p.pos, text(500, 500, p.name), class="kernel", shrink=0.4, strokeWidth=40)
-         ,class="cell",shrink=1, strokeWidth=60); 
+         ,class="cell",height=1000, width=1000, strokeWidth=60); 
            
 public str rows() {
-    str output = svg( 600, 600, box(LT, [cell(p)|p<-getPositions()]
+    str output = svg( 1000, 400, box(LT, [cell(p)|p<-getPositions()]
         ,svgLayout=grid(5)));    
     return output;
     } 
-     
+/*     
 str nesting(list[str] colors, num shrink = 1.0, num strokeWidth = 10) {
      list[SVG] step(list[SVG] aggr, str color, num shrink = 1.0)  {
      return [
@@ -33,7 +33,7 @@ str nesting(list[str] colors, num shrink = 1.0, num strokeWidth = 10) {
         ];
      }
      
-    str output = svg( 600, 600, 
+str output = svg( 600, 600, 
        rotate(PI()/4, 
     box(CC
       ,([box(CC, style="stroke:<head(colors)>", shrink = shrink, strokeWidth=strokeWidth)]|step(it, color, shrink = shrink)|color<-tail(colors))
@@ -43,11 +43,12 @@ str nesting(list[str] colors, num shrink = 1.0, num strokeWidth = 10) {
     );
     return output;
     }
+ */
    
  
  public App def() { 
-    str output = nesting(take(4, colors), strokeWidth=40, shrink = 0.4);
-    // str output = rows(); 
+    // str output = nesting(take(4, colors), strokeWidth=40, shrink = 0.4);
+    str output = rows(); 
     App ap = app( |project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>);
     return ap;
     } 

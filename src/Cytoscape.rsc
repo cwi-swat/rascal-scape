@@ -58,7 +58,7 @@ public data Style = style(
               Label sourceLabel = sourceLabel(""),
               Label targetLabel = targetLabel(""),
               num opacity =  -1,
-              str visibility = "",
+              str visibility = "", // visible, hidden
               int zIndex = -1,
    //   ---
               str color="", 

@@ -3,10 +3,7 @@ extend Racytoscal;
 import Prelude;
 import util::Math;
 
- lrel[int, int] genCircle(int n) = [<i%n, (i+2)%n>|int i<-[0..n]];
- 
- 
- lrel[int, int] genTree(int n, int depth) { 
+lrel[int, int] genRandomTree(int n, int depth) { 
       int name=1;
       lrel[int, int] result = [];
       lrel[int, int] nextLevel(list[int] level, int n) {
@@ -54,6 +51,7 @@ import util::Math;
  str esc(loc v)= escape(v.path, (".":"_", "/":"_"));
  
  str callbackTapstart(str id) {
+    if (id[0]=="-") return "";
     Style styl = style(
        textBackgroundOpacity=1, textBackgroundColor="lightgrey", textBackgroundPadding=10, textOpacity=1, color="black");
     str r = "{\"styles\":<Racytoscal::toString([<"node#<id>", styl>])>}";
@@ -62,18 +60,17 @@ import util::Math;
     
 str callbackTapend(str id) {
     // println("end: <id>");
+    if (id[0]=="-") return "";
     Style styl = style(textBackgroundOpacity=0, textOpacity=0, color="red");
     str r = "{\"styles\":<Racytoscal::toString([<"node#<id>", styl>])>}";
     return r;
     }
  
- public App def() {
-    int n=8;
-    lrel[loc, loc] rl  = genTree(|project://racytoscal/src|, 4);
-    // lrel[loc, loc] rl  = genTree(|file:///Users/bertl/white|, 4);
+ public App def(loc file) {
+    lrel[loc, loc] rl  = genTree(file, 4);
     // println(rl);
-    // lrel[int, int] rl  = genTree(5, 3);
-    list[Ele] edges = [e_("<esc(a[0])>_<esc(a[1])>", esc(a[0]), esc(a[1]))
+    // lrel[int, int] rl  = genRandomTree(5, 3);
+    list[Ele] edges = [e_("-<esc(a[0])>_<esc(a[1])>", esc(a[0]), esc(a[1]))
         |a<-rl];
     list[Ele]  nodes = 
          [n_(esc(i)
@@ -104,7 +101,6 @@ str callbackTapend(str id) {
                    ,fontSize= "10pt"
                   )>
                   ]
-         //,\layout = breadthfirst("directed:true")
           ,\layout = dagre("")
       );  
     App ap = app(|project://racytoscal/src/demo/directoryTree/Tree.html|, <"cy", cy>, tapstart = callbackTapstart, tapend=callbackTapend);

@@ -72,10 +72,35 @@ rascal> ap.stop();
 ```
 The belonging picture is stored in [Simple.png](images/Simple.md).
 
+## Command app
+
+```
+App app(loc html, Script contents...,loc site = |http://localhost:8081|
+   , bool display = true 
+    ,React click = <[], nullCallback>
+    ,React keypress = <[], nullCallback>
+    ,React change = <[], nullCallback>
+   , Callback tapstart = nullCallback
+    ,Callback tapend =  nullCallback
+    ,Callback tap = nullCallback
+    ,Callback load =  nullCallback
+    ,Callback timer = nullCallback
+    )
+```
+where *html* is the location of the belonging `.html` file
+      ,*contents* is the list of tuples *<container, definition>*. The field *container* refers to the position 
+       in the `.html`
+       file where the definition must be added. *definition* can have the type *str*, *CytoScape*, or *Chart*. 
+       When `display = true`, the browser will be opened automatically, otherwise not. With `click`, `keypress`, `change`,   
+      `load' and `timer` you can define callbacks in html.  
+       With `tap`, `tapend`, `tap` you can define callbacks in `cytoscape`.
+       `app` returns a data type containing the methods `serve` and `stop` for starting and stopping the server.
+
 ## SVG Commands
 
 * `svg(int width , int height,  SVG content ..., ViewBox viewBox= <0, 0, width, height>)`
-    produces an `.svg` string from a *content* of type *list\[SVG\]* with attributes *width*, *height*, and *viewBox*.
+    translates *content* of type *list\[SVG\]* with attributes *width*, *height*, and *viewBox*.
+    into `html` code stored in a string. This string can be used into the arguments of `app`.
 *  
 ``` 
    SVG box(Position pos, SVG inner ..., str id = "", str class = "", str style = ""

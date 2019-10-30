@@ -3,28 +3,8 @@
 
 racytoscal is an added graphical functionality to rascal which makes use of *svg*, *html*, *css*, *cytoscape*, and *dagre*.  The name *racytoscal* indicates the connection between *rascal* and *cytoscape*.
 
-An unit is a directory containing a `.html` and a `.rsc` file. An example is the unit *simple* which contains the files *Graph.rsc* and *Graph.html*.
-```
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Simple</title>
-<script src="lib/racytoscal.js"></script>
-<style>
-.cell{fill:steelblue;stroke:red}
-.kernel{fill:yellow;stroke:brown}
-title {display:block}
-</style>
-</head>
-<body onunload="handleOnClose()">
-<div id='attach'>
-<script src="init"></script>
-</div>
-</body>
-</html>
-```
-and
+An unit is a directory containing a `.rsc` and a `.html` file. An example is the unit *simple* which contains the files *Graph.rsc* and *Graph.html*.
+
 ```
 module demo::simple::Graph
 import Prelude;
@@ -51,6 +31,34 @@ public App def() {
     return ap;
     } 
 ```
+and
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Simple</title>
+<script src="lib/racytoscal.js"></script>
+<style>
+.cell{fill:steelblue;stroke:red}
+.kernel{fill:yellow;stroke:brown}
+text {
+    font-style:italic;
+    text-anchor:middle;
+    font-size:160pt;
+    dominant-baseline:middle;
+    }
+title {display:block}
+</style>
+</head>
+<body>
+<div id='attach'>
+</div>
+<script src="init"></script>
+</body>
+</html>
+```
+The line `<script src="init"></script>` is mandatory. This script runs the update defined in the `.rsc` file.
 The user must call the function *app* and assign the returned value to a variable *ap* of type *App*.
 The browser will be opened with a connection to the defined `.html` file updated with the generated `.html` -string *output* by entering the command *ap.serve()*. 
 The `html`-string *output* will be attached to the `<div id='attach'>` line standing in the `.html` file. 
@@ -72,11 +80,13 @@ The belonging picture is stored in [Simple.png](images/Simple.md).
 ``` 
    SVG box(Position pos, SVG inner ..., str id = "", str class = "", str style = ""
               ,num vshrink = 1, num hshrink = 1, shrink = 1, num strokeWidth = 2
-              ,ViewBox viewBox=<0, 0, 100, 100>
+              ,num width=1000, num height=1000
+              ,ViewBox viewBox=<0, 0, 1000, 1000>
               ,Dim padding = pxl(<0,0,0,0>)
               ,SVGLayout svgLayout = overlay()
 ```
 where *pos* is the position with respect to the viewBox of the outer SVG figure,
+             *width* and *height* are the dimensions with respect to the viewbox of the outer figure
              *inner* is the list of inner figures,
              *hshrink* the relative size with respect to the width of the outer SVG figure,
              *vshrink* the relative size with respect to the height of the outer SVG figure,
@@ -93,7 +103,7 @@ the result is a rect with attributes *width*, *height*, and *viewBox* on positi
 *  
 ```
    SVG htmlObject(tuple[Pos, Pos] pos, str html, str id= "", str class= "", str frameClass = "",
-   str style="", int width=100, int height=100, num vshrink = 1.0, num hshrink = 1.0, 
+   str style="", int width=1000, int height=1000, num vshrink = 1.0, num hshrink = 1.0, 
    num shrink = 1.0, int strokeWidth=2)
 ``` 
 places the html code defined in string  *html* in position *pos* with respect to the viewbox of the parent. 
@@ -219,7 +229,7 @@ title {display:block}
 </body>
 </html>
 ```
-The line `<script src="init"></script>` is mandatory. This script runs the update defined in the `.rsc` file.
+
 The result is found in [Tree.png](images/Tree.md)
 
 ## Frame

@@ -258,7 +258,7 @@ title {display:block}
 The result is found in [Tree.png](images/Tree.md)
 
 ## Chart
-The result is found in [GitHub Chart.html](http://htmlpreview.github.com/?https://github.com/BertLisser/racytoscal/blob/master/images/Chart.html)
+The result is found in [Chart.html](http://htmlpreview.github.com/?https://github.com/BertLisser/racytoscal/blob/master/images/Chart.html)
 ## Frame
 The command
 ```

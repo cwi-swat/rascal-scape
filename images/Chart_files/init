@@ -1,0 +1,27 @@
+var div = document.getElementById('attach');
+var ctx = document.createElement('canvas');
+ctx.setAttribute('id', '-attach');
+div.appendChild(ctx);
+// alert(JSON.stringify(JSON.parse('{"data":{"datasets":[{"data":[232762.0,235152.0,239179.0,242253.0,246378.0],"label":"alleenstaand","backgroundColor":"yellow"},{"data":[87701.0,89826.0,91984.0,93748.0,95647.0],"label":"samenwonend0","backgroundColor":"lightblue"},{"data":[71097.0,71902.0,72733.0,73116.0,73670.0],"label":"samenwonend1","backgroundColor":"blue"},{"data":[39452.0,39727.0,39920.0,40441.0,40651.0],"label":"eenoudergezin","backgroundColor":"beige"},{"data":[5926.0,6086.0,6232.0,6429.0,6238.0],"label":"overig","backgroundColor":"lightgreen"}],"labels":["2014","2015","2016","2017","2018"]},"type":"bar","options":{"scales":{"xAxes":[{"stacked":true}],"yAxes":[{"stacked":true}]},"title":{"display":true,"text":"Amsterdam"}}}')));
+chart["attach"] = new Chart(ctx, walkThroughCardConfiguration(JSON.parse('{"data":{"datasets":[{"data":[232762.0,235152.0,239179.0,242253.0,246378.0],"label":"alleenstaand","backgroundColor":"yellow"},{"data":[87701.0,89826.0,91984.0,93748.0,95647.0],"label":"samenwonend0","backgroundColor":"lightblue"},{"data":[71097.0,71902.0,72733.0,73116.0,73670.0],"label":"samenwonend1","backgroundColor":"blue"},{"data":[39452.0,39727.0,39920.0,40441.0,40651.0],"label":"eenoudergezin","backgroundColor":"beige"},{"data":[5926.0,6086.0,6232.0,6429.0,6238.0],"label":"overig","backgroundColor":"lightgreen"}],"labels":["2014","2015","2016","2017","2018"]},"type":"bar","options":{"scales":{"xAxes":[{"stacked":true}],"yAxes":[{"stacked":true}]},"title":{"display":true,"text":"Amsterdam"}}}')));
+     
+if (typeof clickCallback==='undefined') clickCallback = fromRascal;
+if (typeof changeCallback==='undefined') changeCallback = fromRascal;
+if (typeof keypressCallback==='undefined') keypressCallback = fromRascal;
+	    
+if (typeof clickCallback==='undefined') clickCallback = fromRascal;
+if (typeof changeCallback==='undefined') changeCallback = fromRascal;
+if (typeof keypressCallback==='undefined') keypressCallback = fromRascal;
+	    
+if (typeof clickCallback==='undefined') clickCallback = fromRascal;
+if (typeof changeCallback==='undefined') changeCallback = fromRascal;
+if (typeof keypressCallback==='undefined') keypressCallback = fromRascal;
+	    
+if (typeof clickCallback==='undefined') clickCallback = fromRascal;
+if (typeof changeCallback==='undefined') changeCallback = fromRascal;
+if (typeof keypressCallback==='undefined') keypressCallback = fromRascal;
+	    
+if (typeof clickCallback==='undefined') clickCallback = fromRascal;
+if (typeof changeCallback==='undefined') changeCallback = fromRascal;
+if (typeof keypressCallback==='undefined') keypressCallback = fromRascal;
+	    

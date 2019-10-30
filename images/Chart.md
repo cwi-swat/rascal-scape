@@ -1,1 +1,1 @@
-![GitHub Logo](https://github.com/BertLisser/racytoscal/images/Chart.html)
+![GitHub Logo](https://github.com/BertLisser/racytoscal/blob/master/images/Chart.html)

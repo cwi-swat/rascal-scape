@@ -40,8 +40,8 @@ and
 <title>Simple</title>
 <script src="lib/racytoscal.js"></script>
 <style>
-.cell{fill:steelblue;stroke:red}
-.kernel{fill:yellow;stroke:brown}
+.cell{fill:steelblue;stroke:lightblue}
+.kernel{fill:yellow;stroke:salmon}
 text {
     font-style:italic;
     text-anchor:middle;

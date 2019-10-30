@@ -111,7 +111,9 @@ public str executeInBrowser(lrel[str, Style] styles=[], tuple[str, str] \layout=
 public str svg(int width, int height, ViewBox viewBox, str inside) =
       "\<svg width=\"<width>px\" height=\"<height>px\", viewBox=\"<viewBox.x> <viewBox.y> <viewBox.width> <viewBox.height>\"\><inside>\</svg\>";
       
-public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, width, height>) {
+public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1, -1>) {
+      if (viewBox.width<0) viewBox.width=width;
+      if (viewBox.height<0) viewBox.height=height;
       SVG parent =  root(viewBox = viewBox);
       content = addParent(parent, content);
       str inside = "<for(SVG c <- content){>  <eval(viewBox, 0, c)> <}>";
@@ -119,7 +121,7 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, wid
       <inside>\</svg\>";
       }
  
- public SVG box(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=100, num height=100, num vshrink = 1.0, num hshrink = 1.0, 
+ public SVG box(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=1000, num height=1000, num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, 1000, 1000>, Dim padding = pxl(<0,0,0, 0>)
      , SVGLayout svgLayout = overlay()) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
@@ -131,7 +133,7 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, wid
      return c;
  }
  
- public SVG ellipse(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=100, num height=100, num vshrink = 1.0, num hshrink = 1.0, 
+ public SVG ellipse(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=1000, num height=1000, num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, 1000, 1000>,  Dim padding = pxl(<0,0,0, 0>)) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      // println("<padding>");
@@ -141,7 +143,7 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, wid
      return c;
  }
  
-public SVG htmlObject(Position pos, str html, str id= "", str class= "", str frameClass = "", str style="", int width=100, int height=100, num vshrink = 1.0, num hshrink = 1.0, 
+public SVG htmlObject(Position pos, str html, str id= "", str class= "", str frameClass = "", str style="", int width=1000, int height=1000, num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, int strokeWidth=2) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      SVG c =  foreignObject(pos[0], pos[1], ((hshrink?)||(shrink?))?pct(hshrink*100) :pxl(width) 

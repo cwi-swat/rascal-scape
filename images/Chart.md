@@ -1,1 +1,1 @@
-![GitHub Logo](https:/images/Chart.html)
+![GitHub Logo](https://images/Chart.html)

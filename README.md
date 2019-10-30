@@ -214,11 +214,12 @@ title {display:block}
 <body>
 <h2>Tree</h2>
 <div id='cy'>
-<script src="init"></script>
 </div>
+<script src="init"></script>
 </body>
 </html>
 ```
+The line `<script src="init"></script>` is mandatory. This script runs the update defined in the `.rsc` file.
 The result is found in [Tree.png](images/Tree.md)
 
 ## Frame

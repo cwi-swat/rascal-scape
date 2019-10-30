@@ -258,7 +258,7 @@ title {display:block}
 The result is found in [Tree.png](images/Tree.md)
 
 ## Chart
-
+The result is found in [Chart.htm](images/Chart.htm)
 ## Frame
 The command
 ```

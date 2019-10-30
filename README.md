@@ -108,7 +108,7 @@ where *html* is the location of the belonging `.html` file
               ,num width=1000, num height=1000
               ,ViewBox viewBox=<0, 0, 1000, 1000>
               ,Dim padding = pxl(<0,0,0,0>)
-              ,SVGLayout svgLayout = overlay()
+              ,SVGLayout svgLayout = overlay())
 ```
 where *pos* is the position with respect to the viewBox of the outer SVG figure,
              *width* and *height* are the dimensions with respect to the viewbox of the outer figure
@@ -256,6 +256,8 @@ title {display:block}
 ```
 
 The result is found in [Tree.png](images/Tree.md)
+
+## Chart
 
 ## Frame
 The command

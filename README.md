@@ -130,7 +130,7 @@ the result is a rect with attributes *width*, *height*, and *viewBox* on positi
    respect to the viewbox of the parent figure.
 *  
 ```
-   SVG htmlObject(tuple[Pos, Pos] pos, str html, str id= "", str class= "", str frameClass = "",
+   SVG htmlObject(Position pos, str html, str id= "", str class= "", str frameClass = "",
    str style="", int width=1000, int height=1000, num vshrink = 1.0, num hshrink = 1.0, 
    num shrink = 1.0, int strokeWidth=2)
 ``` 

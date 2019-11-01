@@ -58,10 +58,10 @@ title {display:block}
 </body>
 </html>
 ```
-The line `<script src="init"></script>` is mandatory. This script runs the update defined in the `.rsc` file.
+The line `<script src="init"></script>` is mandatory. This script runs the update defined in the `rsc` file.
 The user must call the function *app* and assign the returned value to a variable *ap* of type *App*.
-The browser will be opened with a connection to the defined `.html` file updated with the generated `.html` -string *output* by entering the command *ap.serve()*. 
-The `html`-string *output* will be attached to the `<div id='attach'>` line standing in the `.html` file. 
+The browser will be opened with a connection to the defined `html` file updated with the generated `html` string *output* by entering the command *ap.serve()*. 
+The `html` string *output* will be attached to the `<div id='attach'>` line standing in the `html` file. 
 The connection will be closed by entering the command *ap.stop()*.
 So in console:
 ```
@@ -88,13 +88,14 @@ App app(loc html, Script contents...,loc site = |http://localhost:8081|
     )
 ```
 where *html* is the location of the belonging `.html` file
-      ,*contents* is the list of tuples *<container, definition>*. The field *container* refers to the position 
-       in the `.html`
-       file where the definition must be added. *definition* can have the type *str*, *CytoScape*, or *Chart*. 
+      ,*contents* is the list of tuples *<container, definition>*. The field of type *str* *container* refers 
+       to the position 
+       in the `html` file where the definition must be added. The field *definition* can have the type 
+       *str*, *CytoScape*, or *Chart*. 
        When `display = true`, the browser will be opened automatically, otherwise not. With `click`, `keypress`, `change`,   
       `load` and `timer` you can define callbacks in html.  
        With `tap`, `tapend`, `tap` you can define callbacks in `cytoscape`.
-       `app` returns a data type containing the methods `serve` and `stop` for starting and stopping the server.
+       Function `app` returns a data type containing the methods `serve` and `stop` for starting and stopping the server.
 
 ## SVG Commands
 
@@ -258,6 +259,8 @@ title {display:block}
 The result is found in [Tree.png](images/Tree.md)
 
 ## Chart
+`racytoscal` provides an interface to
+[Chart.js](https://www.chartjs.org/docs/latest/)
 ```
 module demo::amsterdam::Chart
 import Prelude;
@@ -314,6 +317,7 @@ public App def() {
     return ap;
     }
 ```
+and
 ```
 <!DOCTYPE html>
 <html>

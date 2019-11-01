@@ -314,6 +314,27 @@ public App def() {
     return ap;
     }
 ```
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Chart</title>
+<script src="lib/cytoscape.umd.js"></script>
+<script src="lib/dagre.min.js"></script>
+<script src="lib/cytoscape-dagre.js"></script>
+<script src="lib/racytoscal.js"></script>
+<script src="lib/Chart.bundle.min.js"></script>
+<style>
+div:{width:400px;height:400px}
+</style>
+<body>
+<div id="attach">
+</div>
+<script src="init"></script>
+</body>
+</html>
+```
 The result is found in [Chart.html](http://htmlpreview.github.com/?https://github.com/BertLisser/racytoscal/blob/master/images/Chart.html)
 ## Frame
 The command

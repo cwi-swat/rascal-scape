@@ -1,7 +1,8 @@
 # racytoscal  
 
 
-racytoscal is an added graphical functionality to rascal which makes use of *svg*, *html*, *css*, *cytoscape*, and *dagre*.  The name *racytoscal* indicates the connection between *rascal* and *cytoscape*.
+racytoscal is an added graphical functionality to rascal which makes use of *svg*, *html*, *css*, *cytoscape*, 
+[*chartjs*](https://www.chartjs.org/docs/latest/) and *dagre*.  The name *racytoscal* indicates the connection between *rascal* and *cytoscape*.
 
 An unit is a directory containing a `.rsc` and a `.html` file. An example is the unit *simple* which contains the files *Graph.rsc* and *Graph.html*.
 

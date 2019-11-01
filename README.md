@@ -262,7 +262,8 @@ The result is found in [Tree.png](images/Tree.md)
 
 ## Chart
 `racytoscal` provides an interface to
-[Chart.js](https://www.chartjs.org/docs/latest/)
+[chartjs](https://www.chartjs.org/docs/latest/).
+An example of a histogram follows here.
 ```
 module demo::amsterdam::Chart
 import Prelude;

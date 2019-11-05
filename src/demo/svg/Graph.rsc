@@ -19,10 +19,10 @@ public App tst() {
     str styl = "fill:beige; stroke:red";
     str html(ViewBox viewBox)  = svg(400,400      
          , box(LT
-                  ,[ellipse(pos[1] , ellipse(pos[1], shrink=0.5, class="inner-tst")
-                           , shrink=0.3, class = "tst", padding=pct(<0, 0, 0, 0>)
+                  ,[ellipse(pos[1] , ellipse(pos[1], shrink=0.5, class="inner-tst", strokeWidth = 4)
+                           , shrink=0.3, class = "tst", strokeWidth = 4
                     )|pos<-getPositions()]
-                    , style=styl, viewBox = <0, 0, 100, 100>
+                    , style=styl 
                         , hshrink = 1.0, vshrink=1.0
                        , id="frame", strokeWidth=4)
           , viewBox = viewBox)

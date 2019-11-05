@@ -6,6 +6,37 @@ import util::Webserver;
 extend Chart;
 extend Cytoscape;
 
+// public App app(loc html, Script contents...,loc site = |http://localhost:8081|
+//  , bool display = true 
+//    ,React click = <[], nullCallback>
+//    ,React keypress = <[], nullCallback>
+//    ,React change = <[], nullCallback>
+//   , Callback tapstart = nullCallback
+//    ,Callback tapend =  nullCallback
+//    ,Callback tap = nullCallback
+//    ,Callback load =  nullCallback
+//    ,Callback timer = nullCallback
+ //   )
+
+// public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1, -1>)
+
+// public SVG box(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=1000, num height=1000
+//  ,num vshrink = 1.0, num hshrink = 1.0 
+//  ,num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, -1, -1>, Dim padding = pxl(<0,0,0, 0>)
+//  ,SVGLayout svgLayout = overlay()) 
+
+// public SVG ellipse(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=1000, num height=1000
+//  ,num vshrink = 1.0, num hshrink = 1.0 
+//  ,num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, -1, -1>, Dim padding = pxl(<0,0,0, 0>)
+//  ,SVGLayout svgLayout = overlay())
+
+// public SVG htmlObject(Position pos, str html, str id= "", str class= "", str frameClass = "", str style="", int width=1000, int height=1000, num vshrink = 1.0, num hshrink = 1.0, 
+//     num shrink = 1.0, int strokeWidth=2) 
+
+// public SVG text(num x, num y, str txt, str id= "", str class= "", str style= "") 
+
+// public SVG path(str txt, str id= "", str class= "", str style= "")
+
 public alias App = tuple[void() serve, void() stop, str() content];
 public alias Script = tuple[str container, value val];
 public alias Callback = str(str);
@@ -122,10 +153,9 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
       }
  
  public SVG box(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=1000, num height=1000, num vshrink = 1.0, num hshrink = 1.0, 
-     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, 1000, 1000>, Dim padding = pxl(<0,0,0, 0>)
+     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, -1, -1>, Dim padding = pxl(<0,0,0, 0>)
      , SVGLayout svgLayout = overlay()) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
-     // println("<vshrink?> <vshrink>");
      SVG c =  rect(pos[0], pos[1], (!(width?))?pct(hshrink*100) :pxl(width) 
                                  , (!(height?))?pct(vshrink*100) :pxl(height)
                                  , strokeWidth, style, inner = inner, id = id, class = class, viewBox = viewBox, padding = padding
@@ -134,12 +164,12 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
  }
  
  public SVG ellipse(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=1000, num height=1000, num vshrink = 1.0, num hshrink = 1.0, 
-     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, 1000, 1000>,  Dim padding = pxl(<0,0,0, 0>)) {
+     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, -1, -1>,  Dim padding = pxl(<0,0,0, 0>)) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
-     // println("<padding>");
-     SVG c =  ellipse(pos[0], pos[1], ((hshrink?)||(shrink?))?pct(hshrink*100) :pxl(width) 
-                                 , ((vshrink?)||(shrink?))?pct(vshrink*100) :pxl(height)
-                                 , strokeWidth, style, inner = inner, id = id, class= class, viewBox = viewBox, padding = padding);
+     SVG c =  ellipse(pos[0], pos[1], (!(width?))?pct(hshrink*100) :pxl(width) 
+                                    , (!(height?))?pct(vshrink*100) :pxl(height)
+                                    , strokeWidth, style, inner = inner, id = id
+                                    , class= class, viewBox = viewBox, padding = padding);
      return c;
  }
  
@@ -230,15 +260,20 @@ private num posY(num dim, num offset, num height, Coord p, num lw) {
     return 0;
     }
     
-private SVG newParent(SVG d, SVG parent) {d.parent = parent; return d;}
+private SVG newParent(SVG d, SVG parent) {
+   d.parent = parent; 
+   return d;
+   }
     
-private SVG addParent(SVG parent, SVG s) {
-       s.parent = parent;
-       s.inner = addParent(s, s.inner);
-       if (_rotate(_):=s || _rotate(_,_,_):=s || translate(_,_):=s || scale(_,_):=s) {
-              s.inner = [newParent(d, parent)|SVG d<-s.inner];
+private SVG addParent(SVG parent, SVG c) {
+       if (c.viewBox[2]<0)  c.viewBox[2] = parent.viewBox[2];
+       if (c.viewBox[3]<0)  c.viewBox[3] = parent.viewBox[3];
+       c.parent = parent;
+       c.inner = addParent(c, c.inner);
+       if (_rotate(_):=c || _rotate(_,_,_):=c || translate(_,_):=c || scale(_,_):=c) {
+              c.inner = [newParent(d, parent)|SVG d<-c.inner];
           }
-       return s;
+       return c;
        }
  
 private str toString(SVG content) {

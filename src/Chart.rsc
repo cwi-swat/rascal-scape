@@ -14,6 +14,15 @@ public Color noneColor = "rgba(220, 220, 220, 0)";
 
 public str defaultColor="";
 
+public data Options = options(
+     set[str] keys = {"scales", "title", "legend", "tooltips", "elements"}
+     , Scales scales=scales()
+     , Title title=title()
+     , Legend legend = legend()
+     , Tooltips tooltips = tooltips()
+     , Elements elements = elements()
+     );
+
 public data DataSet(
              set[str] keys = {"label","data","backgroundColor","borderCapStyle","borderColor"
                  ,"borderDash","borderDashOffset","borderJoinStyle","borderWidth"
@@ -24,13 +33,11 @@ public data DataSet(
              , str label=""
              , Points \data=vec([])
              , Color backgroundColor = defaultColor
-             , str borderCapStyle = "butt"
- // butt, round, square
+             , str borderCapStyle = "butt"   // butt, round, square
              , Color borderColor = defaultColor
              , list[num] borderDash = []
              , num borderDashOffset = 0
-             , str borderJoinStyle = "miter"
- // bevel, round, miter
+             , str borderJoinStyle = "miter" // bevel, round, miter
              , num borderWidth = 1
              , str cubicInterpolationMode = "default"
              , value fill = false
@@ -231,14 +238,7 @@ public data Elements(
       ,Point point = point()
      ) = elements();  
          
- public data Options = options(
-     set[str] keys = {"scales", "title", "legend", "tooltips", "elements"}
-     , Scales scales=scales()
-     , Title title=title()
-     , Legend legend = legend()
-     , Tooltips tooltips = tooltips()
-     , Elements elements = elements()
-     );
+ 
      
  public data Tooltips(
      set[str] keys = {"enabled","costum","mode","intersect","position","callbacks"

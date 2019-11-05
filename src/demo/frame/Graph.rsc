@@ -31,14 +31,14 @@ public App def() {
      str html = svg(width, height, 
        box(CC, 
           box(LT, frame(1, 1, <"x-axe", ["<i>"|num i<-[0,0.1..1]]>
-                        ,<"y-axe", ["<i>"|num i<-[0,0.1..1]]>
-                        ,[<"left",[<0, x>, <1-x, 0>]>|num x<-[0,0.01..1]]
+                             ,<"y-axe", ["<i>"|num i<-[0,0.1..1]]>
+                            ,[<"left",[<0, x>, <1-x, 0>]>|num x<-[0,0.01..1]]
                         +
                          [<"right",[<1, x>, <1-x, 1>]>|num x<-[0,0.01..1]]
         , viewBox = <0, 0, 1, 1>, width = width, height = height)
          , ellipse(CC, text(500, 500, "Hallo", class="text"), shrink = 0.3, id="sign", strokeWidth=16
            )
-           , strokeWidth = 2
+           , strokeWidth = 2, viewBox=<0, 0, 1000, 1000>
         )
         ,
         box(LT, frame(1, 1/PI(), <"x-axe", ["0","\u03C0/2","\u03C0","3\u03C0/2","2\u03C0"]>

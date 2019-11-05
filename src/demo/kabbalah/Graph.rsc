@@ -40,8 +40,6 @@ public App def() {
                       ,e_("pe", "geburah", "hod", style=style(label=label("\u05E4")))
                       ,e_("kaf", "chessed", "nezach", style=style(label=label("\u05DB")))
                       ];
-   // println(size(edges));
-    // str output = genScript("cy", 
      Cytoscape cy = cytoscape(
         elements= nodes + edges
        ,styles = [

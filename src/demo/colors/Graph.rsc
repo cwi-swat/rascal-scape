@@ -1,12 +1,10 @@
-module demo::simple::Graph
+module demo::colors::Graph
 import Prelude;
 extend Racytoscal;
+extend Colors;
 import util::Math;
 
-list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
-     , "seagreen","skyblue", "slategray","steelblue", "yellow"];
-     
-public list[tuple[str name , Racytoscal::Position pos]] getPositions() = [
+     public list[tuple[str name , Racytoscal::Position pos]] getPositions() = [
       <"LT", LT>, <"LC", LC>, <"LB", LB>
     , <"CT", CT>, <"CC", CC>, <"CB", CB>, <"RT", RT>, <"RC", RC>, <"RB", RB>];
      
@@ -15,13 +13,14 @@ str pickColor() {
     return "<colors[d]>";
     }
     
-SVG cell(tuple[str name, Racytoscal::Position pos] p) = box(CC
-            ,box(p.pos, text(500, 500, p.name), class="kernel", shrink=0.4, strokeWidth=40)
-         ,class="cell",height=1000, width=1000, strokeWidth=60); 
+SVG cell(str name) = box(CC
+            ,box(LT, text(500, 250, name), class="kernel", vshrink=0.5, strokeWidth=4, viewBox=<0,0, 1000, 1000>)
+            ,box(LB, text(500, 250, name), class="kernel", vshrink=0.5, strokeWidth=4, viewBox=<0,0, 1000, 1000>)
+                   , class="cell", height=100, width=1000, strokeWidth=6, viewBox=<0,0, 100, 1000>); 
            
 public str rows() {
-    str output = svg( 1000, 400, box(LT, [cell(p)|p<-getPositions()]
-        ,svgLayout=grid(5), viewBox=<0,0, 1000, 1000>));    
+    str output = svg( 1000, 1500, box(LT, [cell(p)|p<-color]
+        ,svgLayout=grid(10), viewBox=<0,0, 1000, 1500>));    
     return output;
     } 
 /*     
@@ -49,7 +48,7 @@ str output = svg( 600, 600,
  public App def() { 
     // str output = nesting(take(4, colors), strokeWidth=40, shrink = 0.4);
     str output = rows(); 
-    App ap = app( |project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>);
+    App ap = app( |project://racytoscal/src/demo/colors/Graph.html|, <"attach", output>);
     return ap;
     } 
       

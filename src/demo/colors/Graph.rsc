@@ -4,6 +4,12 @@ extend Racytoscal;
 extend Colors;
 import util::Math;
 
+int ncols = 8;
+int marg = 0;
+
+num nrows = ceil(size(color)/ncols);
+
+num f = nrows/ncols;
      public list[tuple[str name , Racytoscal::Position pos]] getPositions() = [
       <"LT", LT>, <"LC", LC>, <"LB", LB>
     , <"CT", CT>, <"CC", CC>, <"CB", CB>, <"RT", RT>, <"RC", RC>, <"RB", RB>];
@@ -14,13 +20,16 @@ str pickColor() {
     }
     
 SVG cell(str name) = box(CC
-            ,box(LT, text(500, 250, name), class="kernel", vshrink=0.5, strokeWidth=4, viewBox=<0,0, 1000, 1000>)
-            ,box(LB, text(500, 250, name), class="kernel", vshrink=0.5, strokeWidth=4, viewBox=<0,0, 1000, 1000>)
-                   , class="cell", height=100, width=1000, strokeWidth=6, viewBox=<0,0, 100, 1000>); 
+            ,box(LT, text(500, 250, name), class="kernel", vshrink=0.5, strokeWidth=0, viewBox=<0,0, 1000, 500>)
+            ,box(LB, style="fill:<name>", class="kernel", vshrink=0.5, strokeWidth=0, viewBox=<0,0, 1000, 500>)
+                   , class="cell", height=1000, width= 1000, strokeWidth=0, viewBox=<0,0, 1000, 1000>); 
            
 public str rows() {
-    str output = svg( 1000, 1500, box(LT, [cell(p)|p<-color]
-        ,svgLayout=grid(10), viewBox=<0,0, 1000, 1500>));    
+    println(f);
+    str output = svg( 2000, 4000, box(LT, [cell(p)|p<-sort(domain(color))]
+        ,svgLayout=grid(ncols
+        // , preserveAspectRatio="none"
+        ), width=1000+500, height = f*(1000+500), strokeWidth=4, viewBox=<0,0, 1000, 1000>), viewBox=<0,0, 2000, 4000>);    
     return output;
     } 
 /*     

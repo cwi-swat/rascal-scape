@@ -46,7 +46,8 @@ public alias Position = tuple[Coord, Coord];
 public alias ViewBox = tuple[num x, num y, num width, num height];
 public alias Padding = tuple[num top,  num right, num bottom, num left];
 
-data SVGLayout = grid(int nCols)|overlay();
+data SVGLayout = grid(int nCols, str preserveAspectRatio="xMinYMin slice")
+  |overlay(str preserveAspectRatio="none");
        
 data Coord = L(num  left) | R(num right) |C(num center)|L1(num  left1) | R1(num right1) |C1(num center1);
   
@@ -308,27 +309,31 @@ private Padding getPadding(num width, num height, Dim d) {
    if (pct(Padding v):=d) return <floor(height*v.top/100),floor(width*v.right/100),floor(height*v.bottom/100),floor(width*v.left/100)>;
    } 
    
-private str gridLayout(num x, num y, num width, num height, num lw, int nCols, ViewBox vb, list[SVG] inner) {
+private str gridLayout(num x, num y, num width, num height, num lw, int nCols, ViewBox vb, list[SVG] inner
+    str preserveAspectRatio = "xMinYMin slice") {
    int nRows = (size(inner)-1)/nCols+1;
-   ViewBox newVb = <vb.x, vb.y, vb.width*nCols,  vb.height*nRows>;
-   num posX = x+lw/2, posY = y+lw/2;
+   println("HELP: <lw>");
+   ViewBox newVb = <vb.x, vb.y, (vb.width+2*lw)*nCols,  (vb.height+2*lw)*nRows>;
+   num posX = 0, posY = 0;
    str r = "";
+   r+= " \<svg x=\"<_(x+lw/2)>\"  y=\"<_(y+lw/2)>\"\>";
    int cnt = 0;
    int row = 0;
    for (int row<-[0..nRows]) {
       for (_<-[row..row+nCols] && cnt<size(inner)) {   
        r+= "
-          ' \<svg x=\"<posX>\"  y=\"<posY>\"  viewBox=\"<newVb.x> <newVb.y> <_(newVb.width)> <_(newVb.height)>\" 
-          ' preserveAspectRatio=\"none\"\>
+          ' \<svg x=\"<_(posX)>\"  y=\"<_(posY)>\"  viewBox=\"<newVb.x> <newVb.y> <_(newVb.width)> <_(newVb.height)>\" 
+          ' preserveAspectRatio=\"<preserveAspectRatio>\"\>
           ' <eval(newVb, lw, inner[cnt])>
           ' \</svg\>
           ";
-         posX+=(width/nCols);
+         posX+=((width-2*lw)/nCols);
          cnt += 1;
         }
-        posX = x+lw/2; 
-        posY+=(height/nRows);
+        posX = 0; 
+        posY+=((height-2*lw)/nRows);
       }
+    r+="\</svg\>";
     return r;
    }
 
@@ -399,12 +404,15 @@ private str eval(ViewBox vb,  num lw0, SVG c) {
         if (overlay():=c.svgLayout)
         r+= "
           ' \<svg x=\"<_(x+lw/2)>\"  y=\"<_(y+lw/2)>\"  viewBox=\"<newVb.x> <newVb.y> <_(newVb.width)> <_(newVb.height)>\" 
-          ' preserveAspectRatio=\"none\"\>
+          ' preserveAspectRatio=\"<c.svgLayout.preserveAspectRatio>\"\>
           ' <for(SVG s<-c.inner){> <eval(newVb, lw, s)><}>
           ' \</svg\>
           ";
        if (grid(int nCols):=c.svgLayout) {
-         r+=gridLayout(x, y, w, h, lw, nCols, newVb, c.inner);
+         // println(c.svgLayout.preserveAspectRatio);
+         r+=gridLayout(x, y, w, h, lw, nCols, newVb, c.inner
+           , preserveAspectRatio=c.svgLayout.preserveAspectRatio
+           );
          }
        }
        }

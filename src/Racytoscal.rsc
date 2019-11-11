@@ -46,7 +46,7 @@ public alias Position = tuple[Coord, Coord];
 public alias ViewBox = tuple[num x, num y, num width, num height];
 public alias Padding = tuple[num top,  num right, num bottom, num left];
 
-data SVGLayout = grid(int nCols, str preserveAspectRatio="xMinYMin slice")
+data SVGLayout = grid(int nCols, str preserveAspectRatio="none")
   |overlay(str preserveAspectRatio="none");
        
 data Coord = L(num  left) | R(num right) |C(num center)|L1(num  left1) | R1(num right1) |C1(num center1);
@@ -312,11 +312,10 @@ private Padding getPadding(num width, num height, Dim d) {
 private str gridLayout(num x, num y, num width, num height, num lw, int nCols, ViewBox vb, list[SVG] inner
     str preserveAspectRatio = "xMinYMin slice") {
    int nRows = (size(inner)-1)/nCols+1;
-   println("HELP: <lw>");
-   ViewBox newVb = <vb.x, vb.y, (vb.width+2*lw)*nCols,  (vb.height+2*lw)*nRows>;
+   ViewBox newVb = <vb.x, vb.y, vb.width*nCols,  vb.height*nRows>;
    num posX = 0, posY = 0;
    str r = "";
-   r+= " \<svg x=\"<_(x+lw/2)>\"  y=\"<_(y+lw/2)>\"\>";
+   r+= " \<svg x=\"<lw>\"  y=\"<lw>\"\>";
    int cnt = 0;
    int row = 0;
    for (int row<-[0..nRows]) {
@@ -327,11 +326,11 @@ private str gridLayout(num x, num y, num width, num height, num lw, int nCols, V
           ' <eval(newVb, lw, inner[cnt])>
           ' \</svg\>
           ";
-         posX+=((width-2*lw)/nCols);
+         posX+=width/nCols;
          cnt += 1;
         }
         posX = 0; 
-        posY+=((height-2*lw)/nRows);
+        posY+=height/nRows;
       }
     r+="\</svg\>";
     return r;
@@ -518,7 +517,7 @@ private loc openBrowser(loc html, str script, bool display = true
         return response(click.callback(path));
       }
       
-      Response page(get(/^\/change\/<path:\S+>$/)) { 
+      Response page(get(/^\/change\/<path:.+>$/)) { 
         // println("HELP0:<id>");
         return response(change.callback(path));
       }

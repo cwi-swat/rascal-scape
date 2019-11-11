@@ -1,8 +1,9 @@
-module demo::colors::Graph
+module demo::eval::Graph
 import Prelude;
 extend Racytoscal;
 extend Colors;
 import util::Math;
+import util::Eval;
 
 int ncols = 8;
 
@@ -21,11 +22,33 @@ public str rows() {
         ), width=1000, height = f*1000, strokeWidth=4, viewBox=<0,0, 1000, 1000>));    
     return output;
     } 
+    
+str action(str s) {
+   println(s);
+   list[str] v = split("/", s); 
+   str expr = v[-1];
+   println(eval(expr+";"));
+   return expr;
+   }
    
  public App def() { 
     str output = rows(); 
-    App ap = app( |project://racytoscal/src/demo/colors/Graph.html|, <"attach", output>);
+    App ap = app( |project://racytoscal/src/demo/eval/Graph.html|
+      ,change= <["enter-field"], action>);
     return ap;
-    } 
+    }
+/* 
+.Examples
+
+[source,rascal-shell]
+----
+import util::Eval;
+eval("2 * 3;");
+eval(["X = 2 * 3;", "X + 5;"]);
+---- 
+*/   
+public void main() {
+    println(eval("2+3;"));
+    }
       
  

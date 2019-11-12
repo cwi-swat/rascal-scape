@@ -24,7 +24,7 @@ public str rows() {
     } 
     
 str action(str s) {
-   println(s);
+   // println(s);
    list[str] v = split("/", s); 
    str expr = v[-1];
    println(eval(expr+";"));

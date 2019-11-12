@@ -517,8 +517,7 @@ private loc openBrowser(loc html, str script, bool display = true
         return response(click.callback(path));
       }
       
-      Response page(get(/^\/change\/<path:.+>$/)) { 
-        // println("HELP0:<id>");
+      Response page(get(/^\/change\/<path:\S+>$/)) { 
         return response(change.callback(path));
       }
       

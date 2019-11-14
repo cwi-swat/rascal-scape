@@ -54,7 +54,6 @@ text {
     font-size:160pt;
     dominant-baseline:middle;
     }
-.aap{stroke:black}
 .cell{fill:steelblue;stroke:lightblue}
 .kernel{fill:yellow;stroke:salmon}
 rect{stroke-width:0; fill:none}
@@ -165,8 +164,8 @@ title {display:block}
 ```
 When the value of the input field has been changed the callback *action* will be triggered with argument *path*. The last part of *path* contains the rascal expression which needs to be evaluated. The result will be send back to the client via 
 *executeInBrowser*. In `app( |project://racytoscal/src/demo/eval/Graph.html|,change= <["enter-field"], action>)`
-will the callback defined. `change` has type *React* = *tuple[list[str] ids, Callback callback]* 
-which identifies the widgets on which the `change` callback must be trigged.
+will the callback defined. *change* has type *React* which is an alias for `tuple[list[str] ids, Callback callback]` 
+which identifies the widgets on which the `change` callback must be triggered.
 
 ## SVG Commands
 
@@ -191,9 +190,11 @@ where *pos* is the position with respect to the viewBox of the outer SVG figure,
              *viewBox* will be applied to each inner figure,
              *padding* applied to each inner figure,       
              if *svgLayout* = `overlay()` then the inner figures will be overlayed,        
-             if *svgLayout* = `grid(ncols)` then the inner figure will be laid next to each other 
+             if *svgLayout* = `grid(ncols, width=-1, height=-1)` then the inner figure will be laid next to each other 
              (after *ncols* a new row will be started),
 the result is a rect with attributes *width*, *height*, and *viewBox* on position *pos*.
+If *width* and *height* are defined in `grid` then each cell has width *width* and height *height*. The
+total width of the grid `ncols*width` and `ceil(size(inner)/ncols)*height`.
 * `SVG ellipse` has the same parameters as `box`. There are no parameters *rx* and *ry*.
 * `SVG text(num x, num y, str txt, str id= "", str class= "", str style= "")` places *txt* in position *(x,y)* with 
    respect to the viewbox of the parent figure.

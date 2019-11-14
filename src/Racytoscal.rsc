@@ -163,38 +163,42 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
       return <width, height>; 
       }
  
- public SVG box(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=1000, num height=1000, num vshrink = 1.0, num hshrink = 1.0, 
+ public SVG box(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=-1, num height=-1, num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, -1, -1>, Dim padding = pxl(<0,0,0, 0>)
      , SVGLayout svgLayout = overlay()) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      <width, height>= getDimFromCell(svgLayout, inner, width, height);
      // if (grid(_):=svgLayout) println("HELP: <width?> <width> <height>");
-     SVG c =  rect(pos[0], pos[1], ((shrink?||hshrink?))?pct(hshrink*100) :pxl(width) 
-                                 , ((shrink?||vshrink?))?pct(vshrink*100) :pxl(height)
+     SVG c =  rect(pos[0], pos[1], (width==-1)?pct(hshrink*100) :pxl(width) 
+                                 , (height==-1)?pct(vshrink*100) :pxl(height)
                                  , strokeWidth, style, inner = inner, id = id, class = class, viewBox = viewBox, padding = padding
                                  , svgLayout = svgLayout);
      return c;
  }
  
- public SVG ellipse(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=1000, num height=1000, num vshrink = 1.0, num hshrink = 1.0, 
-     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, -1, -1>,  Dim padding = pxl(<0,0,0, 0>)) {
+ public SVG ellipse(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=-1, num height=-1, num vshrink = 1.0, num hshrink = 1.0, 
+     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, -1, -1>,  Dim padding = pxl(<0,0,0, 0>)
+     , SVGLayout svgLayout = overlay()) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      <width, height>= getDimFromCell(svgLayout, inner, width, height);
-     SVG c =  ellipse(pos[0], pos[1], ((shrink?||hshrink?))?pct(hshrink*100) :pxl(width) 
-                                    , ((shrink?||vshrink))?pct(vshrink*100) :pxl(height)
+     SVG c =  ellipse(pos[0], pos[1], width==-1?pct(hshrink*100) :pxl(width) 
+                                    , height==-1?pct(vshrink*100) :pxl(height)
                                     , strokeWidth, style, inner = inner, id = id
                                     , class= class, viewBox = viewBox, padding = padding);
      return c;
  }
  
-public SVG htmlObject(Position pos, str html, str id= "", str class= "", str frameClass = "", str style="", int width=1000, int height=1000, num vshrink = 1.0, num hshrink = 1.0, 
+public SVG htmlObject(Position pos, str html, str id= "", str class= "", str frameClass = "", str style="", int width=-1, int height=-1, num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, int strokeWidth=2) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
-     SVG c =  foreignObject(pos[0], pos[1], ((hshrink?)||(shrink?))?pct(hshrink*100) :pxl(width) 
-                                 , ((vshrink?)||(shrink?))?pct(vshrink*100) :pxl(height)
+     SVG c =  foreignObject(pos[0], pos[1], width==-1?pct(hshrink*100) :pxl(width) 
+                                 , height==-1?pct(vshrink*100) :pxl(height)
                                  , strokeWidth, style, html, id = id, class=class, frameClass = frameClass);
      return c;
  }
+ 
+ // Only to be used inside htmlObject.  The classes innerX and innerY must be defined in .html file.
+ public str centerText(str txt) = div(div(div(txt), class = "innerX"), class = "innerY");
  
  public SVG text(num x, num y, str txt, str id= "", str class= "", str style= "") {
      SVG c = text(x, y, style, txt, id =id, class = class);
@@ -207,9 +211,6 @@ public SVG path(str txt, str id= "", str class= "", str style= "") {
      return c;
  }
  
-public str centerText(str txt...) = div(div(div(txt), class = "innerX"), class = "innerY");
-
-
 public SVG frame(num hshrink, num vshrink, tuple[str \class, list[str] d] xAxe, tuple[str \class, list[str] d] yAxe
     , tuple[str \class, lrel[num x, num y] d] graphs... ,ViewBox viewBox =<0, 0, 100, 100>,
     num width = 1000, num height = 1000) {

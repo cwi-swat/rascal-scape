@@ -11,7 +11,7 @@ public list[tuple[str name , Racytoscal::Position pos]] getPositions() =
     
 SVG cell(tuple[str name, Racytoscal::Position pos] p) = box(CC
             ,box(p.pos, text(500, 500, p.name), class="kernel" , shrink=0.4, strokeWidth=40)
-         ,class="cell",height=1000, width=1000, strokeWidth=60); 
+         ,class="cell", strokeWidth=60); 
            
 public str rows() {
     str output = svg( 2000, 2000

@@ -110,8 +110,8 @@ where *html* is the location of the belonging `html` file
       ,*contents* is the list of tuples *<container, definition>*. The field of type *str* *container* refers 
        to the position in the `html` file where the definition must be placed. 
        The field *definition* can have the type *str*, *CytoScape*, or *Chart*. 
-       When `display = true`, the browser will be opened automatically, otherwise not. With `click`, `keypress`, `change`,   
-      `load` and `timer` you can define callbacks in html.  
+       When `display = true`, the browser will be opened automatically, otherwise not. 
+       With `click`, `keypress`, `change`, `load` and `timer` you can define callbacks in html.  
        With `tap`, `tapend`, `tap` you can define callbacks in `cytoscape`.
        Function `app` returns a data type containing the methods `serve` and `stop` for starting and stopping the server.
        

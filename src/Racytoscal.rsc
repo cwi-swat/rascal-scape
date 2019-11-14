@@ -46,7 +46,7 @@ public alias Position = tuple[Coord, Coord];
 public alias ViewBox = tuple[num x, num y, num width, num height];
 public alias Padding = tuple[num top,  num right, num bottom, num left];
 
-data SVGLayout = grid(int nCols, str preserveAspectRatio="none")
+data SVGLayout = grid(int nCols, str preserveAspectRatio="none", num width=-1, num height = -1)
   |overlay(str preserveAspectRatio="none");
        
 data Coord = L(num  left) | R(num right) |C(num center)|L1(num  left1) | R1(num right1) |C1(num center1);
@@ -152,13 +152,25 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
       return "\<svg width=\"<width>px\" height=\"<height>px\"  viewBox=\"<viewBox.x> <viewBox.y> <viewBox.width> <viewBox.height>\"\>
       <inside>\</svg\>";
       }
+      
+ tuple[num, num] getDimFromCell(SVGLayout svgLayout, list[SVG] inner, num width, num height) {
+      if (grid(int ncols):=svgLayout && (svgLayout.width?)&&(svgLayout.width?)) {
+           num d = size(inner);
+           num f = d/ncols;
+           num nrows = ceil(f);
+           return <ncols*svgLayout.width, nrows*svgLayout.height>;
+           }
+      return <width, height>; 
+      }
  
  public SVG box(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=1000, num height=1000, num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, -1, -1>, Dim padding = pxl(<0,0,0, 0>)
      , SVGLayout svgLayout = overlay()) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
-     SVG c =  rect(pos[0], pos[1], (!(width?))?pct(hshrink*100) :pxl(width) 
-                                 , (!(height?))?pct(vshrink*100) :pxl(height)
+     <width, height>= getDimFromCell(svgLayout, inner, width, height);
+     // if (grid(_):=svgLayout) println("HELP: <width?> <width> <height>");
+     SVG c =  rect(pos[0], pos[1], ((shrink?||hshrink?))?pct(hshrink*100) :pxl(width) 
+                                 , ((shrink?||vshrink?))?pct(vshrink*100) :pxl(height)
                                  , strokeWidth, style, inner = inner, id = id, class = class, viewBox = viewBox, padding = padding
                                  , svgLayout = svgLayout);
      return c;
@@ -167,8 +179,9 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
  public SVG ellipse(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=1000, num height=1000, num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, -1, -1>,  Dim padding = pxl(<0,0,0, 0>)) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
-     SVG c =  ellipse(pos[0], pos[1], (!(width?))?pct(hshrink*100) :pxl(width) 
-                                    , (!(height?))?pct(vshrink*100) :pxl(height)
+     <width, height>= getDimFromCell(svgLayout, inner, width, height);
+     SVG c =  ellipse(pos[0], pos[1], ((shrink?||hshrink?))?pct(hshrink*100) :pxl(width) 
+                                    , ((shrink?||vshrink))?pct(vshrink*100) :pxl(height)
                                     , strokeWidth, style, inner = inner, id = id
                                     , class= class, viewBox = viewBox, padding = padding);
      return c;

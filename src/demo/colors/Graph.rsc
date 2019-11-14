@@ -18,7 +18,10 @@ SVG cell(str name) = box(CC
 public str rows() {
     str output = svg( 2000, 4000, box(LT, [cell(p)|p<-sort(domain(color))]
         ,svgLayout=grid(ncols
-        ), width=1000, height = f*1000, strokeWidth=4, viewBox=<0,0, 1000, 1000>));    
+        // , width=125, height = 125
+        )
+       , width=1000, height = f*1000
+      , strokeWidth=4, viewBox=<0,0, 1000, 1000>));    
     return output;
     } 
    

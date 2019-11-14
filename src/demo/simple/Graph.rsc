@@ -2,52 +2,28 @@ module demo::simple::Graph
 import Prelude;
 extend Racytoscal;
 import util::Math;
-
-list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
-     , "seagreen","skyblue", "slategray","steelblue", "yellow"];
      
-public list[tuple[str name , Racytoscal::Position pos]] getPositions() = [
-      <"LT", LT>, <"LC", LC>, <"LB", LB>
-    , <"CT", CT>, <"CC", CC>, <"CB", CB>, <"RT", RT>, <"RC", RC>, <"RB", RB>];
-     
-str pickColor() {
-    int d = arbInt(size(colors));
-    return "<colors[d]>";
-    }
+public list[tuple[str name , Racytoscal::Position pos]] getPositions() = 
+    [ <"LT", LT>, <"LC", LC>, <"LB", LB>
+    , <"CT", CT>, <"CC", CC>, <"CB", CB>
+    , <"RT", RT>, <"RC", RC>, <"RB", RB>
+    ];
     
 SVG cell(tuple[str name, Racytoscal::Position pos] p) = box(CC
-            ,box(p.pos, text(500, 500, p.name), class="kernel", shrink=0.4, strokeWidth=40)
+            ,box(p.pos, text(500, 500, p.name), class="kernel" , shrink=0.4, strokeWidth=40)
          ,class="cell",height=1000, width=1000, strokeWidth=60); 
            
 public str rows() {
-    str output = svg( 1000, 400, box(LT, [cell(p)|p<-getPositions()]
-        ,svgLayout=grid(5), viewBox=<0,0, 1000, 1000>));    
+    str output = svg( 2000, 2000
+        ,box(LT, [cell(p)|p<-getPositions()]
+               , svgLayout=grid(5, width=200, height=200)
+               , viewBox=<0,0, 1000, 1000>
+             )
+         );    
     return output;
     } 
-/*     
-str nesting(list[str] colors, num shrink = 1.0, num strokeWidth = 10) {
-     list[SVG] step(list[SVG] aggr, str color, num shrink = 1.0)  {
-     return [
-         box(RC, aggr, shrink = shrink, strokeWidth=strokeWidth, style="stroke:<color>")
-        ,box(LC, aggr, shrink = shrink, strokeWidth=strokeWidth, style="stroke:<color>")
-        ];
-     }
-     
-str output = svg( 600, 600, 
-       rotate(PI()/4, 
-    box(CC
-      ,([box(CC, style="stroke:<head(colors)>", shrink = shrink, strokeWidth=strokeWidth)]|step(it, color, shrink = shrink)|color<-tail(colors))
-    , width = 400, height = 400, lineWidth=2, class="aap", viewBox=<0,0, 1000, 1000>)
-     )
-     ,viewBox=<-500, -500, 1000, 1000>
-    );
-    return output;
-    }
- */
    
- 
  public App def() { 
-    // str output = nesting(take(4, colors), strokeWidth=40, shrink = 0.4);
     str output = rows(); 
     App ap = app( |project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>);
     return ap;

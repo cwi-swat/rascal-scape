@@ -1,33 +1,39 @@
 # racytoscal  
 
 
-racytoscal is an added graphical functionality to rascal which makes use of *svg*, *html*, *css*, 
+racytoscal is an added graphic functionality to rascal which makes use of *svg*, *html*, *css*, 
 [*cytoscape*](https://js.cytoscape.org/), 
 [*chartjs*](https://www.chartjs.org/docs/latest/) and [*dagre*](https://github.com/dagrejs/dagre/wiki).  The name *racytoscal* indicates the connection between *rascal* and *cytoscape*.
 
-An unit is a directory containing a `.rsc` and a `.html` file. An example is the unit *simple* which contains the files *Graph.rsc* and *Graph.html*.
+An unit is a directory containing a `rsc` and a `html` file. An example is the unit *simple* which contains the files *Graph.rsc* and *Graph.html*.
 
 ```
 module demo::simple::Graph
 import Prelude;
 extend Racytoscal;
-   
-public list[tuple[str name , Racytoscal::Position pos]] getPositions() = [
-      <"LT", LT>, <"LC", LC>, <"LB", LB>
-    , <"CT", CT>, <"CC", CC>, <"CB", CB>, <"RT", RT>, <"RC", RC>, <"RB", RB>];
+import util::Math;
      
+public list[tuple[str name , Racytoscal::Position pos]] getPositions() = 
+    [ <"LT", LT>, <"LC", LC>, <"LB", LB>
+    , <"CT", CT>, <"CC", CC>, <"CB", CB>
+    , <"RT", RT>, <"RC", RC>, <"RB", RB>
+    ];
     
 SVG cell(tuple[str name, Racytoscal::Position pos] p) = box(CC
-            ,box(p.pos, text(500, 500, p.name), class="kernel", shrink=0.4, strokeWidth=40)
+            ,box(p.pos, text(500, 500, p.name), class="kernel" , shrink=0.4, strokeWidth=40)
          ,class="cell",height=1000, width=1000, strokeWidth=60); 
            
 public str rows() {
-    str output = svg( 600, 600, box(LT, [cell(p)|p<-getPositions()]
-        ,svgLayout=grid(3)));    
+    str output = svg( 2000, 2000
+        ,box(LT, [cell(p)|p<-getPositions()]
+               , svgLayout=grid(5, width=200, height=200)
+               , viewBox=<0,0, 1000, 1000>
+             )
+         );    
     return output;
-    }
-    
-public App def() { 
+    } 
+   
+ public App def() { 
     str output = rows(); 
     App ap = app( |project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>);
     return ap;
@@ -42,28 +48,35 @@ and
 <title>Simple</title>
 <script src="lib/racytoscal.js"></script>
 <style>
-.cell{fill:steelblue;stroke:lightblue}
-.kernel{fill:yellow;stroke:salmon}
 text {
     font-style:italic;
     text-anchor:middle;
     font-size:160pt;
     dominant-baseline:middle;
     }
+.aap{stroke:black}
+.cell{fill:steelblue;stroke:lightblue}
+.kernel{fill:yellow;stroke:salmon}
+rect{stroke-width:0; fill:none}
+.htmlObject {
+   display:table;
+   height:100%;
+   margin:auto;
+   }
 title {display:block}
 </style>
 </head>
 <body>
 <div id='attach'>
-</div>
 <script src="init"></script>
+</div>
 </body>
 </html>
 ```
 The line `<script src="init"></script>` is mandatory. This script runs the update defined in the `rsc` file.
 The user must call the function *app* and assign the returned value to a variable *ap* of type *App*.
 The browser will be opened with a connection to the defined `html` file updated with the generated `html` string *output* by entering the command *ap.serve()*. 
-The `html` string *output* will be attached to the `<div id='attach'>` line standing in the `html` file. 
+The `html` string *output* will be placed into the `<div id='attach'>` part standing in the `html` file. 
 The connection will be closed by entering the command *ap.stop()*.
 So in console:
 ```
@@ -73,6 +86,10 @@ rascal> ap.serve();
 rascal> ap.stop();
 ```
 The belonging picture is stored in [Simple.png](images/Simple.md).
+
+The line `box(LT, [cell(p)|p<-getPositions()],svgLayout=grid(5, width=200, height=200),viewBox=<0,0, 1000, 1000>)` 
+in the `rsc` file defines a grid in which each row contains at most 5 cells. Each cell has width 200 and height 200.
+So the box has width 1000 end height 400 because of there are totally 9 cells.
 
 ## Command app
 
@@ -89,7 +106,7 @@ App app(loc html, Script contents...,loc site = |http://localhost:8081|
     ,Callback timer = nullCallback
     )
 ```
-where *html* is the location of the belonging `.html` file
+where *html* is the location of the belonging `html` file
       ,*contents* is the list of tuples *<container, definition>*. The field of type *str* *container* refers 
        to the position 
        in the `html` file where the definition must be added. The field *definition* can have the type 

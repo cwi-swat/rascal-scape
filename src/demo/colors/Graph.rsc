@@ -6,9 +6,11 @@ import util::Math;
 
 int ncols = 8;
 
-num nrows = ceil(size(color)/ncols);
+str onChange(str path) {
+    num opacity = toReal(split("/", path)[1]);
+    return executeInBrowser(css=[<"ellipse", "fill-opacity","<_(opacity)>">]);
+    }
 
-num f = nrows/ncols;
  
 SVG cell(str name) = box(CC
             ,box(LT, text(500, 250, name), class="kernel", vshrink=0.5, strokeWidth=0, viewBox=<0,0, 1000, 500>)
@@ -18,16 +20,26 @@ SVG cell(str name) = box(CC
 public str rows() {
     str output = svg( 2000, 4000, box(LT, [cell(p)|p<-sort(domain(color))]
         ,svgLayout=grid(ncols
-        // , width=125, height = 125
+         , width=125, height = 125
         )
-       , width=1000, height = f*1000
       , strokeWidth=4, viewBox=<0,0, 1000, 1000>));    
     return output;
-    } 
+    }
+    
+public str panel() {
+    str output = svg( 400, 400
+    , ellipse(<C(-0.5*sqrt(3)),C(0.5)>,  rx=1, ry=1, style="fill:red")
+    , ellipse(<C(0.5*sqrt(3)),C(0.5)>,  rx=1, ry=1, style="fill:blue")
+    , ellipse(<C(0),C(1)>, rx=1, ry=1,  style="fill:yellow")
+    , viewBox=<-4,-4, 8, 8>);    
+    return output;
+    }  
    
  public App def() { 
-    str output = rows(); 
-    App ap = app( |project://racytoscal/src/demo/colors/Graph.html|, <"attach", output>);
+    App ap = app( |project://racytoscal/src/demo/colors/Graph.html|
+    , <"attach", rows()>
+     , <"panel", panel()>
+    , change=<["slider"], onChange>);
     return ap;
     } 
       

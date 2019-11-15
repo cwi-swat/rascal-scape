@@ -164,7 +164,7 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
       }
  
  public SVG box(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=-1, num height=-1, num vshrink = 1.0, num hshrink = 1.0, 
-     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, -1, -1>, Dim padding = pxl(<0,0,0, 0>)
+     num shrink = 1.0, num strokeWidth=0, ViewBox viewBox=<0, 0, -1, -1>, Dim padding = pxl(<0,0,0, 0>)
      , SVGLayout svgLayout = overlay()) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      <width, height>= getDimFromCell(svgLayout, inner, width, height);
@@ -176,10 +176,13 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
      return c;
  }
  
- public SVG ellipse(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=-1, num height=-1, num vshrink = 1.0, num hshrink = 1.0, 
-     num shrink = 1.0, num strokeWidth=2, ViewBox viewBox=<0, 0, -1, -1>,  Dim padding = pxl(<0,0,0, 0>)
+ public SVG ellipse(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=-1, num height=-1,
+     num rx = -1, num ry = -1, 
+     num vshrink = 1.0, num hshrink = 1.0, 
+     num shrink = 1.0, num strokeWidth=0, ViewBox viewBox=<0, 0, -1, -1>,  Dim padding = pxl(<0,0,0, 0>)
      , SVGLayout svgLayout = overlay()) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
+     if (rx>=0 && ry>=0) {width = 2*rx; height = 2*ry;}
      <width, height>= getDimFromCell(svgLayout, inner, width, height);
      SVG c =  ellipse(pos[0], pos[1], width==-1?pct(hshrink*100) :pxl(width) 
                                     , height==-1?pct(vshrink*100) :pxl(height)
@@ -189,7 +192,7 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
  }
  
 public SVG htmlObject(Position pos, str html, str id= "", str class= "", str frameClass = "", str style="", int width=-1, int height=-1, num vshrink = 1.0, num hshrink = 1.0, 
-     num shrink = 1.0, int strokeWidth=2) {
+     num shrink = 1.0, int strokeWidth=0) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      SVG c =  foreignObject(pos[0], pos[1], width==-1?pct(hshrink*100) :pxl(width) 
                                  , height==-1?pct(vshrink*100) :pxl(height)

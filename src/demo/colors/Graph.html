@@ -10,14 +10,14 @@
 <script src="lib/racytoscal.js"></script>
 <style>
 text {
-    font-style:italic;
+    font-style:normal;
     font-weight:bold;
     text-anchor:middle;
     font-size:80pt;
     dominant-baseline:middle;
     }
 rect{stroke:black}
-.cell{fill:steelblue;stroke:black}
+.cell{fill:white;stroke:black}
 .kernel{fill:white;stroke:salmon}
 rect{stroke-width:0; fill:none}
 .htmlObject {
@@ -25,13 +25,44 @@ rect{stroke-width:0; fill:none}
    height:100%;
    margin:auto;
    }
+button{
+   font-size:200px;
+   height:100%;
+   width:100%;  
+   }
+#slider {
+     margin: auto;
+     }
+td {
+   border-width:20px;
+   border-color:grey;
+   border-style:ridge;
+   }
+table {
+   margin-top:30%;
+   }
+.top{
+   margin: auto;
+   width: 50%;
+   }
+ .c{
+   width:100px;
+   height:20px;
+   border-width:4px;
+   border-color:grey;
+   border-style:ridge;
+   text-align: center;
+   }
 title {display:block}
 </style>
 </head>
 <body>
-<div id="panel"></div>
-<div>
+<div id = "top">
+<div id="panel" class="top"></div>
+<table class="top"><tr><td id="c1" class="c"/><td id="c2" class="c"/><td id="c3" class="c"/></tr></table>
+<div class="top">
 <input id="slider" type="range" min=0 max=1 value=1 step=0.01 />
+</div>
 </div>
 <div id='attach'>
 </div>

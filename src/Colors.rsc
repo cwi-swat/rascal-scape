@@ -1,4 +1,5 @@
 module Colors
+import String;
 public map[str, str] color = (
   "aliceblue": "#f0f8ff",
   "antiquewhite": "#faebd7",
@@ -149,3 +150,10 @@ public map[str, str] color = (
   "yellow": "#ffff00",
   "yellowgreen": "#9acd32"
 );
+
+public list[str] darkColors = [c|str c<-color, startsWith(c,"dark")];
+
+str pickColor() {
+    int d = arbInt(size(domain(color)));
+    return toList(domain(color))[d];
+    }

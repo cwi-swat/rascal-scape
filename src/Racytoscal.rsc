@@ -64,6 +64,7 @@ data SVG  (ViewBox viewBox= <0, 0, 100, 100>, list[SVG] inner =[], str id = "", 
         | path(str style, str txt)
         | transform(str txt)
         | root()
+        | emptySvg()
         ;
  
  public Position LT = <L1(0), L1(0)>;
@@ -235,7 +236,7 @@ public SVG frame(num hshrink, num vshrink, tuple[str \class, list[str] d] xAxe, 
                ,class=yAxe.class
                 )]
                +graph(viewBox, graphs)
-                ,hshrink=hshrink*shrnk, vshrink = vshrink*shrnk, viewBox= viewBox)
+                ,hshrink=hshrink*shrnk, vshrink = vshrink*shrnk, viewBox= viewBox, strokeWidth=2)
               ,box(<L1(0), L1(0)>,
                    [text(viewBoxYaxe.width/2, y, yAxe.d[i], class=yAxe.class)
                      | int i <-[0..size(yAxe.d)], num y := (i*dyY)]             
@@ -417,9 +418,11 @@ private str eval(ViewBox vb,  num lw0, SVG c) {
         num h = height-lw, w = width-lw;   
         ViewBox newVb = <_(vb1.x), _(vb1.y), _((vb.width*vb1.width)/w),  _((vb.height*vb1.height)/h)>;
         if (!isEmpty(c.inner)) {
+        str viewBox = "viewBox = \"<newVb.x> <newVb.y> <_(newVb.width)> <_(newVb.height)>\"";
+        // str viewBox = "";
         if (overlay():=c.svgLayout)
         r+= "
-          ' \<svg x=\"<_(x+lw/2)>\"  y=\"<_(y+lw/2)>\"  viewBox=\"<newVb.x> <newVb.y> <_(newVb.width)> <_(newVb.height)>\" 
+          ' \<svg x=\"<_(x+lw/2)>\"  y=\"<_(y+lw/2)>\"  <viewBox>
           ' preserveAspectRatio=\"<c.svgLayout.preserveAspectRatio>\"\>
           ' <for(SVG s<-c.inner){> <eval(newVb, lw, s)><}>
           ' \</svg\>

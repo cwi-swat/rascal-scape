@@ -16,7 +16,17 @@ extend Cytoscape;
 //    ,Callback tap = nullCallback
 //    ,Callback load =  nullCallback
 //    ,Callback timer = nullCallback
- //   )
+//   )
+ 
+// public str executeInBrowser(lrel[str, Style] styles=[], tuple[str, str] \layout=<"","">, str extra="\"extra\":\"none\"",
+//       list[tuple[str attach, str tableId, str cellId, int width, int height]] table = [],
+//       list[tuple[str sel, str key, str val]] css = []
+//       , list[tuple[str sel, str val]] transform = []
+//      , list[str] onclick=[]
+//       , list[str] onkeypress=[]
+ //      , list[str] onchange=[]
+ //      , int setInterval= -1, str path = ""
+ //      ,bool sync = true, list[tuple[str attach, str content]] html = [])
 
 // public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1, -1>)
 
@@ -289,8 +299,8 @@ private SVG addParent(SVG parent, SVG c) {
        if (c.viewBox[3]<0)  c.viewBox[3] = parent.viewBox[3];
        c.parent = parent;
        c.inner = addParent(c, c.inner);
-       if (_rotate(_):=c || _rotate(_,_,_):=c || translate(_,_):=c || scale(_,_):=c) {
-              c.inner = [newParent(d, parent)|SVG d<-c.inner];
+       if (transform(_):=c) {
+           c.inner = [newParent(d, parent)|SVG d<-c.inner];        
           }
        return c;
        }
@@ -459,7 +469,6 @@ public void disconnect(loc site) = shutdown(site);
 private num cut1 = 0.01;
 private num cut2 = 0.000001;
 public  num _(num x) = round(x, x>1.5?cut1:cut2);
- 
  private str genScript(str container, str htmlContent) {
   str r= 
   "attach[\"<container>\"] = document.getElementById(\'<container>\');

@@ -341,9 +341,9 @@ private str gridLayout(num x, num y, num width, num height, num lw, int nCols, V
     str preserveAspectRatio = "xMinYMin slice") {
    int nRows = (size(inner)-1)/nCols+1;
    ViewBox newVb = <vb.x, vb.y, vb.width*nCols,  vb.height*nRows>;
-   num posX = 0, posY = 0;
+   num posX = x+lw/2, posY = y+lw/2;
    str r = "";
-   r+= " \<svg x=\"<lw>\"  y=\"<lw>\"\>";
+   //r+= " \<svg x=\"<lw>\"  y=\"<lw>\"\>";
    int cnt = 0;
    int row = 0;
    for (int row<-[0..nRows]) {
@@ -357,10 +357,10 @@ private str gridLayout(num x, num y, num width, num height, num lw, int nCols, V
          posX+=width/nCols;
          cnt += 1;
         }
-        posX = 0; 
+        posX = x+lw/2; 
         posY+=height/nRows;
       }
-    r+="\</svg\>";
+    //r+="\</svg\>";
     return r;
    }
 

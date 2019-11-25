@@ -187,6 +187,19 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
      return c;
  }
  
+ public SVG vcat(Position pos,SVG inner ..., str id= "", str class= "", num vshrink = 1.0, num hshrink = 1.0, 
+     num shrink = 1.0, num width = -1, num height = -1, ViewBox viewBox=<0,0,-1, -1>, num strokeWidth=0) 
+       = box(pos, inner, svgLayout=grid(1), id=id, class=class
+          ,vshrink = vshrink, hshrink = hshrink, shrink= shrink, width = width, height = height, viewBox = viewBox
+          ,strokeWidth=strokeWidth);
+ 
+ public SVG hcat(Position pos, SVG inner ..., str id= "", str class= "", num vshrink = 1.0, num hshrink = 1.0, 
+     num shrink = 1.0, num width = -1, num height = -1, ViewBox viewBox=<0,0,-1, -1>, num strokeWidth=0) = 
+        box(pos, inner, svgLayout=grid(size(inner)), id=id, class=class
+                            ,vshrink = vshrink, hshrink = hshrink, shrink= shrink, width = width, height = height
+                            , viewBox = viewBox, strokeWidth=strokeWidth);
+ 
+ 
  public SVG ellipse(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=-1, num height=-1,
      num rx = -1, num ry = -1, 
      num vshrink = 1.0, num hshrink = 1.0, 

@@ -1,6 +1,7 @@
 module demo::chart::Chart
 import Prelude;
 import Racytoscal;
+import Chart;
 import util::Math;
 
 public App def() { 
@@ -35,7 +36,7 @@ public App def() {
                   )
              )                                
               ])
-       , options=options(title=title(display=true,text="aap")
+       , options=options(title=title(display=true,text="gonio")
             ,scales = scales(xAxes=[
                 axis(
                    position="bottom", \type="linear", display = true
@@ -57,14 +58,14 @@ public App def() {
                          "var label=data.datasets[tooltipItem.datasetIndex].label;
                          'var idx=tooltipItem.index;
                           'var pi = <toJavascriptArray(pi)>;
-                          'return label+\\\":aap:\\\"+pi[idx];"
+                          'return label+\\\":value:\\\"+pi[idx];"
                        )
                    ,title = func(arguments=["tooltipItems", "data"], body=
                      "return \\\"tip:\\\"+tooltipItems[0].value;")
                   ))
             ,elements = elements(point=point(pointStyle="rectRounded", radius=5, backgroundColor="yellow", borderWidth=2)
                                ,line=line(tension=0.4)
-                               ,rectangle=rectangle(backgroundColor="yellow"))
+                               ,rectangle=Chart::rectangle(backgroundColor="yellow"))
             ,legend = legend(position="right", labels=labels(usePointStyle=true)
                        
                        )

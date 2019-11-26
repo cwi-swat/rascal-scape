@@ -225,7 +225,7 @@ public SVG htmlObject(Position pos, str html, str id= "", str class= "", str fra
  }
  
  // Only to be used inside htmlObject.  The classes innerX and innerY must be defined in .html file.
- public str centerText(str txt) = div(div(div(txt), class = "innerX"), class = "innerY");
+ public str centerText(str txt...) = div(div(div(txt), class = "innerX"), class = "innerY");
  
  public SVG text(num x, num y, str txt, str id= "", str class= "", str style= "") {
      SVG c = text(x, y, style, txt, id =id, class = class);

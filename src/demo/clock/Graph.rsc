@@ -25,6 +25,7 @@ int strokeWidth = 18;
 int r = 400;
 int lmayor = 30;
 int lminor = 15;
+int rdot = 20;
     
 str onChange(str path) {
     int rot = toInt(split("/", path)[1]);
@@ -73,7 +74,8 @@ public App def() {
                         ,width=labelWidth, height = labelHeight
                          ,viewBox=<-50, - 50, 100, 100>)
                     ] 
-                 + pointer(0, 0.8*r)           
+                 + pointer(0, 0.8*r)
+                 + ellipse(CC, rx = rdot, ry= rdot, strokeWidth=2, id ="dot")        
                , viewBox=<-(1000+width)/2, -(1000+height)/2, 1000+width, 1000+height>          
                ,class="frame", strokeWidth=4      
              )

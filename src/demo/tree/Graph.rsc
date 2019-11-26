@@ -8,7 +8,7 @@ public App def() {
     ,<"brown_grey","brown_grey_blue">,<"brown_grey","brown_grey_red">
     ,<"brown_black","brown_black_orange">
     ];
-    println([split("_", i)[-1]|str i<-dup(carrier(rl))]);
+    // println([split("_", i)[-1]|str i<-dup(carrier(rl))]);
     list[Ele] edges = [e_("<a[0]><a[1]>", a[0], a[1])|a<-rl];
     list[Ele]  nodes = 
          [n_(i

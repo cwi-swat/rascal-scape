@@ -3,9 +3,9 @@ import Prelude;
 extend Racytoscal;
 import util::Eval;
     
-str action(str s) {
-   list[str] v = split("/", s); 
-   str expr = v[-1];
+str action(str s) { 
+   int idx = findFirst(s,"/");
+   str expr = substring(s,idx+1);
    str result = "<eval(expr+";")>";
    return executeInBrowser(html=[<"result", result>]);
    }

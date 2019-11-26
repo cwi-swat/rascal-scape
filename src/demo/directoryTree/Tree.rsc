@@ -65,6 +65,8 @@ str callbackTapend(str id) {
     str r = "{\"styles\":<Racytoscal::toString([<"node#<id>", styl>])>}";
     return r;
     }
+    
+ public App def() = def(|project://racytoscal/src/demo|);
  
  public App def(loc file) {
     lrel[loc, loc] rl  = genTree(file, 4);

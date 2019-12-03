@@ -66,7 +66,7 @@ data Dim = pxl(num dim)|pct(num dim)|pxl(Padding tpl)|pct(Padding tpl);
 str nullCallback(str id) = "";
        
 data SVG  (ViewBox viewBox= <0, 0, 100, 100>, list[SVG] inner =[], str id = "", str class= "", str frameClass = "", SVG parent= root(),
-          Dim padding = pxl(<0, 0, 0, 0>), SVGLayout svgLayout = overlay())
+          Dim padding = pxl(<0, 0, 0, 0>), SVGLayout svgLayout = overlay(), str clipId="")
         = rect(Coord x, Coord y, Dim width, Dim height, num strokeWidth, str style)
         | ellipse(Coord x, Coord y, Dim width, Dim height, num strokeWidth, str style)
         | foreignObject(Coord x, Coord y, Dim width, Dim height, num strokeWidth, str style, str html)
@@ -159,7 +159,7 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
       if (viewBox.height<0) viewBox.height=height;
       SVG parent =  root(viewBox = viewBox);
       content = addParent(parent, content);
-      str inside = "<for(SVG c <- content){>  <eval(viewBox, 0, c)> <}>";
+      str inside = "<for(SVG c <- content){>  <eval(viewBox, 0, c, "")> <}>";
       return "\<svg width=\"<width>px\" height=\"<height>px\"  viewBox=\"<viewBox.x> <viewBox.y> <viewBox.width> <viewBox.height>\"\>
       <inside>\</svg\>";
       }
@@ -176,14 +176,14 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
  
  public SVG box(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=-1, num height=-1, num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, num strokeWidth=0, ViewBox viewBox=<0, 0, -1, -1>, Dim padding = pxl(<0,0,0, 0>)
-     , SVGLayout svgLayout = overlay()) {
+     , SVGLayout svgLayout = overlay(), str clipId="") {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      <width, height>= getDimFromCell(svgLayout, inner, width, height);
      // if (grid(_):=svgLayout) println("HELP: <width?> <width> <height>");
      SVG c =  rect(pos[0], pos[1], (width==-1)?pct(hshrink*100) :pxl(width) 
                                  , (height==-1)?pct(vshrink*100) :pxl(height)
                                  , strokeWidth, style, inner = inner, id = id, class = class, viewBox = viewBox, padding = padding
-                                 , svgLayout = svgLayout);
+                                 , svgLayout = svgLayout, clipId = clipId);
      return c;
  }
  
@@ -204,14 +204,14 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
      num rx = -1, num ry = -1, 
      num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, num strokeWidth=0, ViewBox viewBox=<0, 0, -1, -1>,  Dim padding = pxl(<0,0,0, 0>)
-     , SVGLayout svgLayout = overlay()) {
+     , SVGLayout svgLayout = overlay(), str clipId="") {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      if (rx>=0 && ry>=0) {width = 2*rx; height = 2*ry;}
      <width, height>= getDimFromCell(svgLayout, inner, width, height);
      SVG c =  ellipse(pos[0], pos[1], width==-1?pct(hshrink*100) :pxl(width) 
                                     , height==-1?pct(vshrink*100) :pxl(height)
                                     , strokeWidth, style, inner = inner, id = id
-                                    , class= class, viewBox = viewBox, padding = padding);
+                                    , class= class, viewBox = viewBox, padding = padding, clipId = clipId);
      return c;
  }
  
@@ -319,13 +319,17 @@ private SVG addParent(SVG parent, SVG c) {
        }
  
 private str toString(SVG content) {
-    str inside = "<for(SVG c <- content){>  <eval(viewBox, 0, c)> <}>";
+    str inside = "<for(SVG c <- content){>  <eval(viewBox, 0, c,"")> <}>";
     }
   
 
 private  list[SVG] addParent(SVG parent, list[SVG] content) =  [addParent(parent, c)|SVG c<-content];       
 private str useId(SVG c) {
    if ((c.id?) && !isEmpty(c.id)) return "id=\"<c.id>\"";
+   return "";
+   }
+private str useClipId(str clipId) {
+   if (!isEmpty(clipId)) return "clip-path=\"url(#<clipId>)\"";
    return "";
    }
    
@@ -364,7 +368,7 @@ private str gridLayout(num x, num y, num width, num height, num lw, int nCols, V
        r+= "
           ' \<svg x=\"<_(posX)>\"  y=\"<_(posY)>\"  viewBox=\"<newVb.x> <newVb.y> <_(newVb.width)> <_(newVb.height)>\" 
           ' preserveAspectRatio=\"<preserveAspectRatio>\"\>
-          ' <eval(newVb, lw, inner[cnt])>
+          ' <eval(newVb, lw, inner[cnt],"")>
           ' \</svg\>
           ";
          posX+=width/nCols;
@@ -376,8 +380,12 @@ private str gridLayout(num x, num y, num width, num height, num lw, int nCols, V
     //r+="\</svg\>";
     return r;
    }
+   
+str clipPath(str clipId, num x, num y, num width, num height) {
+   return "\<clipPath id=\"<clipId>\"\>\<rect x=\"<_(x)>\" y=\"<_(y)>\" width=\"<_(width)>\" height=\"<_(height)>\" /\> \</clipPath\>";
+   }
 
-private str eval(ViewBox vb,  num lw0, SVG c) {
+private str eval(ViewBox vb,  num lw0, SVG c, str clipId) {
       str r  = "", styl = "", txt = "";
       ViewBox vb1  = c.viewBox;
       ViewBox vb2  = c.parent.viewBox;
@@ -394,7 +402,7 @@ private str eval(ViewBox vb,  num lw0, SVG c) {
                  y = posY(vb2.height,vb2.y, height1,  y1, lw1)+p.top; 
                  width = width1-lw1-p.left-p.right; height  = height1-lw1-p.top-p.bottom; lw = lw1;
                  style1+=";stroke-width:<_(lw)>"; 
-                 r+= "\<rect <useId(c)> <useClass(c)> x=\"<_(x)>\" y=\"<_(y)>\"  width=\"<_(width)>\" height=\"<_(height)>\" style=\"<style1>\" /\>";
+                 r+= "\<rect <useId(c)> <useClass(c)> <useClipId(clipId)> x=\"<_(x)>\" y=\"<_(y)>\"  width=\"<_(width)>\" height=\"<_(height)>\" style=\"<style1>\" /\>";
                  }
           case fig:ellipse(Coord x1, Coord y1, Dim widthDim, Dim heightDim, num lw1, str style1): {
                  num width1 = checkShrink(vb2.width, widthDim), height1 = checkShrink(vb2.height, heightDim);
@@ -425,13 +433,13 @@ private str eval(ViewBox vb,  num lw0, SVG c) {
                     ";
                  }
           case fig:path(str style, str txt): {
-                 r+= "\<path <useId(c)> <useClass(c)> d=\"<txt>\" style=\"<style>\"/\>       
+                 r+= "\<path <useId(c)> <useClass(c)> <useClipId(clipId)> d=\"<txt>\" style=\"<style>\"/\>       
                     ";
                  }
           case fig:transform(str txt): {
                 r+="\<g  <useId(c)> transform=\"<txt>\"\>";
                 for (SVG b<-fig.inner) {
-                     r+= eval(vb,  lw0, b);
+                     r+= eval(vb,  lw0, b, clipId);
                      }
                 r+="\</g\>";
                 return r;
@@ -445,9 +453,10 @@ private str eval(ViewBox vb,  num lw0, SVG c) {
         // str viewBox = "";
         if (overlay():=c.svgLayout)
         r+= "
-          ' \<svg x=\"<_(x+lw/2)>\"  y=\"<_(y+lw/2)>\"  <viewBox>
+          ' \<svg x=\"<_(x+lw/2)>\"  y=\"<_(y+lw/2)>\"  <viewBox>   
           ' preserveAspectRatio=\"<c.svgLayout.preserveAspectRatio>\"\>
-          ' <for(SVG s<-c.inner){> <eval(newVb, lw, s)><}>
+          ' <if(!isEmpty(c.clipId)) {> <clipPath(c.clipId, vb1.x, vb1.y, vb1.width, vb1.height)> <}>
+          ' <for(SVG s<-c.inner){> <eval(newVb, lw, s, c.clipId)><}>
           ' \</svg\>
           ";
        if (grid(int nCols):=c.svgLayout) {

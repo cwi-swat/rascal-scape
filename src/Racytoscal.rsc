@@ -3,6 +3,7 @@ import Prelude;
 import util::Math;
 import util::HtmlDisplay;
 import util::Webserver;
+import util::UUID;
 extend Chart;
 extend Cytoscape;
 
@@ -176,7 +177,7 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
  
  public SVG box(Position pos, SVG inner ..., str id= "", str class= "", str style="", num width=-1, num height=-1, num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, num strokeWidth=0, ViewBox viewBox=<0, 0, -1, -1>, Dim padding = pxl(<0,0,0, 0>)
-     , SVGLayout svgLayout = overlay(), str clipId="") {
+     , SVGLayout svgLayout = overlay(), str clipId=uuid().authority) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      <width, height>= getDimFromCell(svgLayout, inner, width, height);
      // if (grid(_):=svgLayout) println("HELP: <width?> <width> <height>");
@@ -204,7 +205,7 @@ public str svg(int width, int height, SVG content..., ViewBox viewBox=<0, 0, -1,
      num rx = -1, num ry = -1, 
      num vshrink = 1.0, num hshrink = 1.0, 
      num shrink = 1.0, num strokeWidth=0, ViewBox viewBox=<0, 0, -1, -1>,  Dim padding = pxl(<0,0,0, 0>)
-     , SVGLayout svgLayout = overlay(), str clipId="") {
+     , SVGLayout svgLayout = overlay(), str clipId=uuid().authority) {
      if ((shrink?)) {vshrink = shrink; hshrink = shrink;}
      if (rx>=0 && ry>=0) {width = 2*rx; height = 2*ry;}
      <width, height>= getDimFromCell(svgLayout, inner, width, height);
@@ -448,14 +449,14 @@ private str eval(ViewBox vb,  num lw0, SVG c, str clipId) {
       if (getName(c) notin ["foreignObject", "text", "path"]) {  
         num h = height-lw, w = width-lw;   
         ViewBox newVb = <_(vb1.x), _(vb1.y), _((vb.width*vb1.width)/w),  _((vb.height*vb1.height)/h)>;
-        if (!isEmpty(c.inner)) {
+        if (!isEmpty(c.inner) && vb1!=<0,0,-1,-1>) {
         str viewBox = "viewBox = \"<newVb.x> <newVb.y> <_(newVb.width)> <_(newVb.height)>\"";
         // str viewBox = "";
         if (overlay():=c.svgLayout)
         r+= "
           ' \<svg x=\"<_(x+lw/2)>\"  y=\"<_(y+lw/2)>\"  <viewBox>   
           ' preserveAspectRatio=\"<c.svgLayout.preserveAspectRatio>\"\>
-          ' <if(!isEmpty(c.clipId)) {> <clipPath(c.clipId, vb1.x, vb1.y, vb1.width, vb1.height)> <}>
+          ' <if(!isEmpty(c.clipId) && vb1!=<0,0,-1,-1>) {> <clipPath(c.clipId, vb1.x, vb1.y, vb1.width, vb1.height)> <}>
           ' <for(SVG s<-c.inner){> <eval(newVb, lw, s, c.clipId)><}>
           ' \</svg\>
           ";

@@ -34,6 +34,17 @@ str drawTriangle(Triangle T0, Triangle T1, Triangle T2, str kind) {
       case "BA": return "M <T1.B.x> <T1.B.y> L <T2.A.x> <T2.A.y>  L <T0.C.x> <T0.C.y> Z";
       }
    }
+   
+str drawBoundHex1(Triangle T0, Triangle T1, Triangle T2, str kind) {
+   switch(kind) {
+      case "AC": return "M <T0.A.x> <T0.A.y> L <T1.C.x> <T1.C.y>";
+      case "BC": return "M <T0.B.x> <T0.B.y> L <T2.C.x> <T2.C.y>";
+      case "BA": return "M <T1.B.x> <T1.B.y> L <T2.A.x> <T2.A.y>";
+      }
+   }
+   
+str drawBoundHex1(Triangle T0, Triangle T1, Triangle T2, tuple[num x, num y] v, str kind) = drawBoundHex1(move(T0, v)
+        , move(T1, v),  move(T2, v), kind);
       
 
 str drawHex(Triangle T0, Triangle T1, Triangle T2, tuple[num x, num y] v) = drawHex(move(T0, v)
@@ -57,8 +68,11 @@ public str output() {
                path("<for(tuple[num x, num y] t<-ts){> <drawHex(T0, T1, T2, t)> <}>") 
                ,path("<for(tuple[num x, num y] t<-ts){> <drawTriangle(T0, T1, T2, t, "AC")> <}>", class="AC") 
                ,path("<for(tuple[num x, num y] t<-ts){> <drawTriangle(T0, T1, T2, t, "BC")> <}>", class="BC")
-               ,path("<for(tuple[num x, num y] t<-ts){> <drawTriangle(T0, T1, T2, t, "BA")> <}>", class="BA") 
-             ,viewBox=<-7.5,-7.5, 15, 15>, strokeWidth = 2, clipId="clip"
+               ,path("<for(tuple[num x, num y] t<-ts){> <drawTriangle(T0, T1, T2, t, "BA")> <}>", class="BA")
+               ,path("<for(tuple[num x, num y] t<-ts){> <drawBoundHex1(T0, T1, T2, t, "AC")> <}>", class="bound-hex") 
+               ,path("<for(tuple[num x, num y] t<-ts){> <drawBoundHex1(T0, T1, T2, t, "BC")> <}>", class="bound-hex")
+               ,path("<for(tuple[num x, num y] t<-ts){> <drawBoundHex1(T0, T1, T2, t, "BA")> <}>", class="bound-hex")  
+             ,viewBox=<-7.5,-7.5, 15, 15>, strokeWidth = 2
          ));    
     return output;
     }   

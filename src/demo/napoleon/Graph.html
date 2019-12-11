@@ -4,30 +4,61 @@
 <meta charset="UTF-8">
 <title>Simple</title>
 <script src="lib/racytoscal.js"></script>
+<script>
+function printChart() {
+	var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+	var prtContent = document.getElementById("attach");
+	WinPrint.document.write('<html><head>');
+	WinPrint.document.write('<link rel="stylesheet" href="src/demo/napoleon/Graph.css">');
+	WinPrint.document.write('</head><body onload="print();close();">');
+	WinPrint.document.write(prtContent.innerHTML);
+	WinPrint.document.write('</body></html>');
+	WinPrint.document.close();
+}
+
+</script>
+<link rel="stylesheet" href="src/demo/napoleon/Graph.css">
 <style>
+.choose{
+   font-size:200px;
+   height:100%;
+   width:100%;  
+   }
 text {
-    font-style:italic;
+    font-style:normal;
+    font-weight:bold;
     text-anchor:middle;
-    font-size:160pt;
+    font-size:80pt;
     dominant-baseline:middle;
     }
-path{stroke-width:0; stroke:black; fill:whitesmoke}
-rect{fill:none;stroke:black}
-.AC{fill:lightpink;stroke-width:0.01}
-.BC{fill:lightblue;stroke-width:0.01}
-.BA{fill:beige;stroke-width:0.01}
-.bound-hex{stroke-width:0.05;stroke:indigo}
-.htmlObject {
-   display:table;
-   height:100%;
-   margin:auto;
+td {
+   border-width:20px;
+   border-color:grey;
+   border-style:ridge;
    }
-title {display:block}
+ .c{
+   width:100px;
+   height:20px;
+   border-width:4px;
+   border-color:grey;
+   border-style:ridge;
+   text-align: center;
+   }
+#color-panel{visibility:visible}
 </style>
 </head>
 <body>
-<div id='attach'>
-<script src="init"></script>
+<button id="color-button" onclick="openPalette()">Open Palette</button>
+<div id='attach'></div>
+<div id = "color-panel">
+<div id="panel" class="top"></div>
+<table class="top"><tr>
+<td id="c1" class="c"/><td id="c2" class="c"/><td id="c3" class="c"/>
+<td id="c4" class="c"/><td id="c5" class="c"/><td id="c6" class="c"/>
+</tr></table>
+<div id='colors'></div>
 </div>
+<script src="init"></script>
+<button id="print-button" onclick="printChart()">Print</button>
 </body>
 </html>

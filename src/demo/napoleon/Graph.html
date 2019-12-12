@@ -2,12 +2,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Simple</title>
+<title>Stelling van Naploleon</title>
 <script src="lib/racytoscal.js"></script>
 <script>
 function printChart() {
 	var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-	var prtContent = document.getElementById("attach");
+	var prtContent = document.getElementById("print");
 	WinPrint.document.write('<html><head>');
 	WinPrint.document.write('<link rel="stylesheet" href="src/demo/napoleon/Graph.css">');
 	WinPrint.document.write('</head><body onload="print();close();">');
@@ -48,8 +48,22 @@ td {
 </style>
 </head>
 <body>
-<button id="color-button" onclick="openPalette()">Open Palette</button>
-<div id='attach'></div>
+<div id="print">
+<div>
+<h3>Probleem</h3>
+<ul>
+<li>Ga uit van een willekeurige driehoek. 
+<li>Breid deze uit door op elk van de 3 zijden een naar buiten gerichte gelijkzijdige driehoek 
+te zetten.
+<li> Bewijs dat de centra van de die drie gelijkzijdige driehoeken de hoekpunten zijn van weer een gelijkzijdige driehoek
+(driehoek van Napoleon).
+</ul>
+</div>
+<div id='attach1'></div>
+<h3>Oplossing</h3>
+De oplossing is af te leiden met hulp van het patroon aan de achterzijde.
+<div id='attach2'></div>
+</div>
 <div id = "color-panel">
 <div id="panel" class="top"></div>
 <table class="top"><tr>

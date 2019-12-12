@@ -4,8 +4,8 @@ import util::Math;
 import util::HtmlDisplay;
 import util::Webserver;
 import util::UUID;
-extend Chart;
-extend Cytoscape;
+import Chart;
+import Cytoscape;
 
 // public App app(loc html, Script contents...,loc site = |http://localhost:8081|
 //  , bool display = true 
@@ -642,13 +642,17 @@ private str toScript(list[Script] contents) {
     for (Script v<-contents) {
         value val = v.val;
         switch (val) {
-            case c:Cytoscape: r+=genScript(v.container, c);
-            case s:String: r+=genScript(v.container, s);
-            case d:Config: r+=genScript(v.container, d);
-            }
+           case Config d:  r+=Chart::genScript(v.container, d);
+        //    case c:Cytoscape: r+=Cytoscape::genScript(v.container, c); 
+        //    case s:String: r+=genScript(v.container, s); 
+           }
+        if (Config d:=val)  r+=Chart::genScript(v.container, d);
+        if (Cytoscape s:=val) r+=Cytoscape::genScript(v.container, c); 
+        if (str s:=val) r+=genScript(v.container, s);
         }
         return r;
     }
+    
     
 private list[SVG] graph(ViewBox viewBox, tuple[str \class, lrel[num x, num y] d] graphs...) {
     list[SVG] r = [];

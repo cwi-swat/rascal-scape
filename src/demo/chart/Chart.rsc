@@ -70,7 +70,7 @@ public App def() {
                        
                        )
             )
-       );
+       ); 
     App ap = app(|project://racytoscal/src/demo/chart/Chart.html|
              ,<"attach1", config("red")>
              ,<"attach2", config("green")>

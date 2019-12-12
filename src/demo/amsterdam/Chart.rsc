@@ -1,7 +1,7 @@
 module demo::amsterdam::Chart
 import Prelude;
-extend Racytoscal;
-extend Chart;
+import Racytoscal;
+import Chart;
 
 public App def() { 
     Config conf() = config(\type="bar"

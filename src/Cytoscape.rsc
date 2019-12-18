@@ -34,7 +34,7 @@ public data Cytoscape = cytoscape(
   str pixelRatio = "auto"
   );  
   
-public data Ele = n_(str id, Style style = style(), tuple[int x, int y] position= <-1, -1>)
+public data Ele = n_(str id, Style style = style(), tuple[int x, int y] position= <-1, -1>, str parent = "")
          | e_(str id, str source, str target, Style style = style())
          ;
          
@@ -210,6 +210,7 @@ public data Layout
    // int nodeSep= -1, // the separation between adjacent nodes in the same rank
   //int edgeSep= -1, // the separation between adjacent edges in the same rank
   //int rankSep= -1, // the separation between adjacent nodes in the same rank
+  //bool compound = false,
   //str rankDir= "", // 'TB' for top to bottom flow, 'LR' for left to right,
   //str ranker= "", // Type of algorithm to assign a rank to each node in the input graph. Possible values= 'network-simplex', 'tight-tree' or 'longest-path'
   // minLen= function( edge ){ return 1; }, // number of ranks to keep between the source and target of the edge
@@ -494,8 +495,6 @@ private str getElStyle(Ele ele) {
        }
     }
     
-
-
 private str toString(list[tuple[str selector, Style style]] styles) {
     // println("ToString");
     list[str] r = [getStyleArgument(t.selector, t.style)|
@@ -516,6 +515,13 @@ private str getNodeElement(str id) =
     '  id: \'<id>\'
     '}\n";
     
+private str getNodeElement(str id, str parent) = 
+    "\'nodes\',
+    'data: {
+    '  id: \'<id>\',
+    '  parent: \'<parent>\'
+    '}\n";
+    
 private str getEdgeElement(str id, str source, str target) = 
     "\'edges\',
     'data: {
@@ -527,7 +533,7 @@ private str getEdgeElement(str id, str source, str target) =
 private str getElement(Ele ele) {
     str r = "{ group:";
     switch(ele) {
-       case v:n_(str id): r+=getNodeElement(id);
+       case v:n_(str id): r+=(!isEmpty(v.parent))?getNodeElement(id, v.parent):getNodeElement(id);
        case v:e_(str id, str source, str target): r+=getEdgeElement(id, source, target);
        }
     if (n_(_):=ele && ele.position?) 

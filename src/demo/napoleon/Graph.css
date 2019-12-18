@@ -1,0 +1,25 @@
+text {
+    font-style:italic;
+    text-anchor:middle;
+    font-size:160pt;
+    dominant-baseline:middle;
+    }
+.circle{stroke:black}
+path{stroke-width:0; stroke:black; fill:white}
+rect{fill:none;stroke:black}
+.AC{fill:lightpink;stroke-width:0.01}
+.BC{fill:lightblue;stroke-width:0.01}
+.BA{fill:beige;stroke-width:0.01}
+.napoleon0{fill:none;stroke-width:0.02;stroke:indigo}
+.napoleon60{fill:none;stroke-width:0.02;stroke:red}
+.napoleon120{fill:none;stroke-width:0.02;stroke:darkgreen}
+.base{fill:lightgrey}
+.bound-hex0{stroke-width:0.05;stroke:indigo;fill:none}
+.bound-hex60{stroke-width:0.05;stroke:red;fill:none}
+.bound-hex120{stroke-width:0.05;stroke:darkgreen;fill:none}
+.htmlObject {
+   display:table;
+   height:100%;
+   margin:auto;
+   }
+title {display:block}

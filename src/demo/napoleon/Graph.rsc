@@ -113,10 +113,10 @@ public str output() {
              T2_60 = triangle(B3+sin(phi), 0.5+cos(phi), phi, -2*PI()/3, <-C.x, -C.y>, 2*PI()/3);
     Triangle T0_120 = triangle(0, 0, phi, 0, <-C.x, -C.y>, 4*PI()/3), T1_120 = triangle(-B3+sin(phi), 0.5+cos(phi), phi, PI()-PI()/3, <-C.x, -C.y>, 4*PI()/3),
              T2_120 = triangle(B3+sin(phi), 0.5+cos(phi), phi, -2*PI()/3, <-C.x, -C.y>, 4*PI()/3);
-    list[tuple[num x, num  y]] ts = [p(vBA, vCB, vCA, k1, k2, k3)|int k1<-[3,2..-5], int k2<-[3,2..-5], int k3<-[0]
+    list[tuple[num x, num  y]] ts = [p(vBA, vCB, vCA, k1, k2, k3)|int k1<-[6,5..-7], int k2<-[6,5..-7], int k3<-[0]
           // ,k1!=0||k2!=0
           ];
-    str output = svg( 800, 800
+    str output = svg( 800, 1600
         ,box(LT, 
                // path(drawHex(T0, T1, T2), class = "base")
                path("<for(tuple[num x, num y] t<-ts){> <drawHex(T0, T1, T2, t)> <}>") 
@@ -135,7 +135,7 @@ public str output() {
                ,path("<for(tuple[num x, num y] t<-ts){> <drawNapoleonTriangle(T0, T1, T2, t)> <}>",class="napoleon0 4")
                ,path("<for(tuple[num x, num y] t<-ts){> <drawNapoleonTriangle(T0_60, T1_60, T2_60, t)> <}>",class="napoleon60 5")
                ,path("<for(tuple[num x, num y] t<-ts){> <drawNapoleonTriangle(T0_120, T1_120, T2_120, t)> <}>",class="napoleon120 6")          
-             ,viewBox=<-7.5,-7.5, 15, 15>, strokeWidth = 2
+             ,viewBox=<-7.5,-15, 15, 30>, strokeWidth = 2
          ));    
     return output;
     }   
@@ -144,9 +144,10 @@ public str output() {
     App ap = app( |project://racytoscal/src/demo/napoleon/Graph.html|
     , <"attach1", problem()>
     , <"attach2", output()>
-     ,<"colors", rows(12, 6)>
+    ,<"colors", rows(12, 6)>
      ,<"panel", panel()>
-     ,click = <["button"], onClick>);
+     ,click = <["button"], onClick>
+    );
     return ap;
     } 
       

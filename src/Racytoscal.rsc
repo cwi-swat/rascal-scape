@@ -641,13 +641,13 @@ private str toScript(list[Script] contents) {
     str r = "";
     for (Script v<-contents) {
         value val = v.val;
-        switch (val) {
-           case Config d:  r+=Chart::genScript(v.container, d);
-        //    case c:Cytoscape: r+=Cytoscape::genScript(v.container, c); 
-        //    case s:String: r+=genScript(v.container, s); 
-           }
-        if (Config d:=val)  r+=Chart::genScript(v.container, d);
-        if (Cytoscape s:=val) r+=Cytoscape::genScript(v.container, c); 
+        //switch (val) {
+        //   case Config d:  r+=Chart::genScript(v.container, d);
+        //    case Cytoscape c: r+=Cytoscape::genScript(v.container, c); 
+        //    case String s: r+=genScript(v.container, s); 
+        //   }
+        if (Config d:=val)  r+=genScript(v.container, d);
+        if (Cytoscape c:=val) r+=genScript(v.container, c); 
         if (str s:=val) r+=genScript(v.container, s);
         }
         return r;

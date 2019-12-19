@@ -2,12 +2,18 @@ module demo::cluster::Graph
 import Prelude;
 extend Racytoscal;
 import util::Math;
+import util::UUID;
+
+map[str, str] key = ();
+
+str _(str id) = key[id]; 
 
 // n_("keter", position=<300, 160> ,style = style(label = label("\u05DB\u05EA\u05E8", vAlign = "center")))
 
 list[Ele] show(str group, list[str] names) {
      Ele background = n_(group, style=style(label=label(group, vAlign = "top", marginY=-10), borderColor="darkgrey"));
-     list[Ele] nodes = [n_(d, style=style(label=label(d, vAlign = "center")), parent=group)|str d<-names];
+     key+=(d:uuid().authority|str d<-names);
+     list[Ele] nodes = [n_(_(d), style=style(label=label(d, vAlign = "center")), parent=group)|str d<-names];
      list[Ele] elements = nodes+background;
      return elements;
      }
@@ -33,6 +39,41 @@ Cytoscape show(list[str] names...) {
        );
      return cy;
      }
+     
+ list[Ele] show(str group, lrel[str, str] pairs) {
+     list[str] car = carrier(pairs);
+     list[Ele] nodes = show(group, car);
+     list[Ele] edges = [e_(uuid().authority, _(d[0]), _(d[1]))|tuple[str, str] d <-pairs]; 
+     return nodes+edges; 
+     }
+     
+Cytoscape show(lrel[str, str] names...) {
+      list[Ele] elements =[];
+      for (int i<-[0..size(names)])
+           elements+= show("group<i>", names[i]);
+      Cytoscape cy = cytoscape(
+           elements= elements
+       ,styles = [<"node", style(borderWidth = "2", borderColor="brown", padding="10")>
+                  ,<"edge", style(  
+                 curveStyle=straight(),lineColor="blue",
+                 arrowShape=[
+                     ArrowShape::triangle(
+                      arrowScale=2
+                     ,arrowColor="red", pos = target()
+                     )
+                     ]
+                  )
+                  >
+           ]
+       ,\layout = dagre("compound:true")
+       );
+     return cy;
+     }
+    
+ lrel[str, str] lattice() =
+       [<"{1,2,3}","{1,2}">, <"{1,2,3}","{1,3}">, <"{1,2,3}","{2,3}">
+         ,<"{1,2}","{1}"> ,<"{1,2}","{2}"> ,<"{1,3}","{1}"> ,<"{1,3}","{3}">,<"{2,3}","{2}"> ,<"{2,3}","{3}">
+         ,<"{1}","{}">,<"{2}","{}">,<"{3}","{}">];
     
 public App def() {
     list[Ele]  nodes = [n_("a", style=style(label=label("A", vAlign = "center")))
@@ -55,7 +96,7 @@ public App def() {
                       ,e_("b_g", "b", "g")
                       ];
     Cytoscape cy = cytoscape(
-        elements= nodes+edges
+        elements=  nodes+edges
        ,styles = [<"edge", style(  
                  curveStyle=straight(),lineColor="blue",
                  arrowShape=[
@@ -79,7 +120,11 @@ public App def() {
                   ]
           ,\layout = dagre("compound:true")
       );   
-     App ap = app(|project://racytoscal/src/demo/cluster/Graph.html|, <"cy", show(["aap","noot","mies"], ["teun","gijs"])>
+     App ap = app(|project://racytoscal/src/demo/cluster/Graph.html|
+         , <"cy"
+         //, show(["aap","noot","mies"], ["teun","gijs"])
+            ,show(lattice())
+            >
            ,display = true);  
     return ap;
     }

@@ -116,7 +116,7 @@ public str output() {
     list[tuple[num x, num  y]] ts = [p(vBA, vCB, vCA, k1, k2, k3)|int k1<-[6,5..-7], int k2<-[6,5..-7], int k3<-[0]
           // ,k1!=0||k2!=0
           ];
-    str output = svg( 800, 1600
+    str output = svg( 800, 1000
         ,box(LT, 
                // path(drawHex(T0, T1, T2), class = "base")
                path("<for(tuple[num x, num y] t<-ts){> <drawHex(T0, T1, T2, t)> <}>") 
@@ -135,7 +135,7 @@ public str output() {
                ,path("<for(tuple[num x, num y] t<-ts){> <drawNapoleonTriangle(T0, T1, T2, t)> <}>",class="napoleon0 4")
                ,path("<for(tuple[num x, num y] t<-ts){> <drawNapoleonTriangle(T0_60, T1_60, T2_60, t)> <}>",class="napoleon60 5")
                ,path("<for(tuple[num x, num y] t<-ts){> <drawNapoleonTriangle(T0_120, T1_120, T2_120, t)> <}>",class="napoleon120 6")          
-             ,viewBox=<-7.5,-15, 15, 30>, strokeWidth = 2
+             ,viewBox=<-7.5,-15, 15, 18.75>, strokeWidth = 2
          ));    
     return output;
     }   

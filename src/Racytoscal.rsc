@@ -134,10 +134,11 @@ public str executeInBrowser(lrel[str, Style] styles=[], tuple[str, str] \layout=
        , list[str] onchange=[]
        , int setInterval= -1, str path = ""
        ,bool sync = true, list[tuple[str attach, str content]] html = []) {
+       // println("executeInBrowser:<styles>");
        return 
        "{<extra>
        '<if((\layout?)){>,\"layout\":[\"<\layout[0]>\", \"<\layout[1]>\"]<}>
-       '<if((\styles?)){>,\"styles\":<toString(styles)><}>
+       '<if((\styles?)){>,\"styles\":<toStylesString(styles)><}>
        '<if((\css?)){>,\"css\":[<toCssString(css)>]<}>
        '<if((\transform?)){>,\"transform\":[<toTransformString(transform)>]<}>
        '<if((\table?)){>,\"table\":[<toString(table)>]<}>

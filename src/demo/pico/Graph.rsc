@@ -75,7 +75,9 @@ Cytoscape show(list[tuple[str, str]] names...) {
  list[Ele] show(str group, rel[tuple[str, str], tuple[str, str]] pairs) {
      list[tuple[str, str]] car = toList(carrier(pairs));
      list[Ele] nodes = show(group, car);
-     list[Ele] edges = [e_(uuid().authority, _(d[0][0]), _(d[1][0]))|tuple[tuple[str, str], tuple[str, str]] d <-pairs]; 
+     list[Ele] edges = [e_(uuid().authority, _(d[0][0]), _(d[1][0])
+           ,style=style(label=label(d[1][1]), textBackgroundColor="lightgrey", textBackgroundOpacity=1))
+                 |tuple[tuple[str, str], tuple[str, str]] d <-pairs]; 
      return nodes+edges; 
      }
      
@@ -109,8 +111,30 @@ public App def() {
          //, show(["aap","noot","mies"], ["teun","gijs"])
             ,show(controlFlow())
             >
-           ,display = true);  
+           ,display = true, click=<["aap"], callbackClick>);  
     return ap;
+    }
+    
+bool edgeLabel = true;
+    
+str callbackEdge(str id) {
+    //println(id);
+    Style styl1 = style(textBackgroundOpacity=0, textOpacity=0);
+    Style styl2 = style(textBackgroundOpacity=1, textOpacity=1, textBackgroundColor="lightgrey");
+    return executeInBrowser(styles=[<"edge", styl2>, <"node", styl1>]);
+    }
+    
+str callbackNode(str id) {
+    //  println(id);
+    Style styl1 = style(textBackgroundOpacity=0, textOpacity=0);
+    Style styl2 = style(textBackgroundOpacity=1, textOpacity=1, textBackgroundColor="white");
+    return executeInBrowser(styles=[<"node", styl2>, <"edge", styl1>]);
+    }
+    
+ str callbackClick(str id) {
+    str r = edgeLabel?callbackEdge(id):callbackNode(id);
+    edgeLabel= !edgeLabel;
+    return r;
     }
     
 public void main() {

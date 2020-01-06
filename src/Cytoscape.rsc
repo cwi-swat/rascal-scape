@@ -262,7 +262,7 @@ public str genScript(str container, Cytoscape cy, str extra ="") {
   str r =  
   "cy[\"<container>\"] = cytoscape({
   'container: document.getElementById(\'<container>\'), 
-  'style: <toString(cy.styles)>.concat(<getElStyles(cy.elements)>),
+  'style: <toStylesString(cy.styles)>.concat(<getElStyles(cy.elements)>),
   'elements: [<getElements(cy.elements)>],
   'layout: <getLayout(cy.\layout)>
   '});
@@ -426,8 +426,10 @@ private str toString(Style arg) {
        r+= getArrowShape(arrowShape);
     if ((arg.curveStyle?))
         r+= getCurveStyle(arg.curveStyle);
-    if ((arg.label?))
-       r+=toString(arg.label);
+    if ((arg.label?)) {
+       str s = toString(arg.label);
+       if (!isEmpty(s)) r+=s;
+       }
     // r+=getEdgeStyle(selector, style.edgeShape);
     if ((arg.opacity?))
         r+= addKeyNumValue("opacity", arg.opacity);
@@ -495,8 +497,8 @@ private str getElStyle(Ele ele) {
        }
     }
     
-private str toString(list[tuple[str selector, Style style]] styles) {
-    // println("ToString");
+str toStylesString(list[tuple[str selector, Style style]] styles) {
+    // println("ToString <styles>");
     list[str] r = [getStyleArgument(t.selector, t.style)|
        tuple[str selector, Style style] t<-styles];
     r = [t|str t<-r,!isEmpty(t)];

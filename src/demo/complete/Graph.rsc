@@ -1,10 +1,9 @@
 module demo::complete::Graph
 import Prelude;
-extend Racytoscal;
+import Rascalscape;
+import Cytoscape;
 import util::Math;
 
-
-    
 public App def() {
     int n=5;
     list[Ele]  nodes = [n_("<i>")|int i<-[0..n]];
@@ -15,7 +14,7 @@ public App def() {
         color[id] = (color[id]=="blue"?"red":"blue");
         // println(color[id]);
         Style styl = style(lineColor=color[id]);
-        return executeInBrowser(styles=[<"edge#<id>", styl>]);
+        return update(styles=[<"edge#<id>", styl>]);
         }
     Cytoscape cy = cytoscape(
         elements= nodes+edges
@@ -36,7 +35,7 @@ public App def() {
                   ]
           ,\layout = circle("")
       );   
-     App ap = app(|project://racytoscal/src/demo/complete/Graph.html|, <"cy", cy>
+     App ap = app(|project://<project>/src/demo/complete/Graph.html|, <"cy", cy>
            ,display = true, tap = callbackTap);  
     return ap;
     }

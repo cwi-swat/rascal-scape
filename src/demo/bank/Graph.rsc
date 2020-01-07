@@ -1,6 +1,7 @@
 module demo::bank::Graph
 import Prelude;
-import Racytoscal;
+import Rascalscape;
+import Cytoscape;
 import util::Math;
 
 tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
@@ -60,7 +61,7 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
                 case "withdraw": current.amount -= toInt(args[4]); 
                 } 
            }    
-          str result = executeInBrowser(extra="\"state\":{\"lab\":\"<lab>\", \"loc\":<current.pt>, \"account\":<current.account>,\"interest\":<current.interest>,\"amount\":<current.amount>}"
+          str result = update(extra="\"state\":{\"lab\":\"<lab>\", \"loc\":<current.pt>, \"account\":<current.account>,\"interest\":<current.interest>,\"amount\":<current.amount>}"
           ,styles = (lab=="init"?[<"node#<current.pt>", style2>]:[<"node#<current0.pt>", style1>,<"node#<current.pt>", style2>]));
           return result;
           }
@@ -95,7 +96,7 @@ tuple[list[Ele], lrel[str, Style]] readAut(loc file) {
        Cytoscape cy  = cytoscape(elements= eles[0], styles= styles,\layout = 
        dagre("nodeSep:50,ranker:\"network-simplex\",rankDir:\"TB\", edgeSep:50,rankSep:200")  
        );
-       App ap = app(|project://racytoscal/src/demo/bank/Graph.html|, <"cy", cy>, display = true
+       App ap = app(|project://<project>/src/demo/bank/Graph.html|, <"cy", cy>, display = true
            ,click = <[], nextStep> ,load = nextStep
        ); 
        return ap;

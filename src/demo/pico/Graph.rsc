@@ -1,6 +1,7 @@
 module demo::pico::Graph
 import Prelude;
-extend Racytoscal;
+import Rascalscape;
+import Cytoscape;
 import util::Math;
 import util::UUID;
 import demo::lang::Pico::ControlFlow;
@@ -31,7 +32,7 @@ str getText(CFNode d, str pico) {
    }
 
 rel[tuple[str, str], tuple[str, str]] controlFlow() {
-   str pico = readFile(|project://racytoscal/src/demo/pico/P1.pico|);
+   str pico = readFile(|project://<project>/src/demo/pico/P1.pico|);
    // println(pico);
    Graph[CFNode] g = delAnnotationsRec(cflowProgram(pico).graph);
    // set[CFNode] c = carrier(g);
@@ -106,7 +107,7 @@ Cytoscape show(rel[tuple[str, str], tuple[str, str]] names...) {
     
     
 public App def() {
-     App ap = app(|project://racytoscal/src/demo/pico/Graph.html|
+     App ap = app(|project://<project>/src/demo/pico/Graph.html|
          , <"cy"
          //, show(["aap","noot","mies"], ["teun","gijs"])
             ,show(controlFlow())
@@ -121,14 +122,14 @@ str callbackEdge(str id) {
     //println(id);
     Style styl1 = style(textBackgroundOpacity=0, textOpacity=0);
     Style styl2 = style(textBackgroundOpacity=1, textOpacity=1, textBackgroundColor="lightgrey");
-    return executeInBrowser(styles=[<"edge", styl2>, <"node", styl1>]);
+    return update(styles=[<"edge", styl2>, <"node", styl1>]);
     }
     
 str callbackNode(str id) {
     //  println(id);
     Style styl1 = style(textBackgroundOpacity=0, textOpacity=0);
     Style styl2 = style(textBackgroundOpacity=1, textOpacity=1, textBackgroundColor="white");
-    return executeInBrowser(styles=[<"node", styl2>, <"edge", styl1>]);
+    return update(styles=[<"node", styl2>, <"edge", styl1>]);
     }
     
  str callbackClick(str id) {

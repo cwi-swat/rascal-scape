@@ -1,5 +1,6 @@
 module demo::directoryTree::Tree
-extend Racytoscal;
+import Rascalscape;
+import Cytoscape;
 import Prelude;
 import util::Math;
 
@@ -54,7 +55,8 @@ lrel[int, int] genRandomTree(int n, int depth) {
     if (id[0]=="-") return "";
     Style styl = style(
        textBackgroundOpacity=1, textBackgroundColor="lightgrey", textBackgroundPadding=10, textOpacity=1, color="black");
-    str r = "{\"styles\":<Racytoscal::toString([<"node#<id>", styl>])>}";
+    // str r = "{\"styles\":<Racytoscal::toString([<"node#<id>", styl>])>}";
+    str r = update(styles=[<"node#<id>", styl>]);
     return r;
     }
     
@@ -62,7 +64,7 @@ str callbackTapend(str id) {
     // println("end: <id>");
     if (id[0]=="-") return "";
     Style styl = style(textBackgroundOpacity=0, textOpacity=0, color="red");
-    str r = "{\"styles\":<Racytoscal::toString([<"node#<id>", styl>])>}";
+    str r = update(styles=[<"node#<id>", styl>]);
     return r;
     }
     
@@ -105,7 +107,7 @@ str callbackTapend(str id) {
                   ]
           ,\layout = dagre("")
       );  
-    App ap = app(|project://racytoscal/src/demo/directoryTree/Tree.html|, <"cy", cy>, tapstart = callbackTapstart, tapend=callbackTapend);
+    App ap = app(|project://<project>/src/demo/directoryTree/Tree.html|, <"cy", cy>, tapstart = callbackTapstart, tapend=callbackTapend);
     return ap; 
     }
    

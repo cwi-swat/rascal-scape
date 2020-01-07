@@ -1,15 +1,15 @@
 module demo::simple::Graph
 import Prelude;
-extend Racytoscal;
+import Rascalscape;
 import util::Math;
      
-public list[tuple[str name , Racytoscal::Position pos]] getPositions() = 
+public list[tuple[str name , Rascalscape::Position pos]] getPositions() = 
     [ <"LT", LT>, <"LC", LC>, <"LB", LB>
     , <"CT", CT>, <"CC", CC>, <"CB", CB>
     , <"RT", RT>, <"RC", RC>, <"RB", RB>
     ];
     
-SVG cell(tuple[str name, Racytoscal::Position pos] p) = box(CC
+SVG cell(tuple[str name, Rascalscape::Position pos] p) = box(CC
             ,box(p.pos, text(500, 500, p.name), class="kernel" , shrink=0.4, strokeWidth=40)
          ,class="cell", strokeWidth=60); 
            
@@ -25,7 +25,7 @@ public str rows() {
    
  public App def() { 
     str output = rows(); 
-    App ap = app( |project://racytoscal/src/demo/simple/Graph.html|, <"attach", output>);
+    App ap = app( |project://<project>/src/demo/simple/Graph.html|, <"attach", output>);
     return ap;
     } 
       

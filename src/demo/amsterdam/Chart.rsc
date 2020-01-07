@@ -1,6 +1,6 @@
 module demo::amsterdam::Chart
 import Prelude;
-import Racytoscal;
+import Rascalscape;
 import Chart;
 
 public App def() { 
@@ -47,7 +47,7 @@ public App def() {
                  )             
             )
        );
-    App ap = app(|project://racytoscal/src/demo/amsterdam/Chart.html|
+    App ap = app(|project://<project>/src/demo/amsterdam/Chart.html|
             , <"attach", conf()>
             );
     return ap;

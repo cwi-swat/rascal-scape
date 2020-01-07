@@ -1,6 +1,7 @@
 module demo::preset::Graph
 import Prelude;
-extend Racytoscal;
+import Rascalscape;
+import Cytoscape;
 import util::Math;
 
 list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
@@ -23,7 +24,7 @@ public App def() {
              width="<z>", height="<z>", borderColor=pickColor()
              )>;
          }
-         return executeInBrowser(styles=r, \layout=<"cy1","preset">);       
+         return update(styles=r, \layout=<"cy1","preset">);       
     }
     list[Ele]  nodes1 = [n_("<i>"
          , position=<200, 200>
@@ -62,7 +63,7 @@ public App def() {
                   ]
          ,\layout = preset("")
       ); 
-     App ap = app(|project://racytoscal/src/demo/preset/Graph.html|, <"cy1", cy1>, <"cy2", cy2>
+     App ap = app(|project://<project>/src/demo/preset/Graph.html|, <"cy1", cy1>, <"cy2", cy2>
      , display = true, tap = onTap);  
     return ap; 
     }

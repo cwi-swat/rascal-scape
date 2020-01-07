@@ -1,6 +1,6 @@
 module demo::napoleon::Graph
 import Prelude;
-import Racytoscal;
+import Rascalscape;
 import demo::colors::ColorButton;
 import util::Math;
      
@@ -141,7 +141,7 @@ public str output() {
     }   
      
  public App def() { 
-    App ap = app( |project://racytoscal/src/demo/napoleon/Graph.html|
+    App ap = app( |project://<project>/src/demo/napoleon/Graph.html|
     , <"attach1", problem()>
     , <"attach2", output()>
     ,<"colors", rows(12, 6)>

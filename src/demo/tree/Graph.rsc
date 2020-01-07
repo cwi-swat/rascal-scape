@@ -1,5 +1,6 @@
 module demo::tree::Graph
-import Racytoscal;
+import Rascalscape;
+import Cytoscape;
 import Prelude;
 
 public App def() {
@@ -42,5 +43,5 @@ public App def() {
                   ]
           ,\layout = dagre("")
         ); 
-    return app(|project://racytoscal/src/demo/tree/Graph.html|, <"cy", cy>);  
+    return app(|project://<project>/src/demo/tree/Graph.html|, <"cy", cy>);  
     }

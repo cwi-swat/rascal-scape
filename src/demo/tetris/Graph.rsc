@@ -1,6 +1,6 @@
 module demo::tetris::Graph
 import Prelude;
-import Racytoscal;
+import Rascalscape;
 import util::Math;
 
 alias el = tuple[int rot, int x, int y, rel[int, int] state, str kind];
@@ -135,7 +135,7 @@ bool isDisjunct() {
 str new(str kind) {
    current+=[<0, 0, 0, {},kind>];
    cnt=cnt+1;
-   return executeInBrowser(css=[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)]
+   return update(css=[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)]
         , extra="\"x1\":\"<rot1()>\", \"y1\":\"<0>\", \"x2\":\"<rot2()>\", \"y2\":\"<0>\",\"cnt\",\"<cnt>\""
         );    
    }
@@ -171,7 +171,7 @@ str getColor(str kind) {
 public App def() {
     current = [];
     str onLoad(str path) {
-         return executeInBrowser(table=[<"attach","table","cells", width, height >]
+         return update(table=[<"attach","table","cells", width, height >]
                                       // , onclick=["rotate","left", "right", "up", "down", "fall", "reset"]
                                       // , onkeypress=["manager"]
                                        , setInterval=300
@@ -191,18 +191,18 @@ public App def() {
           if (minY<10) {
               current[size(current)-1] = old;
               current+=[<0,0,0, {}, "Clr">];
-              return executeInBrowser(extra="\"clearInterval\":\"\"",
+              return update(extra="\"clearInterval\":\"\"",
                     css=[<v,"background-color", getColor("Clr")>|v<-fig("", nullEl, "Clr")]);
               }
           list[tuple[str, str, str]] oldArg = [<v,"background-color",getColor(current[-1].kind)>|v<-fig("",old,current[-1].kind)];
           current+=[<0, 0, 0, {},kind>];
          
-          return executeInBrowser(css=clear(state)+oldArg
+          return update(css=clear(state)+oldArg
                                                   +[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)],
                                                   extra="\"x1\":\"<rot1()>\", \"y1\":\"<0>\", \"x2\":\"<rot2()>\", \"y2\":\"<0>\", \"cnt\":\"<cnt>\"");  
           }
        current+=[<0, 0, 0, {},kind>]; 
-       return executeInBrowser(css=[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)]
+       return update(css=[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)]
        ,extra="\"x1\":\"<rot1()>\", \"y1\":\"<0>\", \"x2\":\"<rot2()>\", \"cnt\":\"<cnt>\"");   
        }
     
@@ -233,7 +233,7 @@ public App def() {
           case "down": current[last].y = current[-1].y+1;
           case "reset": {
                  cnt = 0;
-                 str r = executeInBrowser(css= [*clear(d.state)|d<-current], path = path, extra="\"cnt\":\"0\""
+                 str r = update(css= [*clear(d.state)|d<-current], path = path, extra="\"cnt\":\"0\""
                    ,setInterval=150);
                  current= []; 
                  minY = height;
@@ -242,18 +242,18 @@ public App def() {
           case "fall": {
                  fall();
                  list[tuple[str, str, str]] oldArg = [<v,"background-color",getColor(current[-1].kind)>|v<-fig("",old,current[-1].kind)];
-                 return executeInBrowser(css=clear(state)+oldArg
+                 return update(css=clear(state)+oldArg
                                                  // +[<v,"background-color", getColor(kind)>|v<-fig("", nullEl, kind)]
                                                  ,
                                                  extra="\"x1\":\"<rot1()>\", \"y1\":\"<0>\", \"x2\":\"<rot2()>\", \"y2\":\"<0>\"", path = path);  
                  }
           }
-         return executeInBrowser(css=clear(state)+[<v,"background-color",getColor(current[-1].kind)>|v<-fig("",old,current[-1].kind)]
+         return update(css=clear(state)+[<v,"background-color",getColor(current[-1].kind)>|v<-fig("",old,current[-1].kind)]
            , extra="\"x1\":\"<rot1()>\", \"y1\":\"<0>\", \"x2\":\"<rot2()>\", \"y2\":\"<0>\"" ,path = path);  
          }
     return "";             
     }
-    App ap = app(|project://racytoscal/src/demo/tetris/Graph.html|
+    App ap = app(|project://<project>/src/demo/tetris/Graph.html|
          ,load = onLoad
          , click=<["rotate","left", "right", "up", "down", "fall", "reset"], onClick>
          , keypress = <["manager"], onKeypress>

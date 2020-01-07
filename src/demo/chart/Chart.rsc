@@ -1,6 +1,6 @@
 module demo::chart::Chart
 import Prelude;
-import Racytoscal;
+import Rascalscape;
 import Chart;
 import util::Math;
 
@@ -71,7 +71,7 @@ public App def() {
                        )
             )
        ); 
-    App ap = app(|project://racytoscal/src/demo/chart/Chart.html|
+    App ap = app(|project://<project>/src/demo/chart/Chart.html|
              ,<"attach1", config("red")>
              ,<"attach2", config("green")>
             );

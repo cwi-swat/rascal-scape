@@ -1,6 +1,6 @@
 module demo::frame::Graph
 import Prelude;
-import Racytoscal;
+import Rascalscape;
 import util::Math;
 
 list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
@@ -49,7 +49,7 @@ public App def() {
         , shrink = 0.8, strokeWidth = 0, svgLayout=grid(2)
         )
         );
-      App ap = app(|project://racytoscal/src/demo/frame/Graph.html|, <"attach", html>);
+      App ap = app(|project://<project>/src/demo/frame/Graph.html|, <"attach", html>);
       return ap;
      }
 

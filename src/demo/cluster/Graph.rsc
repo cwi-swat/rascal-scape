@@ -1,6 +1,7 @@
 module demo::cluster::Graph
 import Prelude;
-extend Racytoscal;
+import Rascalscape;
+import Cytoscape;
 import util::Math;
 import util::UUID;
 
@@ -120,7 +121,7 @@ public App def() {
                   ]
           ,\layout = dagre("compound:true")
       );   
-     App ap = app(|project://racytoscal/src/demo/cluster/Graph.html|
+     App ap = app(|project://<project>/src/demo/cluster/Graph.html|
          , <"cy"
          //, show(["aap","noot","mies"], ["teun","gijs"])
             ,show(lattice())

@@ -1,10 +1,10 @@
 module demo::example::Graph
 import Prelude;
-extend Racytoscal;
+extend Rascalscape;
 extend Colors;
 import util::Math;
 
-public list[tuple[str name , Racytoscal::Position pos]] getPositions() = [
+public list[tuple[str name , Rascalscape::Position pos]] getPositions() = [
       <"LT", LT>, <"LC", LC>, <"LB", LB>
     , <"CT", CT>, <"CC", CC>, <"CB", CB>, <"RT", RT>, <"RC", RC>, <"RB", RB>];
     
@@ -60,6 +60,6 @@ public App def() {
     str output  = svg(400, 2000 ,box(LT, vennDiagram(), mondriaan(),genBoxes(true),genBoxes(false), genCircles(), svgLayout=grid(1, width=400, height= 400
        ),viewBox=<0,0, 150, 150>)
     );      
-    App ap = app(|project://racytoscal/src/demo/example/Graph.html|, <"attach", output>);  
+    App ap = app(|project://<project>/src/demo/example/Graph.html|, <"attach", output>);  
     return ap; 
     } 

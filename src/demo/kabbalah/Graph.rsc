@@ -1,6 +1,7 @@
 module demo::kabbalah::Graph
 import Prelude;
-extend Racytoscal;
+import Rascalscape;
+import Cytoscape;
 import util::Math;
 
 public App def() {
@@ -65,6 +66,6 @@ public App def() {
                 ]
          ,\layout = preset("")
         );
-    App ap = app(|project://racytoscal/src/demo/kabbalah/Graph.html|, <"cy", cy>, display = true);  
+    App ap = app(|project://<project>/src/demo/kabbalah/Graph.html|, <"cy", cy>, display = true);  
     return ap;
     }

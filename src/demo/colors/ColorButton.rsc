@@ -1,13 +1,13 @@
 module demo::colors::ColorButton
 import Prelude;
-extend Racytoscal;
-extend Colors;
+import Rascalscape;
+import Colors;
 import util::Math;
 
 
 public str onChange(str path) {
     num opacity = toReal(split("/", path)[1]);
-    return executeInBrowser(css=[<"ellipse", "fill-opacity","<_(opacity)>">]);
+    return update(css=[<"ellipse", "fill-opacity","<_(opacity)>">]);
     }
     
 public str onClick(str path) {
@@ -15,7 +15,7 @@ public str onClick(str path) {
     str name = names[0];
     str id = names[1];
     int idx = toInt(id);
-    return executeInBrowser(css=[<id, idx<4?"fill":"stroke",name>], html=[<"c<id>", name>]);
+    return update(css=[<id, idx<4?"fill":"stroke",name>], html=[<"c<id>", name>]);
     }
     
 str buttons(str name, int n)=

@@ -1,6 +1,6 @@
 module demo::svg::Graph
 import Prelude;
-extend Racytoscal;
+import Rascalscape;
 import util::Math;
 
 list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
@@ -11,7 +11,7 @@ str pickColor() {
     return "<colors[d]>";
     }
     
-public list[tuple[str name , Racytoscal::Position pos]] getPositions() = [
+public list[tuple[str name , Rascalscape::Position pos]] getPositions() = [
       <"LT", LT>, <"LC", LC>, <"LB", LB>
     , <"CT", CT>, <"CC", CC>, <"CB", CB>, <"RT", RT>, <"RC", RC>, <"RB", RB>];
      
@@ -28,9 +28,9 @@ public App tst() {
           , viewBox = viewBox)
           ; 
     str onload(str path) {
-         return executeInBrowser(html=[<"attach1", html>,<"attach2", html>]);               
+         return update(html=[<"attach1", html>,<"attach2", html>]);               
     }     
-    App ap = app(|project://racytoscal/src/demo/svg/Graph.html|
+    App ap = app(|project://<project>/src/demo/svg/Graph.html|
        , <"attach1", html(<0, 0, 400, 400>)>, <"attach2", html(<0, 0, 200, 200>)>
        //, load = onload
        );  
@@ -60,9 +60,9 @@ public App def() {
           ; 
     
     str onload(str path) {
-         return executeInBrowser(html=[<"attach1", html>]);               
+         return update(html=[<"attach1", html>]);               
     }     
-    App ap = app(|project://racytoscal/src/demo/svg/Graph.html|, <"attach1", html>);  
+    App ap = app(|project://<project>/src/demo/svg/Graph.html|, <"attach1", html>);  
     return ap;
     }
 

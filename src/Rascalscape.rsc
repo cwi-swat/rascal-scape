@@ -1,4 +1,4 @@
-module Racytoscal
+module Rascalscape
 import Prelude;
 import util::Math;
 import util::HtmlDisplay;
@@ -6,6 +6,9 @@ import util::Webserver;
 import util::UUID;
 import Chart;
 import Cytoscape;
+
+// public alias Callback = str(str);
+// public alias React = tuple[list[str] ids, Callback callback];
 
 // public App app(loc html, Script contents...,loc site = |http://localhost:8081|
 //  , bool display = true 
@@ -19,7 +22,7 @@ import Cytoscape;
 //    ,Callback timer = nullCallback
 //   )
  
-// public str executeInBrowser(lrel[str, Style] styles=[], tuple[str, str] \layout=<"","">, str extra="\"extra\":\"none\"",
+// public str update(lrel[str, Style] styles=[], tuple[str, str] \layout=<"","">, str extra="\"extra\":\"none\"",
 //       list[tuple[str attach, str tableId, str cellId, int width, int height]] table = [],
 //       list[tuple[str sel, str key, str val]] css = []
 //       , list[tuple[str sel, str val]] transform = []
@@ -47,6 +50,8 @@ import Cytoscape;
 // public SVG text(num x, num y, str txt, str id= "", str class= "", str style= "") 
 
 // public SVG path(str txt, str id= "", str class= "", str style= "")
+
+public str project = "racytoscal";
 
 public alias App = tuple[void() serve, void() stop, str() content];
 public alias Script = tuple[str container, value val];
@@ -124,8 +129,8 @@ public App app(loc html, Script contents...,loc site = |http://localhost:8081|
     >;
     return r;
     }
-  
-public str executeInBrowser(lrel[str, Style] styles=[], tuple[str, str] \layout=<"","">, str extra="\"extra\":\"none\"",
+        
+public str update(lrel[str, Style] styles=[], tuple[str, str] \layout=<"","">, str extra="\"extra\":\"none\"",
        list[tuple[str attach, str tableId, str cellId, int width, int height]] table = [],
        list[tuple[str sel, str key, str val]] css = []
        , list[tuple[str sel, str val]] transform = []

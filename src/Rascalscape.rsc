@@ -51,7 +51,7 @@ import Cytoscape;
 
 // public SVG path(str txt, str id= "", str class= "", str style= "")
 
-public str project = "racytoscal";
+public str project = "rascalscape";
 
 public alias App = tuple[void() serve, void() stop, str() content];
 public alias Script = tuple[str container, value val];

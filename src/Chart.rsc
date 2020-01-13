@@ -1,8 +1,11 @@
 module Chart
 import Prelude;
 import lang::json::IO;
-import Racytoscal;
 import util::Math;
+
+private num cut1 = 0.01;
+private num cut2 = 0.000001;
+public  num _(num x) = round(x, x>1.5?cut1:cut2);
 
 data Points = points(list[tuple[num x , num y]] pnt)
               |bubble(list[tuple[num x , num y, num r]] pnt3d)

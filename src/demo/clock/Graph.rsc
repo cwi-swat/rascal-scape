@@ -1,6 +1,6 @@
 module demo::clock::Graph
 import Prelude;
-extend Racytoscal;
+import Rascalscape;
 import util::Math;
 
 list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
@@ -30,7 +30,7 @@ int rdot = 20;
 str onChange(str path) {
     int rot = toInt(split("/", path)[1]);
     int deg = 6*rot;
-    return executeInBrowser(transform=[<"time", "rotate(<deg>)">]);
+    return update(transform=[<"time", "rotate(<deg>)">]);
     }
 
 SVG pointer(num rad, num r) {
@@ -83,7 +83,7 @@ public App def() {
           )
           ; 
     // println(html(<0, 0, 100, 100>));   
-    App ap = app(|project://racytoscal/src/demo/clock/Graph.html|
+    App ap = app(|project://<project>/src/demo/clock/Graph.html|
        , <"attach", html(<0, 0, 100, 100>)>, change = <["slider"], onChange>
        );  
     return ap; 

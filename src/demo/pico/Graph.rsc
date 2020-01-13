@@ -22,8 +22,6 @@ str getId(CFNode d) {
    
 str getText(CFNode d, str pico) {
    if (exit():=d) return "";
-   //if (statement(_, STATEMENT stat):=d) return replaceAll("<stat>","\"","");
-   // if (choice(_, EXP exp):=d) return replaceAll("<exp>","\"","");
    if (exit():=d) return "";
    if (entry(_):=d) return "";
    if (statement(loc location, _):=d) return "<substring(pico, location.offset, location.offset+location.length)>";
@@ -35,12 +33,9 @@ rel[tuple[str, str], tuple[str, str]] controlFlow() {
    str pico = readFile(|project://<project>/src/demo/pico/P1.pico|);
    // println(pico);
    Graph[CFNode] g = delAnnotationsRec(cflowProgram(pico).graph);
-   // set[CFNode] c = carrier(g);
    rel[tuple[str, str], tuple[str, str]] r = {<<getId(d[0]), getText(d[0], pico)>, <getId(d[1]), getText(d[1], pico)>>|tuple[CFNode, CFNode] d<-g};
    return r;
    }
-
-// n_("keter", position=<300, 160> ,style = style(label = label("\u05DB\u05EA\u05E8", vAlign = "center")))
 
 list[Ele] show(str group, list[tuple[str, str]] names) {
      Ele background = n_(group, style=style(label=label(group, vAlign = "top", marginY=-10), borderColor="darkgrey"));
@@ -109,7 +104,6 @@ Cytoscape show(rel[tuple[str, str], tuple[str, str]] names...) {
 public App def() {
      App ap = app(|project://<project>/src/demo/pico/Graph.html|
          , <"cy"
-         //, show(["aap","noot","mies"], ["teun","gijs"])
             ,show(controlFlow())
             >
            ,display = true, click=<["aap"], callbackClick>);  

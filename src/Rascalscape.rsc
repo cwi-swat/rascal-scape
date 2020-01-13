@@ -564,7 +564,7 @@ private loc openBrowser(loc html, str script, bool display = true
    
     ) {
   	loc site = |http://localhost:8081|;
-  	loc base = |project://racytoscal|;
+  	loc base = |project://<project>|;
   	   
   	 Response page(get(/^\/tap\/<id:\S+>$/)) { 
         return response(tap(id));

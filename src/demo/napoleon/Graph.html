@@ -9,7 +9,7 @@ function printChart() {
 	var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
 	var prtContent = document.getElementById("print");
 	WinPrint.document.write('<html><head>');
-	WinPrint.document.write('<link rel="stylesheet" href="src/demo/napoleon/Graph.css">');
+	WinPrint.document.write('<link rel="stylesheet" href="lib/demo/napoleon/Graph.css">');
 	WinPrint.document.write('</head><body onload="print();close();">');
 	WinPrint.document.write(prtContent.innerHTML);
 	WinPrint.document.write('</body></html>');
@@ -17,7 +17,7 @@ function printChart() {
 }
 
 </script>
-<link rel="stylesheet" href="src/demo/napoleon/Graph.css">
+<link rel="stylesheet" href="lib/demo/napoleon/Graph.css">
 <style>
 .choose{
    font-size:200px;
@@ -72,7 +72,7 @@ De oplossing is af te leiden met hulp van het patroon aan de achterzijde.
 </tr></table>
 <div id='colors'></div>
 </div>
-<script src="init"></script>
+<script src="lib/init"></script>
 <button id="print-button" onclick="printChart()">Print</button>
 </body>
 </html>

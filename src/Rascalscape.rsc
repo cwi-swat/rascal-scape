@@ -6,6 +6,7 @@ import util::Webserver;
 import util::UUID;
 import Chart;
 import Cytoscape;
+import Content;
 
 // public alias Callback = str(str);
 // public alias React = tuple[list[str] ids, Callback callback];
@@ -129,6 +130,32 @@ public App app(loc html, Script contents...,loc site = |http://localhost:8081|
     >;
     return r;
     }
+    
+public Content show(str id, loc html, Script contents...
+   , bool display = true 
+    ,React click = <[], nullCallback>
+    ,React keypress = <[], nullCallback>
+    ,React change = <[], nullCallback>
+   , Callback tapstart = nullCallback
+    ,Callback tapend =  nullCallback
+    ,Callback tap = nullCallback
+    ,Callback load =  nullCallback
+    ,Callback timer = nullCallback
+    ) {
+    str content = toScript(contents);
+    return
+         makeContent(id, html, content
+          ,tapstart=tapstart
+          ,tapend=tapend
+          ,tap=tap
+          ,click=click
+          ,keypress=keypress
+          ,load=load
+          ,timer=timer
+          ,display = display
+          ,change=change
+          );
+}
         
 public str update(lrel[str, Style] styles=[], tuple[str, str] \layout=<"","">, str extra="\"extra\":\"none\"",
        list[tuple[str attach, str tableId, str cellId, int width, int height]] table = [],
@@ -607,7 +634,7 @@ private loc openBrowser(loc html, str script, bool display = true
 	    return response("shutdown");
       }
       
-      Response page(get(/^\/init$/)) { 
+      Response page(get(/\/init$/)) { 
         // println("INIT");
         script+="
         'if (typeof clickCallback===\'undefined\') clickCallback = fromRascal;
@@ -643,6 +670,100 @@ private loc openBrowser(loc html, str script, bool display = true
        // }
     }
     
+private Content makeContent(str id, loc html, str script, bool display = true 
+    ,React click = <[], nullCallback>
+    ,React keypress = <[], nullCallback>
+     ,React change = <[], nullCallback>
+    ,Callback tapstart = nullCallback
+    ,Callback tapend =  nullCallback
+    ,Callback tap = nullCallback
+    ,Callback load = nullCallback
+    ,Callback timer = nullCallback
+   
+    ) {
+  	loc base = |project://<project>/|;
+  	str lib = "lib";
+  	   
+  	 Response page(get(/^\/tap\/<id:\S+>$/)) { 
+        return response(tap(id));
+      }
+      
+      Response page(get(/^\/<id>\/click\/<path:\S+>$/)) { 
+        // println("HELP0:<id>");
+        return response(click.callback(path));
+      }
+      
+      Response page(get(/^\/<id>\/change\/<path:\S+>$/)) { 
+        return response(change.callback(path));
+      }
+      
+      Response page(get(/^\/<id>\/keypress\/<path:\S+>$/)) { 
+        // println("HELP0:<id>");
+        return response(keypress.callback(path));
+      }
+      
+       Response page(get(/^\/<id>\/timer\/<path:\S+>$/)) { 
+        // println("HELP0:<id>");
+        return response(timer(path));
+      }
+      
+      Response page(get(/^\/<id>\/load\/<path:\S+>$/)) { 
+        return response(load(path));
+      }
+      
+      Response page(get(/^\/<id>\/tapstart\/<id:\S+>$/)) { 
+        return response(tapstart(id));
+      }
+      
+      Response page(get(/^\/<id>\/tapend\/<id:\S+>$/)) { 
+        return response(tapend(id));	   
+      }
+      
+      Response page(get(/^\/<id>\/close$/)) { 
+        println("shutdown"); 
+        shutdown(site);
+	    return response("shutdown");
+      }
+      
+      Response page(get(/^\/<id>\/init$/)) { 
+        // println("INIT");
+        script+="
+        'if (typeof clickCallback===\'undefined\') clickCallback = fromRascal;
+	    'if (typeof changeCallback===\'undefined\') changeCallback = fromRascal;
+	    'if (typeof keypressCallback===\'undefined\') keypressCallback = fromRascal;
+	    ";
+        for (str id <-click.ids) {script+="addHandlerClick(\"click\", \"<id>\", true, clickCallback);\n";}
+        for (str id <-keypress.ids) {script+="addHandlerKeypress(\"keypress\", \"<id>\", true, keypressCallback);\n";}
+        for (str id <-change.ids) {script+="addHandlerValue(\"change\", \"<id>\", true, changeCallback);\n";}
+	    return response(script);
+      }
+      
+      Response page(get(str p:/\/<lib><path:.*>/)) {
+       // println("HELP:path=<path>  base=<base>");
+       //println("p1: [<p>]");
+       //println("path1: [<path>]");
+       if   (path=="") {
+	       return response(html);
+           } 
+       //println(base + p);  
+       return response(base + ("lib"+path)); 
+       } 
+     
+     default Response page(get(str p:/\/<id><path:.*>/)) {
+       // println("HELP:path=<path>  base=<base>");
+       //println("p: [<p>]");
+       //println("path: [<path>]");
+       if   (path=="") {
+	       return response(html);
+           } 
+       // return response("");  
+       // println(base + p);  
+       return response(base + ("lib"+path)); 
+       } 
+        
+      return content(id, page);
+    }
+        
 private str toScript(list[Script] contents) {
     str r = "";
     for (Script v<-contents) {

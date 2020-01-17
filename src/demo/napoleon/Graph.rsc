@@ -1,6 +1,7 @@
 module demo::napoleon::Graph
 import Prelude;
 import Rascalscape;
+import Content;
 import demo::colors::ColorButton;
 import util::Math;
      
@@ -150,5 +151,16 @@ public str output() {
     );
     return ap;
     } 
+    
+ public Content show() {  
+    Content ap = show("lib", |project://<project>/src/demo/napoleon/Graph.html|
+    , <"attach1", problem()>
+    , <"attach2", output()>
+    ,<"colors", rows(12, 6)>
+    ,<"panel", panel()>
+    ,click = <["button"], onClick>
+    );
+    return ap;
+}    
       
  

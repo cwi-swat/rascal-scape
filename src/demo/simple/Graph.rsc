@@ -2,6 +2,9 @@ module demo::simple::Graph
 import Prelude;
 import Rascalscape;
 import util::Math;
+
+import Content;
+
      
 public list[tuple[str name , Rascalscape::Position pos]] getPositions() = 
     [ <"LT", LT>, <"LC", LC>, <"LB", LB>
@@ -29,4 +32,10 @@ public str rows() {
     return ap;
     } 
       
+      
+public Content show() { 
+    str output = rows(); 
+    Content ap = show("lib", |project://<project>/src/demo/simple/Graph.html|, <"attach", output>);
+    return ap;
+}      
  

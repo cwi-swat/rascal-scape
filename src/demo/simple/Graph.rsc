@@ -33,9 +33,9 @@ public str rows() {
     } 
       
       
-public Content show() { 
+public Content simple() { 
     str output = rows(); 
-    Content ap = show("lib", |project://<project>/src/demo/simple/Graph.html|, <"attach", output>);
+    Content ap = show("simple", |project://<project>/src/demo/simple/Graph.html|, <"attach", output>);
     return ap;
 }      
  

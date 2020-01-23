@@ -152,8 +152,8 @@ public str output() {
     return ap;
     } 
     
- public Content show() {  
-    Content ap = show("lib", |project://<project>/src/demo/napoleon/Graph.html|
+ public Content napoleon() {  
+    Content ap = show("napoleon", |project://<project>/src/demo/napoleon/Graph.html|
     , <"attach1", problem()>
     , <"attach2", output()>
     ,<"colors", rows(12, 6)>

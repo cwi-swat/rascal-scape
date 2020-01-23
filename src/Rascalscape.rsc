@@ -737,7 +737,7 @@ private Content makeContent(str id, loc html, str script, bool display = true
         for (str id <-change.ids) {script+="addHandlerValue(\"change\", \"<id>\", true, changeCallback);\n";}
 	    return response(script);
       }
-      
+      /*
       Response page(get(str p:/\/<lib><path:.*>/)) {
        // println("HELP:path=<path>  base=<base>");
        //println("p1: [<p>]");
@@ -748,17 +748,18 @@ private Content makeContent(str id, loc html, str script, bool display = true
        //println(base + p);  
        return response(base + ("lib"+path)); 
        } 
+     */
      
      default Response page(get(str p:/\/<id><path:.*>/)) {
        // println("HELP:path=<path>  base=<base>");
        //println("p: [<p>]");
-       //println("path: [<path>]");
+       println("path: [<base+path>]");
        if   (path=="") {
 	       return response(html);
            } 
        // return response("");  
        // println(base + p);  
-       return response(base + ("lib"+path)); 
+       return response(base + path); 
        } 
         
       return content(id, page);

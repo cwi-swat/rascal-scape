@@ -12,7 +12,7 @@ public App def() {
     } 
     
  public Content show() {  
-    Content ap = show("lib", |project://<project>/src/demo/colors/Graph.html| 
+    Content ap = show(|project://<project>/src/demo/colors/Graph.html| 
     , <"attach", rows(18, 3)>
     , <"panel", panel()>
     , change=<["slider"], onChange>, click = <["button"], onClick>

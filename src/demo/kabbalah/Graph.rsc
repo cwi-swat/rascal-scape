@@ -3,8 +3,9 @@ import Prelude;
 import Rascalscape;
 import Cytoscape;
 import util::Math;
+import Content;
 
-public App def() {
+Cytoscape getGraph() {
     list[Ele]  nodes = 
         [
          n_("keter", position=<300, 160> ,style = style(label = label("\u05DB\u05EA\u05E8", vAlign = "center")))
@@ -66,6 +67,16 @@ public App def() {
                 ]
          ,\layout = preset("")
         );
-    App ap = app(|project://<project>/src/demo/kabbalah/Graph.html|, <"cy", cy>, display = true);  
+        return cy;
+      }
+      
+   public App def() {
+    App ap = app(|project://<project>/src/demo/kabbalah/Graph.html|, <"cy", getGraph()>, display = true);  
     return ap;
     }
+    
+    public Content show() {  
+    return show(|project://<project>/src/demo/kabbalah/Graph.html| 
+           ,<"cy", getGraph()>
+          );
+    }    

@@ -131,7 +131,7 @@ public App app(loc html, Script contents...,loc site = |http://localhost:8081|
     return r;
     }
     
-public Content show(str id, loc html, Script contents...
+public Content show(loc html, Script contents...
    , bool display = true 
     ,React click = <[], nullCallback>
     ,React keypress = <[], nullCallback>
@@ -144,7 +144,7 @@ public Content show(str id, loc html, Script contents...
     ) {
     str content = toScript(contents);
     return
-         makeContent(id, html, content
+         makeContent(html, content
           ,tapstart=tapstart
           ,tapend=tapend
           ,tap=tap
@@ -579,6 +579,8 @@ private loc openBrowser(loc html, bool display = true
           );
     }
     
+ str getBundleName(loc x) = split("/", x.path)[-2];
+    
 private loc openBrowser(loc html, str script, bool display = true 
     ,React click = <[], nullCallback>
     ,React keypress = <[], nullCallback>
@@ -592,6 +594,7 @@ private loc openBrowser(loc html, str script, bool display = true
     ) {
   	loc site = |http://localhost:8081|;
   	loc base = |project://<project>|;
+  	str bundleName = getBundleName(html);
   	   
   	 Response page(get(/^\/tap\/<id:\S+>$/)) { 
         return response(tap(id));
@@ -634,7 +637,7 @@ private loc openBrowser(loc html, str script, bool display = true
 	    return response("shutdown");
       }
       
-      Response page(get(/\/init$/)) { 
+      Response page(get(/\/<bundleName>\/init$/)) { 
         // println("INIT");
         script+="
         'if (typeof clickCallback===\'undefined\') clickCallback = fromRascal;
@@ -646,16 +649,16 @@ private loc openBrowser(loc html, str script, bool display = true
         for (str id <-change.ids) {script+="addHandlerValue(\"change\", \"<id>\", true, changeCallback);\n";}
 	    return response(script);
       }
-     
-     default Response page(get(str path)) {
-       // println("HELP:path=<path>  base=<base>");
-       if   (path=="/") {
+       
+       Response page(get(str p:/\/<bundleName><path:.*>/)) {
+            return response(base + path); 
+       }
+       
+       default Response page(get(/\/<path:.*>/)) {
+           // println("path: [<base+path>] <size(path)>");
 	       return response(html);
-           } 
-       // return response("");    
-       return response(base + path); 
-       } 
-        
+           }
+         
        // while (true) {
           try {
             println("Trying ... <site>");
@@ -670,7 +673,7 @@ private loc openBrowser(loc html, str script, bool display = true
        // }
     }
     
-private Content makeContent(str id, loc html, str script, bool display = true 
+private Content makeContent(loc html, str script, bool display = true 
     ,React click = <[], nullCallback>
     ,React keypress = <[], nullCallback>
      ,React change = <[], nullCallback>
@@ -682,50 +685,48 @@ private Content makeContent(str id, loc html, str script, bool display = true
    
     ) {
   	loc base = |project://<project>/|;
-  	str lib = "lib";
-  	   
-  	 Response page(get(/^\/tap\/<id:\S+>$/)) { 
-        return response(tap(id));
+  	str bundleName = getBundleName(html);
+  	 Response page(get(/^\/<bundleName>\/tap\/<path:\S+>$/)) { 
+        return response(tap(path));
       }
       
-      Response page(get(/^\/<id>\/click\/<path:\S+>$/)) { 
-        // println("HELP0:<id>");
+     Response page(get(/^\/<bundleName>\/click\/<path:\S+>$/)) { 
         return response(click.callback(path));
       }
       
-      Response page(get(/^\/<id>\/change\/<path:\S+>$/)) { 
+      Response page(get(/^\/<bundleName>\/change\/<path:\S+>$/)) { 
         return response(change.callback(path));
       }
       
-      Response page(get(/^\/<id>\/keypress\/<path:\S+>$/)) { 
+      Response page(get(/^\/<bundleName>\/keypress\/<path:\S+>$/)) { 
         // println("HELP0:<id>");
         return response(keypress.callback(path));
       }
       
-       Response page(get(/^\/<id>\/timer\/<path:\S+>$/)) { 
+       Response page(get(/^\/<bundleName>\/timer\/<path:\S+>$/)) { 
         // println("HELP0:<id>");
         return response(timer(path));
       }
       
-      Response page(get(/^\/<id>\/load\/<path:\S+>$/)) { 
+      Response page(get(/^\/<bundleName>\/load\/<path:\S+>$/)) { 
         return response(load(path));
       }
       
-      Response page(get(/^\/<id>\/tapstart\/<id:\S+>$/)) { 
-        return response(tapstart(id));
+      Response page(get(/^\/<bundleName>\/tapstart\/<path:\S+>$/)) { 
+        return response(tapstart(path));
       }
       
-      Response page(get(/^\/<id>\/tapend\/<id:\S+>$/)) { 
-        return response(tapend(id));	   
+      Response page(get(/^\/<bundleName>\/tapend\/<path:\S+>$/)) { 
+        return response(tapend(path));	   
       }
       
-      Response page(get(/^\/<id>\/close$/)) { 
+      Response page(get(/^\/<bundleName>\/close$/)) { 
         println("shutdown"); 
         shutdown(site);
 	    return response("shutdown");
       }
       
-      Response page(get(/^\/<id>\/init$/)) { 
+      Response page(get(/^\/<bundleName>\/init$/)) { 
         // println("INIT");
         script+="
         'if (typeof clickCallback===\'undefined\') clickCallback = fromRascal;
@@ -737,50 +738,35 @@ private Content makeContent(str id, loc html, str script, bool display = true
         for (str id <-change.ids) {script+="addHandlerValue(\"change\", \"<id>\", true, changeCallback);\n";}
 	    return response(script);
       }
-      /*
-      Response page(get(str p:/\/<lib><path:.*>/)) {
-       // println("HELP:path=<path>  base=<base>");
-       //println("p1: [<p>]");
-       //println("path1: [<path>]");
-       if   (path=="") {
-	       return response(html);
-           } 
-       //println(base + p);  
-       return response(base + ("lib"+path)); 
-       } 
-     */
      
-     default Response page(get(str p:/\/<id><path:.*>/)) {
+     Response page(get(str p:/\/<bundleName><path:.*>/)) {
        // println("HELP:path=<path>  base=<base>");
        //println("p: [<p>]");
-       println("path: [<base+path>]");
+       // println("path: [<base+path>]");
        if   (path=="") {
 	       return response(html);
            } 
-       // return response("");  
-       // println(base + p);  
        return response(base + path); 
        } 
+       
+      default Response page(get(/<path:.*>/)) { 
+        println("error:<path>");
+        return response(path);
+      }
         
-      return content(id, page);
+      return content(bundleName, page);
     }
         
 private str toScript(list[Script] contents) {
     str r = "";
     for (Script v<-contents) {
         value val = v.val;
-        //switch (val) {
-        //   case Config d:  r+=Chart::genScript(v.container, d);
-        //    case Cytoscape c: r+=Cytoscape::genScript(v.container, c); 
-        //    case String s: r+=genScript(v.container, s); 
-        //   }
         if (Config d:=val)  r+=genScript(v.container, d);
         if (Cytoscape c:=val) r+=genScript(v.container, c); 
         if (str s:=val) r+=genScript(v.container, s);
         }
         return r;
     }
-    
     
 private list[SVG] graph(ViewBox viewBox, tuple[str \class, lrel[num x, num y] d] graphs...) {
     list[SVG] r = [];

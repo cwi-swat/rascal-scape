@@ -153,7 +153,7 @@ public str output() {
     } 
     
  public Content napoleon() {  
-    Content ap = show("napoleon", |project://<project>/src/demo/napoleon/Graph.html|
+    Content ap = show(|project://<project>/src/demo/napoleon/Graph.html|
     , <"attach1", problem()>
     , <"attach2", output()>
     ,<"colors", rows(12, 6)>

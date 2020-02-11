@@ -7,6 +7,7 @@ import util::UUID;
 import demo::lang::Pico::ControlFlow;
 import demo::lang::Pico::Abstract;
 import analysis::graphs::Graph;
+import Content;
 
 map[str, str] key = ();
 
@@ -77,7 +78,7 @@ Cytoscape show(list[tuple[str, str]] names...) {
      return nodes+edges; 
      }
      
-Cytoscape show(rel[tuple[str, str], tuple[str, str]] names...) {
+Cytoscape show1(rel[tuple[str, str], tuple[str, str]] names...) {
       list[Ele] elements =[];
       for (int i<-[0..size(names)])
            elements+= show("group<i>", names[i]);
@@ -104,11 +105,17 @@ Cytoscape show(rel[tuple[str, str], tuple[str, str]] names...) {
 public App def() {
      App ap = app(|project://<project>/src/demo/pico/Graph.html|
          , <"cy"
-            ,show(controlFlow())
+            ,show1(controlFlow())
             >
            ,display = true, click=<["aap"], callbackClick>);  
     return ap;
     }
+    
+public Content pico() { 
+    Content ap = show(|project://<project>/src/demo/pico/Graph.html|, <"cy", show1(controlFlow())>
+        ,click=<["aap"], callbackClick>);
+    return ap;
+}    
     
 bool edgeLabel = true;
     

@@ -3,6 +3,7 @@ import Rascalscape;
 import Cytoscape;
 import Prelude;
 import util::Math;
+import Content;
 
 lrel[int, int] genRandomTree(int n, int depth) { 
       int name=1;
@@ -68,11 +69,10 @@ str callbackTapend(str id) {
     return r;
     }
     
- public App def() = def(|project://racytoscal/src/demo|);
  
- public App def(loc file) {
-    lrel[loc, loc] rl  = genTree(file, 4);
-    // println(rl);
+ Cytoscape getGraph(loc file) {
+     lrel[loc, loc] rl  = genTree(file, 4);
+     println(rl);
     // lrel[int, int] rl  = genRandomTree(5, 3);
     list[Ele] edges = [e_("-<esc(a[0])>_<esc(a[1])>", esc(a[0]), esc(a[1]))
         |a<-rl];
@@ -107,9 +107,18 @@ str callbackTapend(str id) {
                   ]
           ,\layout = dagre("")
       );  
-    App ap = app(|project://<project>/src/demo/directoryTree/Tree.html|, <"cy", cy>, tapstart = callbackTapstart, tapend=callbackTapend);
+      println(cy);
+      return cy;
+     }
+ 
+ public App def() {
+    App ap = app(|project://<project>/src/demo/directoryTree/Tree.html|, <"cy", getGraph(|project://<project>/src/demo|)>, tapstart = callbackTapstart, tapend=callbackTapend);
     return ap; 
     }
    
-    
+public Content show() { 
+    Content ap = show(|project://<project>/src/demo/directoryTree/Tree.html|, <"cy", getGraph(|project://<project>/src/demo|)>
+        , tapstart = callbackTapstart, tapend=callbackTapend);
+    return ap;
+}    
 

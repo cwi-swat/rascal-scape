@@ -4,6 +4,7 @@ import Rascalscape;
 import Cytoscape;
 import util::Math;
 import util::UUID;
+import Content;
 
 map[str, str] key = ();
 
@@ -76,7 +77,7 @@ Cytoscape show(lrel[str, str] names...) {
          ,<"{1,2}","{1}"> ,<"{1,2}","{2}"> ,<"{1,3}","{1}"> ,<"{1,3}","{3}">,<"{2,3}","{2}"> ,<"{2,3}","{3}">
          ,<"{1}","{}">,<"{2}","{}">,<"{3}","{}">];
     
-public App def() {
+public App tst() {
     list[Ele]  nodes = [n_("a", style=style(label=label("A", vAlign = "center")))
                        ,n_("b", style=style(label=label("B", vAlign = "center")), parent="top_group")
                        ,n_("c", style=style(label=label("C", vAlign = "center")), parent="bottom_group")
@@ -120,12 +121,20 @@ public App def() {
                   )>
                   ]
           ,\layout = dagre("compound:true")
-      );   
+      );
+      return cy; 
+   } 
+   
+   public App def() { 
      App ap = app(|project://<project>/src/demo/cluster/Graph.html|
          , <"cy"
-         //, show(["aap","noot","mies"], ["teun","gijs"])
             ,show(lattice())
             >
            ,display = true);  
     return ap;
     }
+    
+ public Content cluster() { 
+    Content ap = show(|project://<project>/src/demo/cluster/Graph.html|, <"cy", show(lattice())>);
+    return ap;
+}    

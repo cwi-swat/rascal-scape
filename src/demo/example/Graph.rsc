@@ -3,6 +3,7 @@ import Prelude;
 extend Rascalscape;
 extend Colors;
 import util::Math;
+import Content;
 
 public list[tuple[str name , Rascalscape::Position pos]] getPositions() = [
       <"LT", LT>, <"LC", LC>, <"LB", LB>
@@ -18,7 +19,7 @@ SVG mondriaan() = box(LT,
                      vcat(RB
                         ,box(LT, strokeWidth= sw, shrink=1)
                         ,box(LT, strokeWidth= sw, shrink=1)
-                         strokeWidth= sw, hshrink=0.2, vshrink=0.8
+                         strokeWidth= sw, hshrink=0.3, vshrink=0.8
                        , viewBox=<0,0,100, 100> )
                       ,box(LB, vshrink=0.5, strokeWidth= sw, style="fill:red")
                       ,box(RT, hshrink=0.5, strokeWidth= sw, style="fill:blue")
@@ -29,7 +30,7 @@ SVG mondriaan() = box(LT,
                            )
                         )
                      ,svgLayout=grid(2/*, width=100, height=100*/), viewbox=<0,0,100, 100>, strokeWidth= 2,
-                     width=100, height=100);
+                     width=60, height=100);
 
 num dim = 100;
                      
@@ -47,7 +48,7 @@ list[tuple[SVG fig, num strokeWidth]] genBox(list[tuple[SVG fig, num strokeWidth
           ; 
     }
     
-int sw = 6;
+int sw = 4;
             
 SVG genBoxes(bool adjust) =  box(LT, [b.fig|b<-(genBox([], "red", adjust) |genBox(it, e, adjust)|str e<-darkColors[0..3])], strokeWidth= 2, width=100, height=100);
 
@@ -56,10 +57,18 @@ SVG circ() = ellipse(CC, box(CC, vshrink=0.2, hshrink=0.6,  class="mark", stroke
 SVG genCircles() = scale(0.5, 0.5, box(LT,  scale(1.0, 1.0, circ()), scale(0.7, 0.7, circ()), scale(0.5, 0.5, circ())
         ,svgLayout=grid(1, width=100, height=100), viewBox=<-60,-60, 120, 120>, strokeWidth=2));
      
-public App def() {
-    str output  = svg(400, 2000 ,box(LT, vennDiagram(), mondriaan(),genBoxes(true),genBoxes(false), genCircles(), svgLayout=grid(1, width=400, height= 400
+
+str output()  = svg(400, 2000 ,box(LT, vennDiagram(), mondriaan(),genBoxes(true),genBoxes(false), genCircles(), svgLayout=grid(1, width=300, height= 300
        ),viewBox=<0,0, 150, 150>)
-    );      
-    App ap = app(|project://<project>/src/demo/example/Graph.html|, <"attach", output>);  
+    );
+    
+public App def() {      
+    App ap = app(|project://<project>/src/demo/example/Graph.html|, <"attach", output()>);  
     return ap; 
     } 
+    
+public Content example() {  
+    return show(|project://<project>/src/demo/example/Graph.html| 
+           ,<"attach", output()>
+          );
+    }    

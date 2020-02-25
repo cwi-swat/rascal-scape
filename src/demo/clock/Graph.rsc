@@ -2,6 +2,7 @@ module demo::clock::Graph
 import Prelude;
 import Rascalscape;
 import util::Math;
+import Content;
 
 list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
      , "seagreen","skyblue", "slategray","steelblue", "yellow"];
@@ -39,8 +40,8 @@ SVG pointer(num rad, num r) {
    , class="pointer"), id = "time");
    }
      
-public App def() { 
-    str html(ViewBox viewBox)  = svg(400,400      
+
+ str html(ViewBox viewBox)  = svg(400,400      
          ,box(CC,  [ellipse(CC, width=2*r+strokeWidth, height = 2*r+strokeWidth, class="bound", 
                    strokeWidth=strokeWidth)]
                    +[ellipse(<C(r*cos(phi)), C(r*sin(phi))>
@@ -82,12 +83,20 @@ public App def() {
               ,viewBox = viewBox             
           )
           ; 
+          
+public App def() { 
     // println(html(<0, 0, 100, 100>));   
     App ap = app(|project://<project>/src/demo/clock/Graph.html|
        , <"attach", html(<0, 0, 100, 100>)>, change = <["slider"], onChange>
        );  
     return ap; 
     }
+    
+Content clock() { 
+    Content ap = show(|project://<project>/src/demo/clock/Graph.html|, <"attach", html(<0, 0, 100, 100>)>
+    , change = <["slider"], onChange>);
+    return ap;
+}  
 
     
  

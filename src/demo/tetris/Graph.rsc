@@ -2,6 +2,7 @@ module demo::tetris::Graph
 import Prelude;
 import Rascalscape;
 import util::Math;
+import Content;
 
 alias el = tuple[int rot, int x, int y, rel[int, int] state, str kind];
 
@@ -167,9 +168,8 @@ str getColor(str kind) {
          minY=current[-1].y;
          }
     }
+    
 
-public App def() {
-    current = [];
     str onLoad(str path) {
          return update(table=[<"attach","table","cells", width, height >]
                                       // , onclick=["rotate","left", "right", "up", "down", "fall", "reset"]
@@ -253,6 +253,9 @@ public App def() {
          }
     return "";             
     }
+
+public App def() {
+    current = [];
     App ap = app(|project://<project>/src/demo/tetris/Graph.html|
          ,load = onLoad
          , click=<["rotate","left", "right", "up", "down", "fall", "reset"], onClick>
@@ -261,3 +264,14 @@ public App def() {
          );
     return ap;       
     }
+    
+public Content tetris() { 
+    current = [];
+    Content ap = show(|project://<project>/src/demo/tetris/Graph.html| 
+         ,load = onLoad
+         , click=<["rotate","left", "right", "up", "down", "fall", "reset"], onClick>
+         , keypress = <["manager"], onKeypress>
+         , timer = onTimer
+             );
+    return ap;
+}  

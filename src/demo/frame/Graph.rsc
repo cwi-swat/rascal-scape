@@ -2,6 +2,7 @@ module demo::frame::Graph
 import Prelude;
 import Rascalscape;
 import util::Math;
+import Content;
 
 list[str] colors = ["blue", "coral", "cyan",  "gray", "green","pink","salmon"
      , "seagreen","skyblue", "slategray","steelblue", "yellow"];
@@ -23,12 +24,7 @@ public void main() {
      openBrowser(|project://racytoscal/src/demo/frame/Graph.html|, <"attach", output>); 
      }
  */
-
-   
-public App def() {
-     num step = 0.1;
-     int width =1600, height = 800;
-     str html = svg(width, height, 
+str html(int width, int height, num step)  = svg(width, height, 
        box(CC, 
           box(LT, frame(1, 1, <"x-axe", ["<i>"|num i<-[0,0.1..1]]>
                              ,<"y-axe", ["<i>"|num i<-[0,0.1..1]]>
@@ -49,8 +45,17 @@ public App def() {
         , shrink = 0.8, strokeWidth = 0, svgLayout=grid(2)
         )
         );
-      App ap = app(|project://<project>/src/demo/frame/Graph.html|, <"attach", html>);
+   
+public App def() {
+     num step = 0.1;
+     int width =1600, height = 800; 
+      App ap = app(|project://<project>/src/demo/frame/Graph.html|, <"attach", html(width, height, step)>);
       return ap;
      }
+     
+public Content frame() { 
+    Content ap = show(|project://<project>/src/demo/frame/Graph.html|, <"attach", html(1600, 800, 0.1) >);
+    return ap;
+}    
 
        
